@@ -13,6 +13,39 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
+import dagre from 'dagre';
+
+const nodeWidth = 172;
+const nodeHeight = 36;
+
+function getLayoutedElements(nodes: Node[], edges: Edge[]) {
+  const graph = new dagre.graphlib.Graph();
+  graph.setDefaultEdgeLabel(() => ({}));
+  graph.setGraph({ rankdir: 'TB' });
+  nodes.forEach((node) => {
+    graph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  });
+  edges.forEach((edge) => {
+    graph.setEdge(edge.source, edge.target);
+  });
+  dagre.layout(graph);
+  const layoutedNodes = nodes.map((node) => {
+    const nodeWithPosition = graph.node(node.id);
+    return {
+      ...node,
+      position: {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      },
+    };
+  });
+  const layoutedEdges = edges.map((edge) => ({
+    ...edge,
+    type: 'smoothstep',
+  }));
+  return { layoutedNodes, layoutedEdges };
+}
+
 let idCounter = 1;
 
 export default function Flow() {
@@ -36,6 +69,13 @@ export default function Flow() {
     (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
     []
   );
+
+  // 自動排版節點
+  const handleLayout = useCallback(() => {
+    const { layoutedNodes, layoutedEdges } = getLayoutedElements(nodes, edges);
+    setNodes(layoutedNodes);
+    setEdges(layoutedEdges);
+  }, [nodes, edges]);
 
   // 右鍵刪除節點
   const onNodeContextMenu = useCallback(
@@ -77,6 +117,20 @@ export default function Flow() {
         }}
       >
         新增節點
+      </button>
+      <button
+        onClick={handleLayout}
+        style={{
+          margin: '10px',
+          padding: '8px 16px',
+          backgroundColor: '#d1d5db',
+          color: '#1f2937',
+          borderRadius: '6px',
+          border: '1px solid #9ca3af',
+          cursor: 'pointer',
+        }}
+      >
+        排版
       </button>
 
       <div style={{ width: '100%', height: '600px' }}>
