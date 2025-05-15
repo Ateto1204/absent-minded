@@ -22,19 +22,10 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
 
         const handleClick = useCallback(() => {
             if (!id) return;
-            const newId = uuidv4();
+            const newId1 = uuidv4();
+            const newId2 = uuidv4();
             setNodes((nodes) => {
                 const node = nodes.find((node) => node.id === id);
-                const newNode: Node = {
-                    id: newId,
-                    data: { label: "" },
-                    position: {
-                        x: node?.position?.x ?? 0,
-                        y: (node?.position?.y ?? 0) + 80,
-                    },
-                    connectable: false,
-                    type: "placeholder",
-                };
                 const updatedNodes = nodes.map((node) => {
                     if (node.id === id) {
                         return {
@@ -45,23 +36,53 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     }
                     return node;
                 });
-                return [...updatedNodes, newNode];
+                const newNode1: Node = {
+                    id: newId1,
+                    data: { label: "" },
+                    position: {
+                        x: node?.position?.x ?? 0,
+                        y: (node?.position?.y ?? 0) + 80,
+                    },
+                    connectable: false,
+                    type: "placeholder",
+                };
+                if (id === "root") return [...updatedNodes, newNode1];
+                const newNode2: Node = {
+                    id: newId2,
+                    data: { label: "" },
+                    position: {
+                        x: (node?.position?.x ?? 0) + 80,
+                        y: (node?.position?.y ?? 0) + 80,
+                    },
+                    connectable: false,
+                    type: "placeholder",
+                };
+                console.log("node 2:", newNode2);
+                return [...updatedNodes, newNode1, newNode2];
             });
 
             setEdges((edges) => {
                 const edge = edges.find((edge) => edge.target === id);
                 const source = edge?.source || "root";
-                const newEdges: Edge = {
-                    id: `e-${source}-${newId}`,
-                    source: source,
-                    target: newId,
-                    type: "default",
-                    animated: true,
-                };
                 const updatedEdges = edges.map((edge) =>
                     edge.target === id ? { ...edge, animated: false } : edge
                 );
-                return [...updatedEdges, newEdges];
+                const newEdge1: Edge = {
+                    id: `e-${source}-${newId1}`,
+                    source: source,
+                    target: newId1,
+                    type: "default",
+                    animated: true,
+                };
+                if (id === "root") return [...updatedEdges, newEdge1];
+                const newEdge2: Edge = {
+                    id: `e-${id}-${newId2}`,
+                    source: id,
+                    target: newId2,
+                    type: "default",
+                    animated: true,
+                };
+                return [...updatedEdges, newEdge1, newEdge2];
             });
         }, [id, setEdges, setNodes]);
 
