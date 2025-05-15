@@ -1,10 +1,12 @@
-import Flow from './components/Flow'
+import { ReactFlowProvider } from "@xyflow/react";
+import Flow from "./components/Flow";
 
 export default function Home() {
-  return (
-    <main>
-      <h1>React Flow Demo</h1>
-      <Flow />
-    </main>
-  )
+    return (
+        <ReactFlowProvider>
+            <main className="w-screen h-screen p-20">
+                <Flow />
+            </main>
+        </ReactFlowProvider>
+    );
 }
