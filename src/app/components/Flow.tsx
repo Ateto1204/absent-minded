@@ -67,7 +67,7 @@ export default function Flow() {
     useEffect(() => {
         if (nodes.length !== 0) return;
         const newNode: Node = {
-            id: "1",
+            id: "root",
             data: { label: "node" },
             position: { x: 100, y: 100 },
             connectable: false,

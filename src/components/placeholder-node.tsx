@@ -9,6 +9,7 @@ import {
     Edge,
 } from "@xyflow/react";
 import { BaseNode } from "@/components/base-node";
+import { v4 as uuidv4 } from "uuid";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;
@@ -21,11 +22,11 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
 
         const handleClick = useCallback(() => {
             if (!id) return;
-
+            const newId = uuidv4();
             setNodes((nodes) => {
                 const node = nodes.find((node) => node.id === id);
                 const newNode: Node = {
-                    id: (id + 1).toString(),
+                    id: newId,
                     data: { label: "" },
                     position: {
                         x: node?.position?.x ?? 0,
@@ -49,11 +50,11 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
 
             setEdges((edges) => {
                 const edge = edges.find((edge) => edge.target === id);
-                const source = edge?.source || "1";
+                const source = edge?.source || "root";
                 const newEdges: Edge = {
-                    id: `e-${source}-${id + 1}`,
+                    id: `e-${source}-${newId}`,
                     source: source,
-                    target: (id + 1).toString(),
+                    target: newId,
                     type: "default",
                     animated: true,
                 };
