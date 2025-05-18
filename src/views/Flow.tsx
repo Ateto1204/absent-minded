@@ -16,9 +16,9 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import CustomNode from "./CustomNode";
-import PlaceholderNodeDemo from "./PlaceholderNodeDemo";
-import getLayoutedElements from "../utils/getLayoutedElements";
+import CustomNode from "@/components/CustomNode";
+import PlaceholderNodeDemo from "@/components/PlaceholderNodeDemo";
+import getLayoutedElements from "@/utils/getLayoutedElements";
 
 const nodeTypes = { custom: CustomNode, placeholder: PlaceholderNodeDemo };
 

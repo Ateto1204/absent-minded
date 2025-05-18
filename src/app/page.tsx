@@ -1,5 +1,5 @@
 import { ReactFlowProvider } from "@xyflow/react";
-import Flow from "./components/Flow";
+import Flow from "@/views/Flow";
 
 export default function Home() {
     return (
