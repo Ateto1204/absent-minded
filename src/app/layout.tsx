@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "absent-minded",
+    title: "absent minded",
     description:
         "a to-do app that makes the list visualized into tree structure",
 };
