@@ -29,13 +29,24 @@ const useTaskViewModel = (): TaskViewModel => {
         fetchTasks();
     }, []);
 
-    const addTask = async (newTask: Task) => {
+    const addTask = async (task: Task) => {
         setLoading(true);
         setSuccess(false);
         setError(null);
         try {
-            await TaskService.addTask(newTask);
-            setTasks((prevTasks) => [...prevTasks, newTask]);
+            await TaskService.addTask(task);
+            const newTasks = tasks.map((t) => {
+                if (t.id === task.parent) {
+                    const newTask = {
+                        ...t,
+                        children: [...t.children, task.id],
+                    };
+                    TaskService.updateTask(newTask);
+                    return newTask;
+                }
+                return t;
+            });
+            setTasks([...newTasks, task]);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
@@ -45,7 +56,45 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
-    return { tasks, addTask, loading, success, error };
+    const deleteTask = async (taskId: string) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            // Helper to recursively find all descendant task IDs
+            const findAllDescendants = (
+                id: string,
+                allTasks: Task[]
+            ): string[] => {
+                const children = allTasks.filter((task) => task.parent === id);
+                const descendantIds = children.flatMap((child) =>
+                    findAllDescendants(child.id, allTasks)
+                );
+                return [id, ...descendantIds];
+            };
+
+            const descendantIds = findAllDescendants(taskId, tasks);
+
+            // Update local storage via service (if needed, can loop through each)
+            for (const id of descendantIds) {
+                await TaskService.removeTask(id);
+            }
+
+            // Update local state
+            setTasks((prevTasks) =>
+                prevTasks.filter((task) => !descendantIds.includes(task.id))
+            );
+
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to delete task(s)");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { tasks, addTask, deleteTask, loading, success, error };
 };
 
 export default useTaskViewModel;

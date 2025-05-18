@@ -32,7 +32,7 @@ export default function Flow() {
     const [nodes, setNodes] = useNodesState<Node>([]);
     const [edges, setEdges] = useEdgesState<Edge>([]);
     const { fitView } = useReactFlow();
-    const { tasks, loading, success, error } = useTaskContext();
+    const { tasks, loading, success, error, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -72,6 +72,26 @@ export default function Flow() {
         [setEdges, setNodes]
     );
 
+    const onNodesDelete = useCallback(
+        (deleted: Node[]) => {
+            const deletedIds = new Set(deleted.map((node) => node.id));
+            setNodes((nds) => nds.filter((n) => !deletedIds.has(n.id)));
+            setEdges((eds) =>
+                eds.filter(
+                    (e) =>
+                        !deletedIds.has(e.source) && !deletedIds.has(e.target)
+                )
+            );
+
+            deleted.forEach((node) => {
+                if (node.type === "task") {
+                    deleteTask(node.id);
+                }
+            });
+        },
+        [setNodes, setEdges, deleteTask]
+    );
+
     useEffect(() => {
         if (mounted || loading || !success) return;
         const nodeTasks = tasksToNodeTasks(tasks);
@@ -96,6 +116,7 @@ export default function Flow() {
                 onEdgesChange={handleEdgesChange}
                 nodeTypes={nodeTypes}
                 onNodeContextMenu={onNodeContextMenu}
+                onNodesDelete={onNodesDelete}
                 fitView
             >
                 <Background />
