@@ -11,7 +11,7 @@ import {
 import { BaseNode } from "@/components/base-node";
 import { v4 as uuidv4 } from "uuid";
 import { useTaskContext } from "@/context/TaskContext";
-import Task from "@/models/Task";
+import Task from "@/models/entities/Task";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;

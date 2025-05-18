@@ -1,7 +1,7 @@
 "use client";
 
 import useTaskViewModel from "@/hooks/useTaskViewModel";
-import TaskViewModel from "@/models/TaskViewModel";
+import TaskViewModel from "@/models/entities/TaskViewModel";
 import { createContext, useContext, ReactNode } from "react";
 
 const TaskContext = createContext<TaskViewModel | undefined>(undefined);

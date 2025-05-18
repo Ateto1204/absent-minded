@@ -19,6 +19,7 @@ import "@xyflow/react/dist/style.css";
 import TaskNode from "@/components/TaskNode";
 import PlaceholderNodeDemo from "@/components/PlaceholderNodeDemo";
 import getLayoutedElements from "@/utils/getLayoutedElements";
+import { useTaskContext } from "@/context/TaskContext";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
@@ -26,6 +27,7 @@ export default function Flow() {
     const [nodes, setNodes] = useNodesState<Node>([]);
     const [edges, setEdges] = useEdgesState<Edge>([]);
     const { fitView } = useReactFlow();
+    const { loading, success, error } = useTaskContext();
 
     useEffect(() => {
         fitView({ duration: 500, padding: 1 });
@@ -89,6 +91,12 @@ export default function Flow() {
             >
                 <Background />
             </ReactFlow>
+
+            <div className="absolute bottom-2 right-2 text-sm bg-white bg-opacity-80 p-2 rounded shadow text-black">
+                {loading && <p>Loading</p>}
+                {success && !loading && <p>success</p>}
+                {error && !loading && <p>error</p>}
+            </div>
         </div>
     );
 }
