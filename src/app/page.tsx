@@ -1,12 +1,18 @@
 import { ReactFlowProvider } from "@xyflow/react";
-import Flow from "./components/Flow";
+import Flow from "@/views/Flow";
+import { NodeSelectionProvider } from "@/context/NodeSelectionContext";
+import { TaskProvider } from "@/context/TaskContext";
 
 export default function Home() {
     return (
-        <ReactFlowProvider>
-            <main className="w-screen h-screen p-20">
-                <Flow />
-            </main>
-        </ReactFlowProvider>
+        <TaskProvider>
+            <NodeSelectionProvider>
+                <ReactFlowProvider>
+                    <main className="w-screen h-screen p-20">
+                        <Flow />
+                    </main>
+                </ReactFlowProvider>
+            </NodeSelectionProvider>
+        </TaskProvider>
     );
 }

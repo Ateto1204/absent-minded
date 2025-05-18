@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     ReactFlow,
     Background,
@@ -16,16 +16,24 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import CustomNode from "./CustomNode";
-import PlaceholderNodeDemo from "./PlaceholderNodeDemo";
-import getLayoutedElements from "../utils/getLayoutedElements";
+import TaskNode from "@/components/TaskNode";
+import PlaceholderNodeDemo from "@/components/PlaceholderNodeDemo";
+import getLayoutedElements from "@/utils/getLayoutedElements";
+import { useTaskContext } from "@/context/TaskContext";
+import {
+    tasksToEdges,
+    tasksToNodes,
+    tasksToNodeTasks,
+} from "@/utils/taskParser";
 
-const nodeTypes = { custom: CustomNode, placeholder: PlaceholderNodeDemo };
+const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
 export default function Flow() {
     const [nodes, setNodes] = useNodesState<Node>([]);
     const [edges, setEdges] = useEdgesState<Edge>([]);
     const { fitView } = useReactFlow();
+    const { tasks, loading, success, error } = useTaskContext();
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         fitView({ duration: 500, padding: 1 });
@@ -65,16 +73,19 @@ export default function Flow() {
     );
 
     useEffect(() => {
-        if (nodes.length !== 0) return;
-        const newNode: Node = {
-            id: "root",
-            data: { label: "node" },
-            position: { x: 100, y: 100 },
-            connectable: false,
-            type: "placeholder",
-        };
-        setNodes((nds) => [...nds, newNode]);
-    }, [nodes.length, setNodes]);
+        if (mounted || loading || !success) return;
+        const nodeTasks = tasksToNodeTasks(tasks);
+        const initNodes = tasksToNodes(nodeTasks);
+        const initEdges = tasksToEdges(nodeTasks);
+        const { layoutedNodes, layoutedEdges } = getLayoutedElements(
+            initNodes,
+            initEdges
+        );
+        setNodes((nds) => [...nds, ...layoutedNodes]);
+        setEdges((eds) => [...eds, ...layoutedEdges]);
+        console.log("init nodes:", initNodes);
+        setMounted(true);
+    }, [nodes.length, setNodes, setEdges, loading, tasks, mounted, success]);
 
     return (
         <div className="w-full h-full border rounded-md border-white relative">
@@ -89,6 +100,12 @@ export default function Flow() {
             >
                 <Background />
             </ReactFlow>
+
+            <div className="absolute bottom-2 right-2 text-sm bg-white bg-opacity-80 p-2 rounded shadow text-black">
+                {loading && <p>Loading</p>}
+                {success && !loading && <p>success</p>}
+                {error && !loading && <p>error</p>}
+            </div>
         </div>
     );
 }
