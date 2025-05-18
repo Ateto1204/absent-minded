@@ -3,7 +3,7 @@ import Task from "@/models/entities/Task";
 class TaskService {
     private static STORAGE_KEY = "tasks";
 
-    private static delay<T>(result: T, ms = 500): Promise<T> {
+    private static delay<T>(result: T, ms = 1000): Promise<T> {
         return new Promise((resolve) => setTimeout(() => resolve(result), ms));
     }
 
@@ -20,9 +20,9 @@ class TaskService {
         return this.delay(undefined);
     }
 
-    static async removeTask(id: string): Promise<void> {
+    static async removeTasks(ids: string[]): Promise<void> {
         let tasks = await this.getTasks();
-        tasks = tasks.filter((task) => task.id !== id);
+        tasks = tasks.filter((task) => !ids.includes(task.id));
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
         return this.delay(undefined);
     }

@@ -14,7 +14,7 @@ function TaskNode({ id, data }: any) {
                     <div
                         className={`relative px-4 py-2 shadow-md rounded-md bg-white border-2 text-gray-700`}
                     >
-                        <div className="max-w-44 overflow-hidden whitespace-nowrap truncate">
+                        <div className="max-w-32 overflow-hidden whitespace-nowrap truncate">
                             {data.label}
                         </div>
                         {!connection.inProgress && (
@@ -41,9 +41,9 @@ function TaskNode({ id, data }: any) {
             <Dialog.Content>
                 <div className="p-4">
                     <Dialog.Title className="text-lg font-semibold">
-                        title: {data.label}
+                        task: {data.label}
                     </Dialog.Title>
-                    <p>ID: {id}</p>
+                    <Dialog.Description>ID: {id}</Dialog.Description>
                 </div>
             </Dialog.Content>
         </Dialog.Root>

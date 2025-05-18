@@ -47,6 +47,8 @@ export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
             ...task,
             type: "task",
         });
+    }
+    for (const task of tasks) {
         nodeTasks.push({
             id: uuidv4(),
             data: { label: "new task" },

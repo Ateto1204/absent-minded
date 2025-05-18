@@ -41,6 +41,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 target,
                 type: "default",
                 animated: true,
+                selectable: false,
             };
             return newEdge;
         };

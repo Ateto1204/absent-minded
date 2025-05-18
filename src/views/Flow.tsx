@@ -93,7 +93,7 @@ export default function Flow() {
     );
 
     useEffect(() => {
-        if (mounted || loading || !success) return;
+        if (!mounted && loading) return;
         const nodeTasks = tasksToNodeTasks(tasks);
         const initNodes = tasksToNodes(nodeTasks);
         const initEdges = tasksToEdges(nodeTasks);
@@ -101,10 +101,9 @@ export default function Flow() {
             initNodes,
             initEdges
         );
-        setNodes((nds) => [...nds, ...layoutedNodes]);
-        setEdges((eds) => [...eds, ...layoutedEdges]);
-        console.log("init nodes:", initNodes);
-        setMounted(true);
+        setNodes(layoutedNodes);
+        setEdges(layoutedEdges);
+        if (!mounted) setMounted(true);
     }, [nodes.length, setNodes, setEdges, loading, tasks, mounted, success]);
 
     return (

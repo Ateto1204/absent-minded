@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const useTaskViewModel = (): TaskViewModel => {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +25,6 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         };
-
         fetchTasks();
     }, []);
 
@@ -34,7 +33,6 @@ const useTaskViewModel = (): TaskViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            await TaskService.addTask(task);
             const newTasks = tasks.map((t) => {
                 if (t.id === task.parent) {
                     const newTask = {
@@ -47,6 +45,7 @@ const useTaskViewModel = (): TaskViewModel => {
                 return t;
             });
             setTasks([...newTasks, task]);
+            await TaskService.addTask(task);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
@@ -61,30 +60,23 @@ const useTaskViewModel = (): TaskViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            // Helper to recursively find all descendant task IDs
             const findAllDescendants = (
                 id: string,
-                allTasks: Task[]
+                descendants: string[]
             ): string[] => {
-                const children = allTasks.filter((task) => task.parent === id);
-                const descendantIds = children.flatMap((child) =>
-                    findAllDescendants(child.id, allTasks)
-                );
-                return [id, ...descendantIds];
+                descendants.push(id);
+                tasks.forEach((t) => {
+                    if (t.parent === id) {
+                        findAllDescendants(t.id, descendants);
+                    }
+                });
+                return descendants;
             };
-
-            const descendantIds = findAllDescendants(taskId, tasks);
-
-            // Update local storage via service (if needed, can loop through each)
-            for (const id of descendantIds) {
-                await TaskService.removeTask(id);
-            }
-
-            // Update local state
+            const descendantIds = findAllDescendants(taskId, []);
             setTasks((prevTasks) =>
                 prevTasks.filter((task) => !descendantIds.includes(task.id))
             );
-
+            await TaskService.removeTasks(descendantIds);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
