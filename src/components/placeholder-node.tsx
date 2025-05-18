@@ -21,7 +21,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
     ({ selected, children }, ref) => {
         const id = useNodeId();
         const { setNodes, setEdges } = useReactFlow();
-        const { addTask } = useTaskContext();
+        const { addTask, loading } = useTaskContext();
 
         const createNode = (id: string, x: number, y: number) => {
             const newNode: Node = {
@@ -47,7 +47,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         };
 
         const handleClick = useCallback(() => {
-            if (!id) return;
+            if (!id || loading) return;
             const newId1 = uuidv4();
             const newId2 = uuidv4();
             setNodes((nodes) => {
@@ -90,13 +90,15 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [id, setEdges, setNodes, addTask]);
+        }, [id, setEdges, setNodes, addTask, loading]);
 
         return (
             <BaseNode
                 ref={ref}
                 selected={selected}
-                className="w-24 border-dashed border-gray-400 bg-card p-2 text-center text-gray-400 shadow-none"
+                className={`w-24 border-dashed border-gray-400 bg-card p-2 text-center text-gray-400 shadow-none ${
+                    loading ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
                 onClick={handleClick}
             >
                 {children}

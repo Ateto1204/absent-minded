@@ -13,9 +13,9 @@ class TaskService {
         return this.delay(tasks);
     }
 
-    static async addTask(task: Task): Promise<void> {
+    static async addTasks(newTasks: Task[]): Promise<void> {
         const tasks = await this.getTasks();
-        tasks.push(task);
+        tasks.push(...newTasks);
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
         return this.delay(undefined);
     }

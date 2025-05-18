@@ -45,7 +45,7 @@ const useTaskViewModel = (): TaskViewModel => {
                 return t;
             });
             setTasks([...newTasks, task]);
-            await TaskService.addTask(task);
+            await TaskService.addTasks([task]);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
