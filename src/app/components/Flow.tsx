@@ -1,152 +1,94 @@
-'use client';
+"use client";
 
-import React, { useCallback, useState } from 'react';
-import ReactFlow, {
-  Background,
-  Controls,
-  Node,
-  Edge,
-  addEdge,
-  applyNodeChanges,
-  applyEdgeChanges,
-  Connection,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+import React, { useCallback, useEffect } from "react";
+import {
+    ReactFlow,
+    Background,
+    Node,
+    Edge,
+    useNodesState,
+    useEdgesState,
+    applyNodeChanges,
+    applyEdgeChanges,
+    useReactFlow,
+    NodeChange,
+    EdgeChange,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
-import dagre from 'dagre';
+import CustomNode from "./CustomNode";
+import PlaceholderNodeDemo from "./PlaceholderNodeDemo";
+import getLayoutedElements from "../utils/getLayoutedElements";
 
-const nodeWidth = 172;
-const nodeHeight = 36;
-
-function getLayoutedElements(nodes: Node[], edges: Edge[]) {
-  const graph = new dagre.graphlib.Graph();
-  graph.setDefaultEdgeLabel(() => ({}));
-  graph.setGraph({ rankdir: 'TB' });
-  nodes.forEach((node) => {
-    graph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-  });
-  edges.forEach((edge) => {
-    graph.setEdge(edge.source, edge.target);
-  });
-  dagre.layout(graph);
-  const layoutedNodes = nodes.map((node) => {
-    const nodeWithPosition = graph.node(node.id);
-    return {
-      ...node,
-      position: {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      },
-    };
-  });
-  const layoutedEdges = edges.map((edge) => ({
-    ...edge,
-    type: 'smoothstep',
-  }));
-  return { layoutedNodes, layoutedEdges };
-}
-
-let idCounter = 1;
+const nodeTypes = { custom: CustomNode, placeholder: PlaceholderNodeDemo };
 
 export default function Flow() {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+    const [nodes, setNodes] = useNodesState<Node>([]);
+    const [edges, setEdges] = useEdgesState<Edge>([]);
+    const { fitView } = useReactFlow();
 
-  // 拖曳節點時
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  );
+    useEffect(() => {
+        fitView({ duration: 500, padding: 1 });
+    }, [fitView, nodes.length]);
 
-  // 邊更新時
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  );
+    const handleNodesChange = useCallback(
+        (changes: NodeChange<Node>[]) => {
+            setNodes((nds) => {
+                const changed = applyNodeChanges(changes, nds);
+                const { layoutedNodes } = getLayoutedElements(changed, edges);
+                return layoutedNodes;
+            });
+        },
+        [edges, setNodes]
+    );
 
-  // 新增連線時
-  const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
-    []
-  );
+    const handleEdgesChange = useCallback(
+        (changes: EdgeChange<Edge>[]) => {
+            setEdges((eds) => {
+                const changed = applyEdgeChanges(changes, eds);
+                const { layoutedEdges } = getLayoutedElements(nodes, changed);
+                return layoutedEdges;
+            });
+        },
+        [nodes, setEdges]
+    );
 
-  // 自動排版節點
-  const handleLayout = useCallback(() => {
-    const { layoutedNodes, layoutedEdges } = getLayoutedElements(nodes, edges);
-    setNodes(layoutedNodes);
-    setEdges(layoutedEdges);
-  }, [nodes, edges]);
+    const onNodeContextMenu = useCallback(
+        (event: React.MouseEvent, node: Node) => {
+            event.preventDefault();
+            setNodes((nds) => nds.filter((n) => n.id !== node.id));
+            setEdges((eds) =>
+                eds.filter((e) => e.source !== node.id && e.target !== node.id)
+            );
+        },
+        [setEdges, setNodes]
+    );
 
-  // 右鍵刪除節點
-  const onNodeContextMenu = useCallback(
-    (event: React.MouseEvent, node: Node) => {
-      event.preventDefault();
-      setNodes((nds) => nds.filter((n) => n.id !== node.id));
-      setEdges((eds) => eds.filter((e) => e.source !== node.id && e.target !== node.id));
-    },
-    []
-  );
+    useEffect(() => {
+        if (nodes.length !== 0) return;
+        const newNode: Node = {
+            id: "root",
+            data: { label: "node" },
+            position: { x: 100, y: 100 },
+            connectable: false,
+            type: "placeholder",
+        };
+        setNodes((nds) => [...nds, newNode]);
+    }, [nodes.length, setNodes]);
 
-  // 按按鈕新增節點（隨機位置）
-  const handleAddNode = () => {
-    const x = Math.random() * 400 + 100;
-    const y = Math.random() * 300 + 100;
-
-    const newNode: Node = {
-      id: `${idCounter++}`,
-      data: { label: `節點 ${idCounter - 1}` },
-      position: { x, y },
-      type: 'default',
-    };
-
-    setNodes((nds) => [...nds, newNode]);
-  };
-
-  return (
-    <div>
-      <button
-        onClick={handleAddNode}
-        style={{
-          margin: '10px',
-          padding: '8px 16px',
-          backgroundColor: '#d1d5db', // 淺灰色（tailwind 的 gray-300）
-          color: '#1f2937',            // 深灰文字（gray-800）
-          borderRadius: '6px',
-          border: '1px solid #9ca3af', // 邊框灰色（gray-400）
-          cursor: 'pointer',
-        }}
-      >
-        新增節點
-      </button>
-      <button
-        onClick={handleLayout}
-        style={{
-          margin: '10px',
-          padding: '8px 16px',
-          backgroundColor: '#d1d5db',
-          color: '#1f2937',
-          borderRadius: '6px',
-          border: '1px solid #9ca3af',
-          cursor: 'pointer',
-        }}
-      >
-        排版
-      </button>
-
-      <div style={{ width: '100%', height: '600px' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onNodeContextMenu={onNodeContextMenu}
-          fitView
-        >
-          <Background />
-          <Controls />
-        </ReactFlow>
-      </div>
-    </div>
-  );
+    return (
+        <div className="w-full h-full border rounded-md border-white relative">
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={handleNodesChange}
+                onEdgesChange={handleEdgesChange}
+                nodeTypes={nodeTypes}
+                onNodeContextMenu={onNodeContextMenu}
+                fitView
+            >
+                <Background />
+            </ReactFlow>
+        </div>
+    );
 }
