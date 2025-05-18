@@ -23,24 +23,16 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const { setNodes, setEdges } = useReactFlow();
         const { addTask } = useTaskContext();
 
-        const createNode = useCallback(
-            (id: string, x: number, y: number) => {
-                const task: Task = {
-                    id: id,
-                    data: { label: "" },
-                };
-                addTask(task);
-                const newNode: Node = {
-                    id: id,
-                    data: { label: "" },
-                    position: { x, y },
-                    connectable: false,
-                    type: "placeholder",
-                };
-                return newNode;
-            },
-            [addTask]
-        );
+        const createNode = (id: string, x: number, y: number) => {
+            const newNode: Node = {
+                id,
+                data: { label: "new task" },
+                position: { x, y },
+                connectable: false,
+                type: "placeholder",
+            };
+            return newNode;
+        };
 
         const createEdge = (source: string, target: string) => {
             const newEdge: Edge = {
@@ -63,38 +55,40 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     if (node.id === id) {
                         return {
                             ...node,
-                            data: { ...node.data, label: "Node" },
                             type: "task",
                         };
                     }
                     return node;
                 });
-                const newNode1: Node = createNode(
-                    newId1,
-                    node?.position?.x ?? 0,
-                    (node?.position?.y ?? 0) + 80
-                );
+                const x = node?.position?.x ?? 0;
+                const y = node?.position?.y ?? 0;
+                const newNode1: Node = createNode(newId1, x, y + 80);
                 if (id === "root") return [...updatedNodes, newNode1];
-                const newNode2: Node = createNode(
-                    newId2,
-                    (node?.position?.x ?? 0) + 80,
-                    (node?.position?.y ?? 0) + 80
-                );
+                const newNode2: Node = createNode(newId2, x + 80, y + 80);
                 return [...updatedNodes, newNode1, newNode2];
             });
 
             setEdges((edges) => {
                 const edge = edges.find((edge) => edge.target === id);
                 const source = edge?.source || "root";
-                const updatedEdges = edges.map((edge) =>
-                    edge.target === id ? { ...edge, animated: false } : edge
-                );
+                const updatedEdges = edges.map((edge) => {
+                    if (edge.target === id) {
+                        return { ...edge, animated: false };
+                    }
+                    return edge;
+                });
+                const task: Task = {
+                    id: id,
+                    data: { label: "new task" },
+                    parent: source,
+                };
+                addTask(task);
                 const newEdge1: Edge = createEdge(source, newId1);
                 if (id === "root") return [...updatedEdges, newEdge1];
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [id, setEdges, setNodes, createNode]);
+        }, [id, setEdges, setNodes, addTask]);
 
         return (
             <BaseNode
