@@ -16,11 +16,11 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import CustomNode from "@/components/CustomNode";
+import TaskNode from "@/components/TaskNode";
 import PlaceholderNodeDemo from "@/components/PlaceholderNodeDemo";
 import getLayoutedElements from "@/utils/getLayoutedElements";
 
-const nodeTypes = { custom: CustomNode, placeholder: PlaceholderNodeDemo };
+const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
 export default function Flow() {
     const [nodes, setNodes] = useNodesState<Node>([]);

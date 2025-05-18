@@ -31,7 +31,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                         return {
                             ...node,
                             data: { ...node.data, label: "Node" },
-                            type: "custom",
+                            type: "task",
                         };
                     }
                     return node;
