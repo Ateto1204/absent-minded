@@ -49,6 +49,26 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
+    const updateProject = async (updated: Project) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            await ProjectService.updateProject(updated);
+            setProjects((prev) =>
+                prev.map((project) =>
+                    project.id === updated.id ? updated : project
+                )
+            );
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to update project");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const toggleProject = (id: string) => {
         setCurrentProject(id);
         localStorage.setItem(STORAGE_KEY, id);
@@ -59,6 +79,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         currentProject,
         toggleProject,
         addProject,
+        updateProject,
         loading,
         success,
         error,

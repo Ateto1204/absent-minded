@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Dialog, TextField, Button, Text, Flex } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +16,12 @@ function ProjectDialog({
     isActive,
     toggleProject,
 }: ProjectDialogProps) {
+    const { updateProject, loading } = useProjectContext();
+    const [name, setName] = useState(project.name);
+    const handleSave = () => {
+        updateProject({ id: project.id, name });
+    };
+
     return (
         <Dialog.Root>
             <li
@@ -46,7 +53,8 @@ function ProjectDialog({
                 <Flex gapX="2" my="5">
                     <Text className="relative pt-0.5">name :</Text>
                     <TextField.Root
-                        defaultValue={project.name}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder="Project name"
                     />
                 </Flex>
@@ -54,7 +62,12 @@ function ProjectDialog({
                     <Button color="red" variant="solid">
                         Delete
                     </Button>
-                    <Button color="blue" variant="solid">
+                    <Button
+                        color="blue"
+                        variant="solid"
+                        onClick={handleSave}
+                        loading={loading}
+                    >
                         Save
                     </Button>
                 </div>
