@@ -73,10 +73,10 @@ const useTaskViewModel = (): TaskViewModel => {
                 return descendants;
             };
             const descendantIds = findAllDescendants(taskId, []);
+            await TaskService.removeTasks(descendantIds);
             setTasks((prevTasks) =>
                 prevTasks.filter((task) => !descendantIds.includes(task.id))
             );
-            await TaskService.removeTasks(descendantIds);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
