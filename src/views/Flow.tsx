@@ -25,6 +25,7 @@ import {
     tasksToNodes,
     tasksToNodeTasks,
 } from "@/utils/taskParser";
+import { useProjectContext } from "@/context/ProjectContext";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
@@ -34,6 +35,7 @@ export default function Flow() {
     const { fitView } = useReactFlow();
     const { tasks, loading, success, error, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
+    const { currentProject } = useProjectContext();
 
     useEffect(() => {
         fitView({ duration: 500, padding: 1 });
@@ -94,7 +96,7 @@ export default function Flow() {
 
     useEffect(() => {
         if (!mounted && loading) return;
-        const nodeTasks = tasksToNodeTasks(tasks);
+        const nodeTasks = tasksToNodeTasks(tasks, currentProject);
         const initNodes = tasksToNodes(nodeTasks);
         const initEdges = tasksToEdges(nodeTasks);
         const { layoutedNodes, layoutedEdges } = getLayoutedElements(
@@ -104,7 +106,16 @@ export default function Flow() {
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
         if (!mounted) setMounted(true);
-    }, [nodes.length, setNodes, setEdges, loading, tasks, mounted, success]);
+    }, [
+        nodes.length,
+        setNodes,
+        setEdges,
+        loading,
+        tasks,
+        mounted,
+        success,
+        currentProject,
+    ]);
 
     return (
         <div className="w-full h-full border rounded-md border-white relative">

@@ -12,6 +12,7 @@ import { BaseNode } from "@/components/base-node";
 import { v4 as uuidv4 } from "uuid";
 import { useTaskContext } from "@/context/TaskContext";
 import Task from "@/models/entities/Task";
+import { useProjectContext } from "@/context/ProjectContext";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;
@@ -22,6 +23,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const id = useNodeId();
         const { setNodes, setEdges } = useReactFlow();
         const { addTask, loading } = useTaskContext();
+        const { currentProject } = useProjectContext();
 
         const createNode = (id: string, x: number, y: number) => {
             const newNode: Node = {
@@ -82,6 +84,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     id: id,
                     data: { label: "new task", description: "" },
                     parent: source,
+                    project: currentProject,
                 };
                 addTask(task);
                 const newEdge1: Edge = createEdge(source, newId1);
@@ -89,7 +92,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [id, setEdges, setNodes, addTask, loading]);
+        }, [id, setEdges, setNodes, addTask, loading, currentProject]);
 
         return (
             <BaseNode

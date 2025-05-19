@@ -3,12 +3,14 @@ import Task from "@/models/entities/Task";
 import TaskViewModel from "@/models/entities/TaskViewModel";
 import { useEffect, useState } from "react";
 import TaskData from "@/models/entities/TaskData";
+import { useProjectContext } from "@/context/ProjectContext";
 
 const useTaskViewModel = (): TaskViewModel => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { currentProject } = useProjectContext();
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -16,7 +18,7 @@ const useTaskViewModel = (): TaskViewModel => {
             setSuccess(false);
             setError(null);
             try {
-                const fetchedTasks = await TaskService.getTasks();
+                const fetchedTasks = await TaskService.getTasks(currentProject);
                 setTasks(fetchedTasks);
                 setSuccess(true);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +29,7 @@ const useTaskViewModel = (): TaskViewModel => {
             }
         };
         fetchTasks();
-    }, []);
+    }, [currentProject]);
 
     const addTask = async (task: Task) => {
         setLoading(true);
