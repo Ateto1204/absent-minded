@@ -80,7 +80,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 });
                 const task: Task = {
                     id: id,
-                    data: { label: "new task" },
+                    data: { label: "new task", description: "" },
                     parent: source,
                     children: [],
                 };

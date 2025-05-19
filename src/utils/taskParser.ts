@@ -34,7 +34,7 @@ export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
         return [
             {
                 id: "root",
-                data: { label: "root" },
+                data: { label: "root", description: "" },
                 parent: "",
                 children: [],
                 type: "placeholder",
@@ -51,7 +51,7 @@ export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
     for (const task of tasks) {
         nodeTasks.push({
             id: uuidv4(),
-            data: { label: "new task" },
+            data: { label: "new task", description: "" },
             parent: task.id,
             children: [],
             type: "placeholder",

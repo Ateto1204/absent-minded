@@ -8,12 +8,17 @@ import TaskDialog from "./TaskDialog";
 function TaskNode({ id, data }: any) {
     const connection = useConnection();
     const isTarget = connection.inProgress && connection.fromNode.id !== id;
-    const { deleteTask } = useTaskContext();
+    const { deleteTask, loading } = useTaskContext();
 
     return (
         <Dialog.Root>
             <Dialog.Trigger>
-                <button className="cursor-pointer">
+                <button
+                    disabled={loading}
+                    className={`${
+                        loading ? "cursor-not-allowed" : "cursor-pointer"
+                    }`}
+                >
                     <div className="relative px-4 py-2 shadow-md rounded-md bg-white border-2 text-gray-700">
                         <div className="max-w-32 overflow-hidden whitespace-nowrap truncate">
                             {data.label}

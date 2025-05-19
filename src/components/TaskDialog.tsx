@@ -23,16 +23,20 @@ const TaskDialog = ({
                     <Text className="relative bottom-3 cursor-pointer">x</Text>
                 </Dialog.Close>
             </Flex>
-            <Dialog.Description>ID: {id}</Dialog.Description>
-            <Button
-                color="red"
-                variant="solid"
-                onClick={handleDelete}
-                className="mt-4"
-                loading={loading}
-            >
-                Delete Task
-            </Button>
+            <Dialog.Description>
+                <Text>ID: {id}</Text>
+            </Dialog.Description>
+            <Text>{data.description}</Text>
+            <div className="mt-6">
+                <Button
+                    color="red"
+                    variant="solid"
+                    onClick={handleDelete}
+                    loading={loading}
+                >
+                    Delete Task
+                </Button>
+            </div>
         </Dialog.Content>
     );
 };
