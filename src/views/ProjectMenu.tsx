@@ -15,10 +15,15 @@ function ProjectMenu() {
     };
 
     return (
-        <div className="w-64 bg-gray-100 p-4 border-r border-gray-300 text-black">
+        <div className="w-64 bg-zinc-900 p-4 border-r border-zinc-700 text-white h-screen">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Projects</h2>
-                <Button size="1" onClick={handleAddProject}>
+                <h2 className="text-lg font-semibold text-white">Projects</h2>
+                <Button
+                    size="1"
+                    onClick={handleAddProject}
+                    color="gray"
+                    variant="surface"
+                >
                     +
                 </Button>
             </div>

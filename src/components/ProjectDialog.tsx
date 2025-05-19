@@ -29,10 +29,8 @@ function ProjectDialog({
         <Dialog.Root>
             <li
                 onClick={toggleProject}
-                className={`truncate px-2 py-1 rounded cursor-pointer flex justify-between items-center ${
-                    isActive
-                        ? "bg-blue-500 text-white font-semibold"
-                        : "hover:bg-gray-200 text-gray-800"
+                className={`truncate px-2 py-1 rounded cursor-pointer flex justify-between items-center hover:opacity-60 ${
+                    isActive && "bg-blue-500 text-white font-semibold"
                 }`}
             >
                 <span>{project.name}</span>
