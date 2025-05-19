@@ -82,7 +82,6 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     id: id,
                     data: { label: "new task", description: "" },
                     parent: source,
-                    children: [],
                 };
                 addTask(task);
                 const newEdge1: Edge = createEdge(source, newId1);

@@ -1,4 +1,12 @@
-import { Dialog, Button, Flex, Text } from "@radix-ui/themes";
+import {
+    Dialog,
+    Button,
+    Flex,
+    Text,
+    TextArea,
+    TextField,
+} from "@radix-ui/themes";
+import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 
 const TaskDialog = ({
@@ -11,31 +19,62 @@ const TaskDialog = ({
     data: any;
     handleDelete: () => void;
 }) => {
-    const { loading } = useTaskContext();
+    const { updateTaskData, loading } = useTaskContext();
+    const [label, setLabel] = useState(data.label || "");
+    const [description, setDescription] = useState(data.description || "");
+
+    const handleSave = () => {
+        const taskData = {
+            label,
+            description,
+        };
+        updateTaskData(id, taskData);
+    };
 
     return (
         <Dialog.Content>
-            <Flex justify="between">
+            <Flex justify="between" align="center">
                 <Dialog.Title className="text-lg font-semibold">
-                    task: {data.label}
+                    Edit Task
                 </Dialog.Title>
                 <Dialog.Close>
                     <Text className="relative bottom-3 cursor-pointer">x</Text>
                 </Dialog.Close>
             </Flex>
             <Dialog.Description>
-                <Text>ID: {id}</Text>
+                <Text size="1">id: {id}</Text>
             </Dialog.Description>
-            <Text>{data.description}</Text>
+            <Flex className="my-3" gapX="2">
+                <Text className="relative pt-1">task :</Text>
+                <TextField.Root
+                    value={label}
+                    onChange={(e) => setLabel(e.target.value)}
+                    placeholder="Task label"
+                />
+            </Flex>
+            <TextArea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+            />
             <div className="mt-6">
-                <Button
-                    color="red"
-                    variant="solid"
-                    onClick={handleDelete}
-                    loading={loading}
-                >
-                    Delete Task
-                </Button>
+                <Flex gapX="2">
+                    <Button
+                        color="red"
+                        variant="solid"
+                        onClick={handleDelete}
+                        loading={loading}
+                    >
+                        Delete
+                    </Button>
+                    <Button
+                        color="blue"
+                        variant="solid"
+                        onClick={handleSave}
+                        loading={loading}
+                    >
+                        Save
+                    </Button>
+                </Flex>
             </div>
         </Dialog.Content>
     );
