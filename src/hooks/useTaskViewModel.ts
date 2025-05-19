@@ -64,10 +64,17 @@ const useTaskViewModel = (): TaskViewModel => {
                 });
                 return descendants;
             };
-            const descendantIds = findAllDescendants(taskId, []);
+            const descendantIds =
+                taskId === "root"
+                    ? tasks.forEach((t) => t.id) ?? []
+                    : findAllDescendants(taskId, []);
             await TaskService.removeTasks(descendantIds);
             setTasks((prevTasks) =>
-                prevTasks.filter((task) => !descendantIds.includes(task.id))
+                taskId === "root"
+                    ? []
+                    : prevTasks.filter(
+                          (task) => !descendantIds.includes(task.id)
+                      )
             );
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
