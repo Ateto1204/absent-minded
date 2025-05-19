@@ -1,3 +1,4 @@
+import { supabase } from "@/app/lib/supabase";
 import Project from "@/models/entities/Project";
 import ProjectViewModel from "@/models/entities/ProjectViewModel";
 import ProjectService from "@/models/services/ProjectService";
@@ -11,15 +12,26 @@ const useProjectViewModel = (): ProjectViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [email, setEmail] = useState("");
+
+    useEffect(() => {
+        const getUserInfo = async () => {
+            const { data } = await supabase.auth.getUser();
+            if (data?.user) {
+                setEmail(data.user.email ?? "");
+            }
+        };
+        getUserInfo();
+    }, []);
 
     useEffect(() => {
         const loadProjects = async () => {
-            const all = await ProjectService.getProjects();
+            const all = await ProjectService.getProjects(email);
             setProjects(all);
             setLoading(false);
         };
         loadProjects();
-    }, [projects]);
+    }, [projects, email]);
 
     useEffect(() => {
         if (currentProject !== "") return;
