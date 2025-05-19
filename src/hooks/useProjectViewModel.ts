@@ -3,10 +3,12 @@ import ProjectViewModel from "@/models/entities/ProjectViewModel";
 import ProjectService from "@/models/services/ProjectService";
 import { useEffect, useState } from "react";
 
+const STORAGE_KEY = "current-project-id";
+
 const useProjectViewModel = (): ProjectViewModel => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [currentProject, setCurrentProject] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -19,8 +21,15 @@ const useProjectViewModel = (): ProjectViewModel => {
     }, [projects]);
 
     useEffect(() => {
-        if (currentProject === "" && projects[0]) {
-            setCurrentProject(projects[0]?.id || "");
+        if (currentProject !== "") return;
+        const storedProjectId = localStorage.getItem(STORAGE_KEY) as string;
+        const initProject = projects.find((p) => p.id === storedProjectId);
+        if (initProject) {
+            setCurrentProject(initProject.id);
+            return;
+        }
+        if (projects[0]) {
+            setCurrentProject(projects[0].id);
         }
     }, [projects, currentProject]);
 
@@ -40,10 +49,15 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
+    const toggleProject = (id: string) => {
+        setCurrentProject(id);
+        localStorage.setItem(STORAGE_KEY, id);
+    };
+
     return {
         projects,
         currentProject,
-        setCurrentProject,
+        toggleProject,
         addProject,
         loading,
         success,

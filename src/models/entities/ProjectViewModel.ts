@@ -6,7 +6,7 @@ interface ProjectViewModel {
     loading: boolean;
     success: boolean;
     error: string | null;
-    setCurrentProject: (id: string) => void;
+    toggleProject: (id: string) => void;
     addProject: (project: Project) => void;
 }
 
