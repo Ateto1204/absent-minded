@@ -30,7 +30,11 @@ function ProjectMenu() {
 
     const handleAddProject = () => {
         const id = uuidv4();
-        addProject({ id, name: `Project ${projects.length + 1}` });
+        addProject({
+            id,
+            name: `Project ${projects.length + 1}`,
+            user: userEmail,
+        });
     };
 
     const handleSignout = async () => {

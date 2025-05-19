@@ -50,15 +50,19 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
-    const updateProject = async (updated: Project) => {
+    const updateProjectName = async (id: string, name: string) => {
         setLoading(true);
         setSuccess(false);
         setError(null);
         try {
-            await ProjectService.updateProject(updated);
+            const project = projects.find((p) => p.id === id);
+            if (project) {
+                const updated = { ...project, name };
+                await ProjectService.updateProject(updated);
+            }
             setProjects((prev) =>
                 prev.map((project) =>
-                    project.id === updated.id ? updated : project
+                    project.id === id ? { ...project, name } : project
                 )
             );
             setSuccess(true);
@@ -100,7 +104,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         currentProject,
         toggleProject,
         addProject,
-        updateProject,
+        updateProjectName,
         deleteProject,
         loading,
         success,
