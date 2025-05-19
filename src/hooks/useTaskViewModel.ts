@@ -2,6 +2,7 @@ import TaskService from "@/models/services/TaskService";
 import Task from "@/models/entities/Task";
 import TaskViewModel from "@/models/entities/TaskViewModel";
 import { useEffect, useState } from "react";
+import TaskData from "@/models/entities/TaskData";
 
 const useTaskViewModel = (): TaskViewModel => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -33,18 +34,7 @@ const useTaskViewModel = (): TaskViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            const newTasks = tasks.map((t) => {
-                if (t.id === task.parent) {
-                    const newTask = {
-                        ...t,
-                        children: [...t.children, task.id],
-                    };
-                    TaskService.updateTask(newTask);
-                    return newTask;
-                }
-                return t;
-            });
-            setTasks([...newTasks, task]);
+            setTasks((prev) => [...prev, task]);
             await TaskService.addTasks([task]);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,10 +63,10 @@ const useTaskViewModel = (): TaskViewModel => {
                 return descendants;
             };
             const descendantIds = findAllDescendants(taskId, []);
+            await TaskService.removeTasks(descendantIds);
             setTasks((prevTasks) =>
                 prevTasks.filter((task) => !descendantIds.includes(task.id))
             );
-            await TaskService.removeTasks(descendantIds);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
@@ -86,7 +76,45 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
-    return { tasks, addTask, deleteTask, loading, success, error };
+    const getTaskById = (id: string): Task | undefined => {
+        const task = tasks.find((t) => t.id === id);
+        return task;
+    };
+
+    const updateTaskData = async (taskId: string, newData: TaskData) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            const updated = tasks.map((task) =>
+                task.id === taskId
+                    ? { ...task, data: { ...task.data, ...newData } }
+                    : task
+            );
+            setTasks(updated);
+            const taskToUpdate = updated.find((t) => t.id === taskId);
+            if (taskToUpdate) {
+                await TaskService.updateTask(taskToUpdate);
+            }
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to update task data");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return {
+        tasks,
+        addTask,
+        deleteTask,
+        getTaskById,
+        updateTaskData,
+        loading,
+        success,
+        error,
+    };
 };
 
 export default useTaskViewModel;
