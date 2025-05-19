@@ -24,6 +24,8 @@ export function tasksToEdges(tasks: NodeTask[]): Edge[] {
             target: task.id,
             type: "default",
             animated: task.type === "placeholder",
+            deletable: false,
+            selectable: false,
         }));
 }
 
@@ -34,6 +36,7 @@ export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
                 id: "root",
                 data: { label: "root" },
                 parent: "",
+                children: [],
                 type: "placeholder",
             },
         ];
@@ -44,10 +47,13 @@ export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
             ...task,
             type: "task",
         });
+    }
+    for (const task of tasks) {
         nodeTasks.push({
             id: uuidv4(),
             data: { label: "new task" },
             parent: task.id,
+            children: [],
             type: "placeholder",
         });
     }

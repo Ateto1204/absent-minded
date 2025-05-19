@@ -3,6 +3,7 @@ import Task from "./Task";
 interface TaskViewModel {
     tasks: Task[];
     addTask: (newTask: Task) => void;
+    deleteTask: (taskId: string) => void;
     loading: boolean;
     success: boolean;
     error: string | null;
