@@ -123,7 +123,7 @@ export default function Flow() {
 
             <div className="absolute bottom-2 right-2 text-sm bg-white bg-opacity-80 p-2 rounded shadow text-black">
                 {loading && <p>Loading</p>}
-                {success && !loading && <p>saved</p>}
+                {success && !loading && <p>done</p>}
                 {error && !loading && <p>failed</p>}
             </div>
         </div>

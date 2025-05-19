@@ -3,6 +3,25 @@ import { Handle, Position, useConnection } from "@xyflow/react";
 import { Dialog } from "@radix-ui/themes";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskDialog from "./TaskDialog";
+import DeleteTaskDialog from "./DeleteTaskDialog";
+
+const DeleteTaskTriggerButton = ({ id }: { id: string }) => {
+    const { deleteTask, loading } = useTaskContext();
+    return (
+        <Dialog.Root>
+            <Dialog.Trigger>
+                <button
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute -top-1.5 -right-1.5 text-xs text-gray-500 hover:opacity-70 rounded-full bg-white border border-gray-500 px-1 cursor-pointer"
+                    disabled={loading}
+                >
+                    ×
+                </button>
+            </Dialog.Trigger>
+            <DeleteTaskDialog id={id} handleDelete={() => deleteTask(id)} />
+        </Dialog.Root>
+    );
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function TaskNode({ id, data }: any) {
@@ -11,15 +30,14 @@ function TaskNode({ id, data }: any) {
     const { deleteTask, loading } = useTaskContext();
 
     return (
-        <Dialog.Root>
-            <Dialog.Trigger>
-                <button
-                    disabled={loading}
-                    className={`${
-                        loading ? "cursor-not-allowed" : "cursor-pointer"
-                    }`}
-                >
-                    <div className="relative px-4 py-2 shadow-md rounded-md bg-white border-2 text-gray-700">
+        <div className="relative">
+            <Dialog.Root>
+                <Dialog.Trigger disabled={loading}>
+                    <div
+                        className={`relative px-4 py-2 shadow-md rounded-md bg-white border-2 text-gray-700 ${
+                            loading ? "cursor-not-allowed" : "cursor-pointer"
+                        }`}
+                    >
                         <div className="max-w-32 overflow-hidden whitespace-nowrap truncate">
                             {data.label}
                         </div>
@@ -42,14 +60,16 @@ function TaskNode({ id, data }: any) {
                             />
                         )}
                     </div>
-                </button>
-            </Dialog.Trigger>
-            <TaskDialog
-                id={id}
-                data={data}
-                handleDelete={() => deleteTask(id)}
-            />
-        </Dialog.Root>
+                </Dialog.Trigger>
+                <DeleteTaskTriggerButton id={id} />
+
+                <TaskDialog
+                    id={id}
+                    data={data}
+                    handleDelete={() => deleteTask(id)}
+                />
+            </Dialog.Root>
+        </div>
     );
 }
 

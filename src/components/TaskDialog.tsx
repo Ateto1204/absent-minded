@@ -8,6 +8,7 @@ import {
 } from "@radix-ui/themes";
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
+import DeleteTaskDialog from "./DeleteTaskDialog";
 
 const TaskDialog = ({
     id,
@@ -49,34 +50,52 @@ const TaskDialog = ({
                 <TextField.Root
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
-                    placeholder="Task label"
+                    placeholder="task title"
                 />
             </Flex>
             <TextArea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                placeholder={"write description here..."}
             />
             <div className="mt-6">
                 <Flex gapX="2">
-                    <Button
-                        color="red"
-                        variant="solid"
-                        onClick={handleDelete}
-                        loading={loading}
-                    >
-                        Delete
-                    </Button>
+                    <DeleteTaskTriggerButton
+                        id={id}
+                        handleDelete={handleDelete}
+                    />
                     <Button
                         color="blue"
                         variant="solid"
                         onClick={handleSave}
                         loading={loading}
+                        disabled={loading}
                     >
                         Save
                     </Button>
                 </Flex>
             </div>
         </Dialog.Content>
+    );
+};
+
+const DeleteTaskTriggerButton = ({
+    id,
+    handleDelete,
+}: {
+    id: string;
+    handleDelete: () => void;
+}) => {
+    const { loading } = useTaskContext();
+    return (
+        <Dialog.Root>
+            <Dialog.Trigger>
+                <Button color="red" variant="solid" disabled={loading}>
+                    Delete
+                </Button>
+            </Dialog.Trigger>
+            <DeleteTaskDialog id={id} handleDelete={handleDelete} />
+        </Dialog.Root>
     );
 };
 
