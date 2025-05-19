@@ -26,6 +26,7 @@ import {
     tasksToNodeTasks,
 } from "@/utils/taskParser";
 import { useProjectContext } from "@/context/ProjectContext";
+import { Flex } from "@radix-ui/themes";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
@@ -119,18 +120,34 @@ export default function Flow() {
 
     return (
         <div className="w-full h-full border rounded-md border-white relative">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={handleNodesChange}
-                onEdgesChange={handleEdgesChange}
-                nodeTypes={nodeTypes}
-                onNodeContextMenu={onNodeContextMenu}
-                onNodesDelete={onNodesDelete}
-                fitView
-            >
-                <Background />
-            </ReactFlow>
+            {currentProject ? (
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={handleNodesChange}
+                    onEdgesChange={handleEdgesChange}
+                    nodeTypes={nodeTypes}
+                    onNodeContextMenu={onNodeContextMenu}
+                    onNodesDelete={onNodesDelete}
+                    fitView
+                >
+                    <Background />
+                </ReactFlow>
+            ) : (
+                <Flex
+                    direction="column"
+                    align="center"
+                    justify="center"
+                    className="h-full text-gray-500"
+                >
+                    <p className="text-xl font-semibold mb-2">
+                        No project selected
+                    </p>
+                    <p className="text-sm">
+                        Please choose or create a project from the sidebar.
+                    </p>
+                </Flex>
+            )}
 
             <div className="absolute bottom-2 right-2 text-sm bg-white bg-opacity-80 p-2 rounded shadow text-black">
                 {loading && <p>Loading</p>}

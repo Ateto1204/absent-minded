@@ -4,22 +4,27 @@ import { useState } from "react";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Dialog, TextField, Button, Text, Flex } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
-
-interface ProjectDialogProps {
-    project: { id: string; name: string };
-    isActive: boolean;
-    toggleProject: () => void;
-}
+import { useTaskContext } from "@/context/TaskContext";
 
 function ProjectDialog({
     project,
     isActive,
     toggleProject,
-}: ProjectDialogProps) {
-    const { updateProject, loading } = useProjectContext();
+}: {
+    project: { id: string; name: string };
+    isActive: boolean;
+    toggleProject: () => void;
+}) {
+    const { updateProject, deleteProject, loading } = useProjectContext();
+    const { deleteTask } = useTaskContext();
     const [name, setName] = useState(project.name);
     const handleSave = () => {
         updateProject({ id: project.id, name });
+    };
+
+    const handleDelete = () => {
+        deleteProject(project.id);
+        deleteTask("root");
     };
 
     return (
@@ -59,7 +64,12 @@ function ProjectDialog({
                     />
                 </Flex>
                 <div className="mt-4 flex gap-2">
-                    <Button color="red" variant="solid">
+                    <Button
+                        color="red"
+                        variant="solid"
+                        onClick={handleDelete}
+                        loading={loading}
+                    >
                         Delete
                     </Button>
                     <Button

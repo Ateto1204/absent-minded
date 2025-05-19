@@ -16,6 +16,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         const loadProjects = async () => {
             const all = await ProjectService.getProjects();
             setProjects(all);
+            setLoading(false);
         };
         loadProjects();
     }, [projects]);
@@ -69,6 +70,26 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
+    const deleteProject = async (id: string) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            await ProjectService.removeProject(id);
+            setProjects((prev) => prev.filter((project) => project.id !== id));
+            if (currentProject === id) {
+                setCurrentProject("");
+                localStorage.removeItem(STORAGE_KEY);
+            }
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to delete project");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const toggleProject = (id: string) => {
         setCurrentProject(id);
         localStorage.setItem(STORAGE_KEY, id);
@@ -80,6 +101,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         toggleProject,
         addProject,
         updateProject,
+        deleteProject,
         loading,
         success,
         error,

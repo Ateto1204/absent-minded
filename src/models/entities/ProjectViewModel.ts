@@ -9,6 +9,7 @@ interface ProjectViewModel {
     toggleProject: (id: string) => void;
     addProject: (project: Project) => void;
     updateProject: (updated: Project) => void;
+    deleteProject: (id: string) => void;
 }
 
 export default ProjectViewModel;
