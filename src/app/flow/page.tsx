@@ -1,14 +1,13 @@
 "use client";
 
 import { ReactFlowProvider } from "@xyflow/react";
-import Flow from "@/components/Flow";
 import { NodeSelectionProvider } from "@/context/NodeSelectionContext";
 import { TaskProvider } from "@/context/TaskContext";
 import { ProjectProvider } from "@/context/ProjectContext";
-import ProjectMenu from "@/components/ProjectMenu";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
+import FlowView from "@/components/views/FlowView";
 
 export default function Home() {
     const [mounted, setMounted] = useState(false);
@@ -29,14 +28,7 @@ export default function Home() {
             <TaskProvider>
                 <NodeSelectionProvider>
                     <ReactFlowProvider>
-                        {mounted && (
-                            <main className="w-screen h-screen flex">
-                                <ProjectMenu />
-                                <div className="flex-1 p-6">
-                                    <Flow />
-                                </div>
-                            </main>
-                        )}
+                        {mounted && <FlowView />}
                     </ReactFlowProvider>
                 </NodeSelectionProvider>
             </TaskProvider>
