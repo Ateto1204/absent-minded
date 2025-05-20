@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ProjectDialog from "@/components/ProjectDialog";
+import ProjectDialog from "./dialogs/ProjectDialog";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Button, Flex } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
@@ -34,6 +34,7 @@ function ProjectMenu() {
             id,
             name: `Project ${projects.length + 1}`,
             user: userEmail,
+            rootTask: "",
         });
     };
 
@@ -75,14 +76,16 @@ function ProjectMenu() {
                     <div>{userName}</div>
                     <div>{userEmail}</div>
                 </div>
-                <Button
-                    size="1"
-                    color="gray"
-                    variant="soft"
-                    onClick={handleSignout}
-                >
-                    Sign out
-                </Button>
+                {userEmail !== "" && (
+                    <Button
+                        size="1"
+                        color="gray"
+                        variant="soft"
+                        onClick={handleSignout}
+                    >
+                        Sign out
+                    </Button>
+                )}
             </Flex>
         </div>
     );

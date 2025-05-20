@@ -16,8 +16,8 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import TaskNode from "@/components/TaskNode";
-import PlaceholderNodeDemo from "@/components/PlaceholderNodeDemo";
+import TaskNode from "./nodes/TaskNode";
+import PlaceholderNodeDemo from "./nodes/PlaceholderNodeDemo";
 import getLayoutedElements from "@/utils/getLayoutedElements";
 import { useTaskContext } from "@/context/TaskContext";
 import {
