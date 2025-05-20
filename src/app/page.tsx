@@ -18,16 +18,7 @@ export default function Home() {
             const { data } = await supabase.auth.getSession();
             const hash = window.location.hash;
             const match = hash.match(/access_token=([^&]*)/);
-            if (data.session) {
-                console.log(
-                    "🔐 Token from session:",
-                    data.session.access_token
-                );
-            } else if (match) {
-                console.log("🔐 Token from hash:", match[1]);
-            } else {
-                router.push("/login");
-            }
+            if (!data.session && !match) router.push("/login");
         };
         getToken();
         setMounted(true);
