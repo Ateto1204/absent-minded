@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { supabase } from "@/app/lib/supabase";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
@@ -25,7 +27,7 @@ export default function LoginPage() {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: `${location.origin}/flow`,
+                redirectTo: `${BASE_URL}/flow`,
             },
         });
 
