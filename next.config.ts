@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
     output: "export",
     basePath: "/absent-minded",
     images: {
+        unoptimized: true,
         remotePatterns: [
             {
                 protocol: "https",
@@ -11,6 +12,7 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+    devIndicators: false,
 };
 
 export default nextConfig;

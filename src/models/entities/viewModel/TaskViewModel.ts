@@ -1,5 +1,5 @@
-import Task from "./Task";
-import TaskData from "./TaskData";
+import Task from "@/models/entities/task/Task";
+import TaskData from "@/models/entities/task/TaskData";
 
 interface TaskViewModel {
     tasks: Task[];
