@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import DeleteTaskDialog from "./DeleteTaskDialog";
+import TaskData from "@/models/entities/task/TaskData";
 
 const TaskDialog = ({
     id,
@@ -16,18 +17,21 @@ const TaskDialog = ({
     handleDelete,
 }: {
     id: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
+    data: TaskData;
     handleDelete: () => void;
 }) => {
     const { updateTaskData, loading } = useTaskContext();
     const [label, setLabel] = useState(data.label || "");
     const [description, setDescription] = useState(data.description || "");
+    const [deadline, setDeadline] = useState(
+        data.deadline ? new Date(data.deadline).toISOString().slice(0, 10) : ""
+    );
 
     const handleSave = () => {
         const taskData = {
             label,
             description,
+            deadline: deadline ? new Date(deadline) : null,
         };
         updateTaskData(id, taskData);
     };
@@ -51,6 +55,15 @@ const TaskDialog = ({
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     placeholder="task title"
+                />
+            </Flex>
+            <Flex className="my-4" gapX="2">
+                <Text className="relative pt-1 text-sm">deadline :</Text>
+                <input
+                    type="date"
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
+                    className="border px-2 py-1 rounded"
                 />
             </Flex>
             <TextArea

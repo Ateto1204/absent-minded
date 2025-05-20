@@ -9,7 +9,11 @@ interface NodeTask extends Task {
 export function tasksToNodes(tasks: NodeTask[]): Node[] {
     return tasks.map((task) => ({
         id: task.id,
-        data: { label: task.data.label, description: task.data.description },
+        data: {
+            label: task.data.label,
+            description: task.data.description,
+            deadline: task.data.deadline,
+        },
         type: task.type,
         position: { x: 0, y: 0 },
     }));
@@ -34,7 +38,7 @@ export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
         return [
             {
                 id: "root",
-                data: { label: "root", description: "" },
+                data: { label: "root", description: "", deadline: null },
                 parent: "",
                 project,
                 type: "placeholder",
@@ -51,7 +55,7 @@ export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
     for (const task of tasks) {
         nodeTasks.push({
             id: uuidv4(),
-            data: { label: "new task", description: "" },
+            data: { label: "new task", description: "", deadline: null },
             parent: task.id,
             project,
             type: "placeholder",

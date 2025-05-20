@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import { Handle, Position, useConnection } from "@xyflow/react";
-import { Dialog, HoverCard, Text } from "@radix-ui/themes";
+import { Dialog, Flex, HoverCard, Text } from "@radix-ui/themes";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskDialog from "@/components/dialogs/TaskDialog";
 import DeleteTaskDialog from "@/components/dialogs/DeleteTaskDialog";
+import TaskData from "@/models/entities/task/TaskData";
 
 const DeleteTaskTriggerButton = ({ id }: { id: string }) => {
     const { deleteTask, loading } = useTaskContext();
@@ -23,8 +24,7 @@ const DeleteTaskTriggerButton = ({ id }: { id: string }) => {
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function TaskNode({ id, data }: any) {
+function TaskNode({ id, data }: { id: string; data: TaskData }) {
     const connection = useConnection();
     const isTarget = connection.inProgress && connection.fromNode.id !== id;
     const { deleteTask, loading } = useTaskContext();
@@ -66,9 +66,25 @@ function TaskNode({ id, data }: any) {
                             </div>
                         </Dialog.Trigger>
                     </HoverCard.Trigger>
-                    {data.description !== "" && (
+                    {(data.description !== "" || data.deadline) && (
                         <HoverCard.Content>
-                            <Text>{data.description}</Text>
+                            <Flex direction="column" gapY="1">
+                                <Text>
+                                    End at:{" "}
+                                    {data.deadline &&
+                                        new Date(
+                                            data.deadline
+                                        ).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                        })}
+                                </Text>
+                                <Text>
+                                    {data.description !== "" &&
+                                        `Note: ${data.description}`}
+                                </Text>
+                            </Flex>
                         </HoverCard.Content>
                     )}
                 </HoverCard.Root>
