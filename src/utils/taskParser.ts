@@ -15,9 +15,9 @@ export function tasksToNodes(tasks: NodeTask[]): Node[] {
     }));
 }
 
-export function tasksToEdges(tasks: NodeTask[]): Edge[] {
+export function tasksToEdges(tasks: NodeTask[], root: string): Edge[] {
     return tasks
-        .filter((task) => task.id !== "root")
+        .filter((task) => task.id !== "root" && task.id !== root)
         .map((task) => ({
             id: `e-${task.parent}-${task.id}`,
             source: task.parent,
@@ -29,13 +29,14 @@ export function tasksToEdges(tasks: NodeTask[]): Edge[] {
         }));
 }
 
-export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
+export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
     if (tasks.length === 0) {
         return [
             {
                 id: "root",
                 data: { label: "root", description: "" },
                 parent: "",
+                project,
                 type: "placeholder",
             },
         ];
@@ -52,6 +53,7 @@ export function tasksToNodeTasks(tasks: Task[]): NodeTask[] {
             id: uuidv4(),
             data: { label: "new task", description: "" },
             parent: task.id,
+            project,
             type: "placeholder",
         });
     }

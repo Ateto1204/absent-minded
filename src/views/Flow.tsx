@@ -25,6 +25,8 @@ import {
     tasksToNodes,
     tasksToNodeTasks,
 } from "@/utils/taskParser";
+import { useProjectContext } from "@/context/ProjectContext";
+import { Flex } from "@radix-ui/themes";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
@@ -34,6 +36,7 @@ export default function Flow() {
     const { fitView } = useReactFlow();
     const { tasks, loading, success, error, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
+    const { currentProject, currentRoot } = useProjectContext();
 
     useEffect(() => {
         fitView({ duration: 500, padding: 1 });
@@ -82,7 +85,6 @@ export default function Flow() {
                         !deletedIds.has(e.source) && !deletedIds.has(e.target)
                 )
             );
-
             deleted.forEach((node) => {
                 if (node.type === "task") {
                     deleteTask(node.id);
@@ -93,10 +95,10 @@ export default function Flow() {
     );
 
     useEffect(() => {
-        if (!mounted && loading) return;
-        const nodeTasks = tasksToNodeTasks(tasks);
+        if ((!mounted && loading) || !currentProject) return;
+        const nodeTasks = tasksToNodeTasks(tasks, currentProject);
         const initNodes = tasksToNodes(nodeTasks);
-        const initEdges = tasksToEdges(nodeTasks);
+        const initEdges = tasksToEdges(nodeTasks, currentRoot);
         const { layoutedNodes, layoutedEdges } = getLayoutedElements(
             initNodes,
             initEdges
@@ -104,26 +106,52 @@ export default function Flow() {
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
         if (!mounted) setMounted(true);
-    }, [nodes.length, setNodes, setEdges, loading, tasks, mounted, success]);
+    }, [
+        nodes.length,
+        setNodes,
+        setEdges,
+        loading,
+        tasks,
+        mounted,
+        success,
+        currentProject,
+        currentRoot,
+    ]);
 
     return (
         <div className="w-full h-full border rounded-md border-white relative">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={handleNodesChange}
-                onEdgesChange={handleEdgesChange}
-                nodeTypes={nodeTypes}
-                onNodeContextMenu={onNodeContextMenu}
-                onNodesDelete={onNodesDelete}
-                fitView
-            >
-                <Background />
-            </ReactFlow>
+            {currentProject ? (
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={handleNodesChange}
+                    onEdgesChange={handleEdgesChange}
+                    nodeTypes={nodeTypes}
+                    onNodeContextMenu={onNodeContextMenu}
+                    onNodesDelete={onNodesDelete}
+                    fitView
+                >
+                    <Background />
+                </ReactFlow>
+            ) : (
+                <Flex
+                    direction="column"
+                    align="center"
+                    justify="center"
+                    className="h-full text-gray-500"
+                >
+                    <p className="text-xl font-semibold mb-2">
+                        No project selected
+                    </p>
+                    <p className="text-sm">
+                        Please choose or create a project from the sidebar.
+                    </p>
+                </Flex>
+            )}
 
             <div className="absolute bottom-2 right-2 text-sm bg-white bg-opacity-80 p-2 rounded shadow text-black">
                 {loading && <p>Loading</p>}
-                {success && !loading && <p>saved</p>}
+                {success && !loading && <p>done</p>}
                 {error && !loading && <p>failed</p>}
             </div>
         </div>

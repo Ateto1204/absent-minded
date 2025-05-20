@@ -7,9 +7,9 @@ import { createContext, useContext, ReactNode } from "react";
 const TaskContext = createContext<TaskViewModel | undefined>(undefined);
 
 export function TaskProvider({ children }: { children: ReactNode }) {
-    const documentViewModel = useTaskViewModel();
+    const taskViewModel = useTaskViewModel();
     return (
-        <TaskContext.Provider value={documentViewModel}>
+        <TaskContext.Provider value={taskViewModel}>
             {children}
         </TaskContext.Provider>
     );
