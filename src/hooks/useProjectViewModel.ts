@@ -2,13 +2,14 @@ import { supabase } from "@/app/lib/supabase";
 import Project from "@/models/entities/Project";
 import ProjectViewModel from "@/models/entities/ProjectViewModel";
 import ProjectService from "@/models/services/ProjectService";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "current-project-id";
 
 const useProjectViewModel = (): ProjectViewModel => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [currentProject, setCurrentProject] = useState("");
+    const [currentRoot, setCurrentRoot] = useState("");
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -39,10 +40,12 @@ const useProjectViewModel = (): ProjectViewModel => {
         const initProject = projects.find((p) => p.id === storedProjectId);
         if (initProject) {
             setCurrentProject(initProject.id);
+            setCurrentRoot(initProject.rootTask);
             return;
         }
         if (projects[0]) {
             setCurrentProject(projects[0].id);
+            setCurrentRoot(projects[0].rootTask);
         }
     }, [projects, currentProject]);
 
@@ -111,13 +114,30 @@ const useProjectViewModel = (): ProjectViewModel => {
         localStorage.setItem(STORAGE_KEY, id);
     };
 
+    const setupRootTask = useCallback(
+        (id: string) => {
+            const project = projects.find((p) => p.id === currentProject);
+            if (project) {
+                const updated: Project = { ...project, rootTask: id };
+                setProjects((prev) =>
+                    prev.map((p) => (p.id === currentProject ? updated : p))
+                );
+                setCurrentRoot(id);
+                ProjectService.updateProject(updated);
+            }
+        },
+        [currentProject, projects]
+    );
+
     return {
         projects,
         currentProject,
+        currentRoot,
         toggleProject,
         addProject,
         updateProjectName,
         deleteProject,
+        setupRootTask,
         loading,
         success,
         error,
