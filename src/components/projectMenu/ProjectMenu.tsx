@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import ProjectDialog from "./dialogs/ProjectDialog";
+import ProjectDialog from "@/components/dialogs/ProjectDialog";
 import { useProjectContext } from "@/context/ProjectContext";
-import { Button, Flex } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/app/lib/supabase";
+import UserConsole from "./UserConsole";
 
 function ProjectMenu() {
     const { projects, addProject, toggleProject, currentProject } =
@@ -39,7 +39,7 @@ function ProjectMenu() {
         const id = uuidv4();
         addProject({
             id,
-            name: `Project ${projects.length + 1}`,
+            name: "new project",
             user: userEmail,
             rootTask: "",
         });
@@ -73,43 +73,12 @@ function ProjectMenu() {
                     />
                 ))}
             </ul>
-            <Flex
-                direction="column"
-                align="start"
-                justify="between"
-                className="absolute bottom-4 left-4 right-4 text-sm text-zinc-400 mb-2"
-            >
-                <Flex align="center" gap="3" className="mb-2">
-                    {userAvatar ? (
-                        <Image
-                            src={userAvatar}
-                            alt="avatar"
-                            width={32}
-                            height={32}
-                            className="rounded-full object-cover"
-                            loading="lazy"
-                        />
-                    ) : (
-                        <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-white text-xs font-bold">
-                            {userName ? userName[0].toUpperCase() : "?"}
-                        </div>
-                    )}
-                    <div>
-                        <div>{userName}</div>
-                        <div>{userEmail}</div>
-                    </div>
-                </Flex>
-                {userEmail !== "" && (
-                    <Button
-                        size="1"
-                        color="gray"
-                        variant="soft"
-                        onClick={handleSignout}
-                    >
-                        Sign out
-                    </Button>
-                )}
-            </Flex>
+            <UserConsole
+                avatar={userAvatar}
+                name={userName}
+                email={userEmail}
+                handleSignout={handleSignout}
+            />
         </div>
     );
 }

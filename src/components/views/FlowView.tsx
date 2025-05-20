@@ -1,5 +1,5 @@
-import Flow from "@/components/Flow";
-import ProjectMenu from "@/components/ProjectMenu";
+import Flow from "@/components/flows/Flow";
+import ProjectMenu from "@/components/projectMenu/ProjectMenu";
 import { Flex } from "@radix-ui/themes";
 import { memo } from "react";
 
