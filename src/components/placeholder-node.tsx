@@ -23,7 +23,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const id = useNodeId();
         const { setNodes, setEdges } = useReactFlow();
         const { addTask, loading } = useTaskContext();
-        const { currentProject } = useProjectContext();
+        const { setupRootTask, currentProject } = useProjectContext();
 
         const createNode = (id: string, x: number, y: number) => {
             const newNode: Node = {
@@ -50,12 +50,17 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
 
         const handleClick = useCallback(() => {
             if (!id || loading) return;
+            const rootId = uuidv4();
             const newId1 = uuidv4();
             const newId2 = uuidv4();
             setNodes((nodes) => {
                 const node = nodes.find((node) => node.id === id);
                 const updatedNodes = nodes.map((node) => {
                     if (node.id === id) {
+                        if (id === "root") {
+                            setupRootTask(rootId);
+                            return { ...node, id: rootId, type: "task" };
+                        }
                         return {
                             ...node,
                             type: "task",
@@ -81,8 +86,11 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     return edge;
                 });
                 const task: Task = {
-                    id: id,
-                    data: { label: "new task", description: "" },
+                    id: id === "root" ? rootId : id,
+                    data: {
+                        label: id === "root" ? "root" : "new task",
+                        description: "",
+                    },
                     parent: source,
                     project: currentProject,
                 };
@@ -92,7 +100,15 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [id, setEdges, setNodes, addTask, loading, currentProject]);
+        }, [
+            id,
+            setEdges,
+            setNodes,
+            addTask,
+            loading,
+            currentProject,
+            setupRootTask,
+        ]);
 
         return (
             <BaseNode

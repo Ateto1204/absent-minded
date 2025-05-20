@@ -36,7 +36,7 @@ export default function Flow() {
     const { fitView } = useReactFlow();
     const { tasks, loading, success, error, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
-    const { currentProject } = useProjectContext();
+    const { currentProject, currentRoot } = useProjectContext();
 
     useEffect(() => {
         fitView({ duration: 500, padding: 1 });
@@ -85,7 +85,6 @@ export default function Flow() {
                         !deletedIds.has(e.source) && !deletedIds.has(e.target)
                 )
             );
-
             deleted.forEach((node) => {
                 if (node.type === "task") {
                     deleteTask(node.id);
@@ -96,10 +95,10 @@ export default function Flow() {
     );
 
     useEffect(() => {
-        if (!mounted && loading) return;
+        if ((!mounted && loading) || !currentProject) return;
         const nodeTasks = tasksToNodeTasks(tasks, currentProject);
         const initNodes = tasksToNodes(nodeTasks);
-        const initEdges = tasksToEdges(nodeTasks);
+        const initEdges = tasksToEdges(nodeTasks, currentRoot);
         const { layoutedNodes, layoutedEdges } = getLayoutedElements(
             initNodes,
             initEdges
@@ -116,6 +115,7 @@ export default function Flow() {
         mounted,
         success,
         currentProject,
+        currentRoot,
     ]);
 
     return (

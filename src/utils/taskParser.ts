@@ -15,9 +15,9 @@ export function tasksToNodes(tasks: NodeTask[]): Node[] {
     }));
 }
 
-export function tasksToEdges(tasks: NodeTask[]): Edge[] {
+export function tasksToEdges(tasks: NodeTask[], root: string): Edge[] {
     return tasks
-        .filter((task) => task.id !== "root")
+        .filter((task) => task.id !== "root" && task.id !== root)
         .map((task) => ({
             id: `e-${task.parent}-${task.id}`,
             source: task.parent,
