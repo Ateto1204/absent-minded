@@ -10,7 +10,7 @@ const useTaskViewModel = (): TaskViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { currentProject } = useProjectContext();
+    const { currentProject, currentRoot, setupRootTask } = useProjectContext();
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -65,17 +65,18 @@ const useTaskViewModel = (): TaskViewModel => {
                 return descendants;
             };
             const descendantIds =
-                taskId === "root"
-                    ? tasks.forEach((t) => t.id) ?? []
+                taskId === currentRoot
+                    ? tasks.map((t) => t.id)
                     : findAllDescendants(taskId, []);
             await TaskService.removeTasks(descendantIds);
             setTasks((prevTasks) =>
-                taskId === "root"
+                taskId === currentRoot
                     ? []
                     : prevTasks.filter(
                           (task) => !descendantIds.includes(task.id)
                       )
             );
+            setupRootTask("");
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {

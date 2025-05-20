@@ -13,7 +13,8 @@ function ProjectDialog({
     isActive: boolean;
     toggleProject: () => void;
 }) {
-    const { updateProjectName, deleteProject, loading } = useProjectContext();
+    const { updateProjectName, deleteProject, currentRoot, loading } =
+        useProjectContext();
     const { deleteTask } = useTaskContext();
     const [name, setName] = useState(project.name);
     const handleSave = () => {
@@ -22,7 +23,7 @@ function ProjectDialog({
 
     const handleDelete = () => {
         deleteProject(project.id);
-        deleteTask("root");
+        deleteTask(currentRoot);
     };
 
     return (
