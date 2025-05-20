@@ -1,5 +1,5 @@
 import { Avatar, Card, Flex, Text } from "@radix-ui/themes";
-import SignoutDialog from "./SignoutDialog";
+import SignOutDialog from "./SignOutDialog";
 
 const UserConsole = ({
     avatar,
@@ -28,7 +28,7 @@ const UserConsole = ({
                     </Flex>
                 </Flex>
             </Card>
-            {email !== "" && <SignoutDialog handleSignout={handleSignout} />}
+            <SignOutDialog handleSignout={handleSignout} />
         </Flex>
     );
 };

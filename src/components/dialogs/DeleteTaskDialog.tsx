@@ -1,48 +1,37 @@
-import { Dialog, Button, Flex, Text } from "@radix-ui/themes";
 import { useTaskContext } from "@/context/TaskContext";
+import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 
-const DeleteTaskDialog = ({
-    id,
-    handleDelete,
-}: {
-    id: string;
-    handleDelete: () => void;
-}) => {
-    const { loading } = useTaskContext();
+const DeleteTaskDialog = ({ id }: { id: string }) => {
+    const { deleteTask, loading } = useTaskContext();
 
     return (
-        <Dialog.Content>
-            <Flex justify="between" align="center">
-                <Dialog.Title className="text-lg font-semibold">
-                    Confirm Delete
-                </Dialog.Title>
-                <Dialog.Close>
-                    <Text className="relative bottom-3 cursor-pointer">x</Text>
-                </Dialog.Close>
-            </Flex>
-            <Dialog.Description>
+        <AlertDialog.Content>
+            <AlertDialog.Title className="text-lg font-semibold">
+                Confirm Delete
+            </AlertDialog.Title>
+            <AlertDialog.Description>
                 <Text size="2">
                     Are you sure you want to delete task ID: {id}?
                 </Text>
-            </Dialog.Description>
+            </AlertDialog.Description>
             <div className="mt-6">
                 <Flex gapX="2">
-                    <Dialog.Close>
+                    <AlertDialog.Action>
                         <Button
                             color="red"
                             variant="solid"
-                            onClick={handleDelete}
+                            onClick={() => deleteTask(id)}
                             loading={loading}
                         >
                             Yes, Delete
                         </Button>
-                    </Dialog.Close>
-                    <Dialog.Close>
+                    </AlertDialog.Action>
+                    <AlertDialog.Cancel>
                         <Button variant="soft">Cancel</Button>
-                    </Dialog.Close>
+                    </AlertDialog.Cancel>
                 </Flex>
             </div>
-        </Dialog.Content>
+        </AlertDialog.Content>
     );
 };
 
