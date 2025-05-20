@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import ProjectDialog from "./dialogs/ProjectDialog";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Button, Flex } from "@radix-ui/themes";
@@ -14,6 +15,7 @@ function ProjectMenu() {
 
     const [userEmail, setUserEmail] = useState("");
     const [userName, setUserName] = useState("");
+    const [userAvatar, setUserAvatar] = useState("");
 
     const router = useRouter();
 
@@ -23,6 +25,11 @@ function ProjectMenu() {
             if (data?.user) {
                 setUserEmail(data.user.email ?? "");
                 setUserName(data.user.user_metadata.full_name ?? "");
+                const avatar =
+                    data.user.user_metadata.avatar_url ??
+                    data.user.user_metadata.picture ??
+                    "";
+                setUserAvatar(avatar);
             }
         };
         getUserInfo();
@@ -72,10 +79,26 @@ function ProjectMenu() {
                 justify="between"
                 className="absolute bottom-4 left-4 right-4 text-sm text-zinc-400 mb-2"
             >
-                <div className="mb-2">
-                    <div>{userName}</div>
-                    <div>{userEmail}</div>
-                </div>
+                <Flex align="center" gap="3" className="mb-2">
+                    {userAvatar ? (
+                        <Image
+                            src={userAvatar}
+                            alt="avatar"
+                            width={32}
+                            height={32}
+                            className="rounded-full object-cover"
+                            loading="lazy"
+                        />
+                    ) : (
+                        <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-white text-xs font-bold">
+                            {userName ? userName[0].toUpperCase() : "?"}
+                        </div>
+                    )}
+                    <div>
+                        <div>{userName}</div>
+                        <div>{userEmail}</div>
+                    </div>
+                </Flex>
                 {userEmail !== "" && (
                     <Button
                         size="1"
