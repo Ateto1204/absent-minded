@@ -30,6 +30,7 @@ const useProjectViewModel = (): ProjectViewModel => {
             const all = await ProjectService.getProjects(email);
             setProjects(all);
             setLoading(false);
+            setSuccess(true);
         };
         loadProjects();
     }, [projects, email]);
