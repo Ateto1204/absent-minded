@@ -1,45 +1,43 @@
 "use client";
 
-import { ReactFlowProvider } from "@xyflow/react";
-import Flow from "@/views/Flow";
-import { NodeSelectionProvider } from "@/context/NodeSelectionContext";
-import { TaskProvider } from "@/context/TaskContext";
-import { ProjectProvider } from "@/context/ProjectContext";
-import ProjectMenu from "@/views/ProjectMenu";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "./lib/supabase";
+import { Button, Flex } from "@radix-ui/themes";
+import { useState } from "react";
 
-export default function Home() {
-    const [mounted, setMounted] = useState(false);
+export default function HomePage() {
     const router = useRouter();
-    useEffect(() => {
-        const getToken = async () => {
-            const { data } = await supabase.auth.getSession();
-            const hash = window.location.hash;
-            const match = hash.match(/access_token=([^&]*)/);
-            if (!data.session && !match) router.push("/login");
-        };
-        getToken();
-        setMounted(true);
-    }, [router]);
+    const [language, setLanguage] = useState<"en" | "zh">("en");
+    const toggleLanguage = () =>
+        setLanguage((prev) => (prev === "en" ? "zh" : "en"));
 
     return (
-        <ProjectProvider>
-            <TaskProvider>
-                <NodeSelectionProvider>
-                    <ReactFlowProvider>
-                        {mounted && (
-                            <main className="w-screen h-screen flex">
-                                <ProjectMenu />
-                                <div className="flex-1 p-6">
-                                    <Flow />
-                                </div>
-                            </main>
-                        )}
-                    </ReactFlowProvider>
-                </NodeSelectionProvider>
-            </TaskProvider>
-        </ProjectProvider>
+        <main className="relative flex flex-col items-center justify-center min-h-screen bg-zinc-950 text-white px-4">
+            <div className="absolute top-4 right-4">
+                <Button
+                    onClick={toggleLanguage}
+                    className="text-white bg-gray-700 hover:bg-gray-600"
+                    size="1"
+                >
+                    {language === "en" ? "中文" : "Eng"}
+                </Button>
+            </div>
+            <h1 className="text-5xl font-bold mb-4">
+                {language === "en" ? "Absent Minded" : "Absent Minded"}
+            </h1>
+            <Flex
+                align="center"
+                className="text-lg text-zinc-400 max-w-2xl text-center mb-8 min-h-20"
+            >
+                {language === "en"
+                    ? "The mind-mapping powered to-do list. Break down your tasks into manageable pieces using structured, visual thinking. Stay focused. Stay clear."
+                    : "一款透過心智圖方式拆解任務的待辦系統，幫助你理清思緒、聚焦重點、化繁為簡。"}
+            </Flex>
+            <Button
+                onClick={() => router.push("/login")}
+                className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+            >
+                {language === "en" ? "Get Started" : "開 始"}
+            </Button>
+        </main>
     );
 }

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ProjectDialog from "@/components/ProjectDialog";
+import ProjectDialog from "@/components/dialogs/ProjectDialog";
 import { useProjectContext } from "@/context/ProjectContext";
-import { Button, Flex } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/app/lib/supabase";
+import UserConsole from "./UserConsole";
 
 function ProjectMenu() {
     const { projects, addProject, toggleProject, currentProject } =
@@ -14,6 +15,7 @@ function ProjectMenu() {
 
     const [userEmail, setUserEmail] = useState("");
     const [userName, setUserName] = useState("");
+    const [userAvatar, setUserAvatar] = useState("");
 
     const router = useRouter();
 
@@ -23,6 +25,11 @@ function ProjectMenu() {
             if (data?.user) {
                 setUserEmail(data.user.email ?? "");
                 setUserName(data.user.user_metadata.full_name ?? "");
+                const avatar =
+                    data.user.user_metadata.avatar_url ??
+                    data.user.user_metadata.picture ??
+                    "";
+                setUserAvatar(avatar);
             }
         };
         getUserInfo();
@@ -32,8 +39,9 @@ function ProjectMenu() {
         const id = uuidv4();
         addProject({
             id,
-            name: `Project ${projects.length + 1}`,
+            name: "new project",
             user: userEmail,
+            rootTask: "",
         });
     };
 
@@ -65,25 +73,12 @@ function ProjectMenu() {
                     />
                 ))}
             </ul>
-            <Flex
-                direction="column"
-                align="start"
-                justify="between"
-                className="absolute bottom-4 left-4 right-4 text-sm text-zinc-400 mb-2"
-            >
-                <div className="mb-2">
-                    <div>{userName}</div>
-                    <div>{userEmail}</div>
-                </div>
-                <Button
-                    size="1"
-                    color="gray"
-                    variant="soft"
-                    onClick={handleSignout}
-                >
-                    Sign out
-                </Button>
-            </Flex>
+            <UserConsole
+                avatar={userAvatar}
+                name={userName}
+                email={userEmail}
+                handleSignout={handleSignout}
+            />
         </div>
     );
 }

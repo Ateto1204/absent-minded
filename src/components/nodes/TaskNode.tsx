@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import { Handle, Position, useConnection } from "@xyflow/react";
 import { Dialog, HoverCard, Text } from "@radix-ui/themes";
 import { useTaskContext } from "@/context/TaskContext";
-import TaskDialog from "./TaskDialog";
-import DeleteTaskDialog from "./DeleteTaskDialog";
+import TaskDialog from "@/components/dialogs/TaskDialog";
+import DeleteTaskDialog from "@/components/dialogs/DeleteTaskDialog";
 
 const DeleteTaskTriggerButton = ({ id }: { id: string }) => {
     const { deleteTask, loading } = useTaskContext();

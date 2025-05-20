@@ -16,8 +16,8 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import TaskNode from "@/components/TaskNode";
-import PlaceholderNodeDemo from "@/components/PlaceholderNodeDemo";
+import TaskNode from "../nodes/TaskNode";
+import PlaceholderNodeDemo from "../nodes/PlaceholderNodeDemo";
 import getLayoutedElements from "@/utils/getLayoutedElements";
 import { useTaskContext } from "@/context/TaskContext";
 import {
@@ -27,6 +27,7 @@ import {
 } from "@/utils/taskParser";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Flex } from "@radix-ui/themes";
+import StateBar from "./StateBar";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
@@ -34,7 +35,7 @@ export default function Flow() {
     const [nodes, setNodes] = useNodesState<Node>([]);
     const [edges, setEdges] = useEdgesState<Edge>([]);
     const { fitView } = useReactFlow();
-    const { tasks, loading, success, error, deleteTask } = useTaskContext();
+    const { tasks, loading, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
     const { currentProject, currentRoot } = useProjectContext();
 
@@ -113,7 +114,6 @@ export default function Flow() {
         loading,
         tasks,
         mounted,
-        success,
         currentProject,
         currentRoot,
     ]);
@@ -148,12 +148,7 @@ export default function Flow() {
                     </p>
                 </Flex>
             )}
-
-            <div className="absolute bottom-2 right-2 text-sm bg-white bg-opacity-80 p-2 rounded shadow text-black">
-                {loading && <p>Loading</p>}
-                {success && !loading && <p>done</p>}
-                {error && !loading && <p>failed</p>}
-            </div>
+            <StateBar />
         </div>
     );
 }
