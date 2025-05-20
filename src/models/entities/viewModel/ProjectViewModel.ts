@@ -1,4 +1,4 @@
-import Project from "./Project";
+import Project from "@/models/entities/project/Project";
 
 interface ProjectViewModel {
     projects: Project[];

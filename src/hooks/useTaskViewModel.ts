@@ -1,8 +1,8 @@
 import TaskService from "@/models/services/TaskService";
-import Task from "@/models/entities/Task";
-import TaskViewModel from "@/models/entities/TaskViewModel";
+import Task from "@/models/entities/task/Task";
+import TaskViewModel from "@/models/entities/viewModel/TaskViewModel";
 import { useEffect, useState } from "react";
-import TaskData from "@/models/entities/TaskData";
+import TaskData from "@/models/entities/task/TaskData";
 import { useProjectContext } from "@/context/ProjectContext";
 
 const useTaskViewModel = (): TaskViewModel => {
