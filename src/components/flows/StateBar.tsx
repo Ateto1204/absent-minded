@@ -2,6 +2,8 @@ import { Flex, Spinner, Text } from "@radix-ui/themes";
 import { useProjectContext } from "@/context/ProjectContext";
 import { useTaskContext } from "@/context/TaskContext";
 import React, { useEffect, useState } from "react";
+import { MdOutlineFileDownloadDone } from "react-icons/md";
+import { MdErrorOutline } from "react-icons/md";
 
 const StateBar = () => {
     const {
@@ -45,7 +47,19 @@ const StateBar = () => {
                     isError ? "bg-red-300" : "bg-white"
                 }`}
             >
-                done
+                <Flex gapX="1">
+                    {isSuccess ? (
+                        <>
+                            <MdOutlineFileDownloadDone className="relative top-0.5" />
+                            <Text>done</Text>
+                        </>
+                    ) : (
+                        <>
+                            <MdErrorOutline className="relative top-0.5" />
+                            <Text>failed</Text>
+                        </>
+                    )}
+                </Flex>
             </Text>
         )
     );
