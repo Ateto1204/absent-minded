@@ -1,5 +1,5 @@
 import { Avatar, Card, Flex, Text } from "@radix-ui/themes";
-import SignOutDialog from "./SignOutDialog";
+import SignOutDialog from "@/components/dialogs/SignOutDialog";
 
 const UserConsole = ({
     avatar,
