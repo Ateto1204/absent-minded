@@ -5,6 +5,7 @@ interface Task {
     data: TaskData;
     parent: string;
     project: string;
+    status: "active" | "completed" | "deprecated";
 }
 
 export default Task;

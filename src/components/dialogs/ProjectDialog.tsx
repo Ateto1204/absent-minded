@@ -36,8 +36,8 @@ function ProjectDialog({
                 }`}
             >
                 <span>{project.name}</span>
-                <Dialog.Trigger>
-                    <Tooltip content="Edit project info">
+                <Tooltip content="Edit project info">
+                    <Dialog.Trigger>
                         <button
                             className={`ml-2 text-md px-2 py-0.5 rounded text-white font-bold ${
                                 isActive
@@ -47,8 +47,8 @@ function ProjectDialog({
                         >
                             ...
                         </button>
-                    </Tooltip>
-                </Dialog.Trigger>
+                    </Dialog.Trigger>
+                </Tooltip>
             </li>
             <Dialog.Content>
                 <Dialog.Title>

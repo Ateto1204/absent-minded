@@ -34,30 +34,33 @@ export function tasksToEdges(tasks: NodeTask[], root: string): Edge[] {
 }
 
 export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
-    if (tasks.length === 0) {
+    const avtiveTasks = tasks.filter((t) => t.status === "active");
+    if (avtiveTasks.length === 0) {
         return [
             {
                 id: "root",
                 data: { label: "root", description: "", deadline: null },
                 parent: "",
                 project,
+                status: "active",
                 type: "placeholder",
             },
         ];
     }
     const nodeTasks: NodeTask[] = [];
-    for (const task of tasks) {
+    for (const task of avtiveTasks) {
         nodeTasks.push({
             ...task,
             type: "task",
         });
     }
-    for (const task of tasks) {
+    for (const task of avtiveTasks) {
         nodeTasks.push({
             id: uuidv4(),
             data: { label: "new task", description: "", deadline: null },
             parent: task.id,
             project,
+            status: "active",
             type: "placeholder",
         });
     }

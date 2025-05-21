@@ -94,6 +94,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                         deadline: null,
                     },
                     parent: source,
+                    status: "active",
                     project: currentProject,
                 };
                 addTask(task);
