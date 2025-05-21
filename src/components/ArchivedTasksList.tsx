@@ -4,15 +4,23 @@ import TaskStatus from "@/models/entities/task/TaskStatus";
 import { Flex, Text } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 
-const CompletedTasksList = () => {
+const ArchivedTasksList = () => {
     const { tasks } = useTaskContext();
     const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+    const [deprecatedTasks, setDeprecatedTasks] = useState<Task[]>([]);
 
     useEffect(() => {
         const completed = tasks.filter(
             (t) => t.status === TaskStatus.Completed
         );
         setCompletedTasks(completed);
+    }, [tasks]);
+
+    useEffect(() => {
+        const deprecated = tasks.filter(
+            (t) => t.status === TaskStatus.Deprecated
+        );
+        setDeprecatedTasks(deprecated);
     }, [tasks]);
 
     return (
@@ -32,8 +40,29 @@ const CompletedTasksList = () => {
                     ))
                 ) : (
                     <Flex justify="center" align="center" className="h-full">
-                        <Text size="2" color="gray">
+                        <Text size="2" color="gray" className="select-none">
                             Nothing has done
+                        </Text>
+                    </Flex>
+                )}
+            </div>
+            <div className="px-4 py-3 border-b border-zinc-700 font-bold text-sm sticky top-0 bg-zinc-900">
+                Deprecated Tasks
+            </div>
+            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-2">
+                {deprecatedTasks.length > 0 ? (
+                    deprecatedTasks.map((t) => (
+                        <div
+                            key={t.id}
+                            className="p-2 bg-zinc-800 rounded text-xs border border-zinc-600 break-words"
+                        >
+                            {t.id}
+                        </div>
+                    ))
+                ) : (
+                    <Flex justify="center" align="center" className="h-full">
+                        <Text size="2" color="gray" className="select-none">
+                            Nothing be deprecated
                         </Text>
                     </Flex>
                 )}
@@ -42,4 +71,4 @@ const CompletedTasksList = () => {
     );
 };
 
-export default CompletedTasksList;
+export default ArchivedTasksList;

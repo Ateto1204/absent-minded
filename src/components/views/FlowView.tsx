@@ -2,7 +2,7 @@ import Flow from "@/components/flows/Flow";
 import ProjectMenu from "@/components/projectMenu/ProjectMenu";
 import { Flex } from "@radix-ui/themes";
 import { memo } from "react";
-import CompletedTasksList from "@/components/CompletedTasksList";
+import ArchivedTasksList from "@/components/ArchivedTasksList";
 
 const FlowView = () => {
     return (
@@ -12,7 +12,7 @@ const FlowView = () => {
                 <div className="flex-1 p-6">
                     <Flow />
                 </div>
-                <CompletedTasksList />
+                <ArchivedTasksList />
             </Flex>
         </main>
     );
