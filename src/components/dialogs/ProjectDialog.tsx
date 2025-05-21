@@ -7,6 +7,7 @@ import {
     Text,
     Flex,
     AlertDialog,
+    Tooltip,
 } from "@radix-ui/themes";
 
 import DeleteDialog from "./DeleteDialog";
@@ -31,14 +32,16 @@ function ProjectDialog({
             <li
                 onClick={toggleProject}
                 className={`truncate px-2 py-1 rounded cursor-pointer flex justify-between items-center hover:opacity-60 ${
-                    isActive && "bg-blue-500 text-white font-semibold"
+                    isActive && "bg-blue-500 text-white font-medium"
                 }`}
             >
                 <span>{project.name}</span>
                 <Dialog.Trigger>
-                    <button className="ml-2 text-md px-2 py-0.5 rounded text-white font-bold hover:bg-blue-700">
-                        ...
-                    </button>
+                    <Tooltip content="Edit project info">
+                        <button className="ml-2 text-md px-2 py-0.5 rounded text-white font-bold hover:bg-blue-700">
+                            ...
+                        </button>
+                    </Tooltip>
                 </Dialog.Trigger>
             </li>
             <Dialog.Content>

@@ -1,12 +1,14 @@
-import { Button, AlertDialog, Flex } from "@radix-ui/themes";
+import { Button, AlertDialog, Flex, Tooltip } from "@radix-ui/themes";
 
 const SignOutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
     return (
         <AlertDialog.Root>
             <AlertDialog.Trigger>
-                <Button size="1" color="gray" variant="soft">
-                    Sign out
-                </Button>
+                <Tooltip content="Sign out">
+                    <Button size="1" color="gray" variant="soft">
+                        Sign out
+                    </Button>
+                </Tooltip>
             </AlertDialog.Trigger>
             <AlertDialog.Content>
                 <AlertDialog.Title>Confirm Sign Out</AlertDialog.Title>
