@@ -6,15 +6,11 @@ import {
     TextArea,
     TextField,
     DataList,
-    AlertDialog,
-    Separator,
-    Select,
 } from "@radix-ui/themes";
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/entities/task/TaskData";
-import DeleteDialog from "./DeleteDialog";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatusUpdateButton from "@/components/buttons/TaskStatusUpdateButton";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const { updateTaskData, loading } = useTaskContext();
@@ -23,7 +19,6 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const [deadline, setDeadline] = useState(
         data.deadline ? new Date(data.deadline).toISOString().slice(0, 10) : ""
     );
-    const [taskStatus, setTaskStatus] = useState<string>(TaskStatus.Completed);
 
     const handleSave = () => {
         const taskData = {
@@ -88,34 +83,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                     </DataList.Item>
                 </DataList.Root>
                 <Flex justify="end" gapX="2" className="mt-8">
-                    <AlertDialog.Root>
-                        <Flex
-                            gapX="2"
-                            className="rounded bg-gray-700 px-2 cursor-pointer border border-gray-600"
-                            align="center"
-                        >
-                            <AlertDialog.Trigger className="hover:opacity-60">
-                                <Text size="1" className="w-16">
-                                    <Flex justify="center">{taskStatus}</Flex>
-                                </Text>
-                            </AlertDialog.Trigger>
-                            <Separator orientation="vertical" size="1" />
-                            <Select.Root size="1" onValueChange={setTaskStatus}>
-                                <Select.Trigger variant="ghost" color="gray">
-                                    <Text className="hover:opacity-60 p-0" />
-                                </Select.Trigger>
-                                <Select.Content>
-                                    <Select.Item value={TaskStatus.Completed}>
-                                        Completed
-                                    </Select.Item>
-                                    <Select.Item value={TaskStatus.Deprecated}>
-                                        Deprecated
-                                    </Select.Item>
-                                </Select.Content>
-                            </Select.Root>
-                        </Flex>
-                        <DeleteDialog id={id} type="task" />
-                    </AlertDialog.Root>
+                    <TaskStatusUpdateButton id={id} />
                     <Button
                         color="blue"
                         variant="solid"

@@ -124,6 +124,7 @@ const useTaskViewModel = (): TaskViewModel => {
             const updated = tasks.map((task) =>
                 task.id === taskId ? { ...task, status } : task
             );
+            setTasks(updated);
             const taskToUpdate = updated.find((t) => t.id === taskId);
             if (taskToUpdate) {
                 await TaskService.updateTask(taskToUpdate);
