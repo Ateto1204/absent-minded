@@ -2,7 +2,7 @@ import Flow from "@/components/flows/Flow";
 import ProjectMenu from "@/components/projectMenu/ProjectMenu";
 import { Flex } from "@radix-ui/themes";
 import { memo } from "react";
-import ArchivedTasksList from "@/components/ArchivedTasksList";
+import ArchivedTasksList from "@/components/archived/ArchivedTasksList";
 
 const FlowView = () => {
     return (
