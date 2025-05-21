@@ -14,6 +14,7 @@ import { useTaskContext } from "@/context/TaskContext";
 import Task from "@/models/entities/task/Task";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Tooltip } from "@radix-ui/themes";
+import TaskStatus from "@/models/entities/task/TaskStatus";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;
@@ -94,7 +95,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                         deadline: null,
                     },
                     parent: source,
-                    status: "active",
+                    status: TaskStatus.Active,
                     project: currentProject,
                 };
                 addTask(task);

@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/entities/task/TaskData";
 import DeleteDialog from "./DeleteDialog";
+import TaskStatus from "@/models/entities/task/TaskStatus";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const { updateTaskData, loading } = useTaskContext();
@@ -22,7 +23,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const [deadline, setDeadline] = useState(
         data.deadline ? new Date(data.deadline).toISOString().slice(0, 10) : ""
     );
-    const [taskStatus, setTaskStatus] = useState("Completed");
+    const [taskStatus, setTaskStatus] = useState<string>(TaskStatus.Completed);
 
     const handleSave = () => {
         const taskData = {
@@ -104,10 +105,10 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                     <Text className="hover:opacity-60 p-0" />
                                 </Select.Trigger>
                                 <Select.Content>
-                                    <Select.Item value="completed">
+                                    <Select.Item value={TaskStatus.Completed}>
                                         Completed
                                     </Select.Item>
-                                    <Select.Item value="deprecated">
+                                    <Select.Item value={TaskStatus.Deprecated}>
                                         Deprecated
                                     </Select.Item>
                                 </Select.Content>

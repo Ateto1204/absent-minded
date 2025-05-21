@@ -4,6 +4,7 @@ import TaskViewModel from "@/models/entities/viewModel/TaskViewModel";
 import { useEffect, useState } from "react";
 import TaskData from "@/models/entities/task/TaskData";
 import { useProjectContext } from "@/context/ProjectContext";
+import TaskStatus from "@/models/entities/task/TaskStatus";
 
 const useTaskViewModel = (): TaskViewModel => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -115,12 +116,34 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
+    const updateTaskStatus = async (taskId: string, status: TaskStatus) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            const updated = tasks.map((task) =>
+                task.id === taskId ? { ...task, status } : task
+            );
+            const taskToUpdate = updated.find((t) => t.id === taskId);
+            if (taskToUpdate) {
+                await TaskService.updateTask(taskToUpdate);
+            }
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to update task status");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         tasks,
         addTask,
         deleteTask,
         getTaskById,
         updateTaskData,
+        updateTaskStatus,
         loading,
         success,
         error,
