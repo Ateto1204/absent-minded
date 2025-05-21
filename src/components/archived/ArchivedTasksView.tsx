@@ -11,6 +11,8 @@ import {
 } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
+import { GrPowerCycle } from "react-icons/gr";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
     const { resaveTask, deleteTask, tasks } = useTaskContext();
@@ -64,14 +66,20 @@ const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
                                                     handleResave(task.id)
                                                 }
                                             >
-                                                Re-save
+                                                <Flex gapX="2">
+                                                    <GrPowerCycle className="relative top-1" />
+                                                    <Text>Resave</Text>
+                                                </Flex>
                                             </DropdownMenu.Item>
                                             <DropdownMenu.Item
                                                 onClick={() =>
                                                     handleDelete(task.id)
                                                 }
                                             >
-                                                Delete
+                                                <Flex gapX="2">
+                                                    <RiDeleteBinLine className="relative top-1" />
+                                                    <Text>Delete</Text>
+                                                </Flex>
                                             </DropdownMenu.Item>
                                         </DropdownMenu.Content>
                                     </DropdownMenu.Root>

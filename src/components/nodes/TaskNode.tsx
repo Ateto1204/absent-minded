@@ -5,6 +5,7 @@ import TaskDialog from "@/components/dialogs/TaskDialog";
 import TaskData from "@/models/entities/task/TaskData";
 import DeleteDialog from "@/components/dialogs/DeleteDialog";
 import TaskPreview from "@/components/task/TaskPreview";
+import { TiDelete } from "react-icons/ti";
 
 function TaskNode({ id, data }: { id: string; data: TaskData }) {
     const { loading } = useTaskContext();
@@ -17,15 +18,15 @@ function TaskNode({ id, data }: { id: string; data: TaskData }) {
             </Dialog.Root>
             <AlertDialog.Root>
                 <AlertDialog.Trigger>
-                    <Tooltip content="Remove task">
-                        <button
-                            onClick={(e) => e.stopPropagation()}
-                            className="absolute -top-1.5 -right-1.5 text-xs text-gray-500 hover:opacity-70 rounded-full bg-white border border-gray-500 px-1 cursor-pointer"
-                            disabled={loading}
-                        >
-                            ×
-                        </button>
-                    </Tooltip>
+                    <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="absolute -top-1.5 -right-1.5 cursor-pointer rounded-full hover:opacity-70 p-0"
+                        disabled={loading}
+                    >
+                        <Tooltip content="Remove task">
+                            <TiDelete color="gray" />
+                        </Tooltip>
+                    </button>
                 </AlertDialog.Trigger>
                 <DeleteDialog id={id} type="task" />
             </AlertDialog.Root>
