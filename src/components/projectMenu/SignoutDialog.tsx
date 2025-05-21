@@ -1,20 +1,22 @@
-import { Button, Dialog, Flex } from "@radix-ui/themes";
+import { Button, AlertDialog, Flex, Tooltip } from "@radix-ui/themes";
 
-const SignoutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
+const SignOutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
     return (
-        <Dialog.Root>
-            <Dialog.Trigger>
-                <Button size="1" color="gray" variant="soft">
-                    Sign out
-                </Button>
-            </Dialog.Trigger>
-            <Dialog.Content>
-                <Dialog.Title>Confirm Sign Out</Dialog.Title>
-                <div className="text-md text-zinc-400 my-5">
+        <AlertDialog.Root>
+            <AlertDialog.Trigger>
+                <Tooltip content="Sign out">
+                    <Button size="1" color="gray" variant="soft">
+                        Sign out
+                    </Button>
+                </Tooltip>
+            </AlertDialog.Trigger>
+            <AlertDialog.Content>
+                <AlertDialog.Title>Confirm Sign Out</AlertDialog.Title>
+                <AlertDialog.Description className="text-md text-zinc-400 my-5">
                     Are you sure you want to sign out?
-                </div>
+                </AlertDialog.Description>
                 <Flex gap="3" mt="4">
-                    <Dialog.Close>
+                    <AlertDialog.Action>
                         <Button
                             size="2"
                             color="red"
@@ -23,16 +25,16 @@ const SignoutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
                         >
                             Confirm
                         </Button>
-                    </Dialog.Close>
-                    <Dialog.Close>
+                    </AlertDialog.Action>
+                    <AlertDialog.Cancel>
                         <Button size="2" variant="soft">
                             Cancel
                         </Button>
-                    </Dialog.Close>
+                    </AlertDialog.Cancel>
                 </Flex>
-            </Dialog.Content>
-        </Dialog.Root>
+            </AlertDialog.Content>
+        </AlertDialog.Root>
     );
 };
 
-export default SignoutDialog;
+export default SignOutDialog;

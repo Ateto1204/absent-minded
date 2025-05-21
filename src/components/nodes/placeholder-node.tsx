@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useTaskContext } from "@/context/TaskContext";
 import Task from "@/models/entities/task/Task";
 import { useProjectContext } from "@/context/ProjectContext";
+import { Tooltip } from "@radix-ui/themes";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;
@@ -112,28 +113,30 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         ]);
 
         return (
-            <BaseNode
-                ref={ref}
-                selected={selected}
-                className={`w-24 border-dashed border-gray-400 bg-card p-2 text-center text-gray-400 shadow-none ${
-                    loading ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
-                onClick={handleClick}
-            >
-                {children}
-                <Handle
-                    type="target"
-                    style={{ visibility: "hidden" }}
-                    position={Position.Left}
-                    isConnectable={false}
-                />
-                <Handle
-                    type="source"
-                    style={{ visibility: "hidden" }}
-                    position={Position.Right}
-                    isConnectable={false}
-                />
-            </BaseNode>
+            <Tooltip content="Add new task">
+                <BaseNode
+                    ref={ref}
+                    selected={selected}
+                    className={`w-24 border-dashed border-gray-400 bg-card p-2 text-center text-gray-400 shadow-none ${
+                        loading ? "cursor-not-allowed" : "cursor-pointer"
+                    }`}
+                    onClick={handleClick}
+                >
+                    {children}
+                    <Handle
+                        type="target"
+                        style={{ visibility: "hidden" }}
+                        position={Position.Left}
+                        isConnectable={false}
+                    />
+                    <Handle
+                        type="source"
+                        style={{ visibility: "hidden" }}
+                        position={Position.Right}
+                        isConnectable={false}
+                    />
+                </BaseNode>
+            </Tooltip>
         );
     }
 );

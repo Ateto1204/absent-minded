@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { useProjectContext } from "@/context/ProjectContext";
-import { Dialog, TextField, Button, Text, Flex } from "@radix-ui/themes";
-import { useTaskContext } from "@/context/TaskContext";
-import DeleteProjectDialog from "./DeleteProjectDialog";
+import {
+    Dialog,
+    TextField,
+    Button,
+    Text,
+    Flex,
+    AlertDialog,
+    Tooltip,
+} from "@radix-ui/themes";
+
+import DeleteDialog from "./DeleteDialog";
 
 function ProjectDialog({
     project,
@@ -13,17 +21,10 @@ function ProjectDialog({
     isActive: boolean;
     toggleProject: () => void;
 }) {
-    const { updateProjectName, deleteProject, currentRoot, loading } =
-        useProjectContext();
-    const { deleteTask } = useTaskContext();
+    const { updateProjectName, loading } = useProjectContext();
     const [name, setName] = useState(project.name);
     const handleSave = () => {
         updateProjectName(project.id, name);
-    };
-
-    const handleDelete = () => {
-        deleteProject(project.id);
-        deleteTask(currentRoot);
     };
 
     return (
@@ -31,14 +32,16 @@ function ProjectDialog({
             <li
                 onClick={toggleProject}
                 className={`truncate px-2 py-1 rounded cursor-pointer flex justify-between items-center hover:opacity-60 ${
-                    isActive && "bg-blue-500 text-white font-semibold"
+                    isActive && "bg-blue-500 text-white font-medium"
                 }`}
             >
                 <span>{project.name}</span>
                 <Dialog.Trigger>
-                    <button className="ml-2 text-sm px-2 py-0.5 rounded hover:bg-gray-300 bg-white border text-black">
-                        ...
-                    </button>
+                    <Tooltip content="Edit project info">
+                        <button className="ml-2 text-md px-2 py-0.5 rounded text-white font-bold hover:bg-blue-700">
+                            ...
+                        </button>
+                    </Tooltip>
                 </Dialog.Trigger>
             </li>
             <Dialog.Content>
@@ -61,8 +64,8 @@ function ProjectDialog({
                     />
                 </Flex>
                 <div className="mt-4 flex gap-2">
-                    <Dialog.Root>
-                        <Dialog.Trigger>
+                    <AlertDialog.Root>
+                        <AlertDialog.Trigger>
                             <Button
                                 color="red"
                                 variant="solid"
@@ -70,15 +73,12 @@ function ProjectDialog({
                             >
                                 Delete
                             </Button>
-                        </Dialog.Trigger>
-                        <Dialog.Content>
-                            <Dialog.Title />
-                            <DeleteProjectTriggerButton
-                                id={project.id}
-                                handleDelete={handleDelete}
-                            />
-                        </Dialog.Content>
-                    </Dialog.Root>
+                        </AlertDialog.Trigger>
+                        <AlertDialog.Content>
+                            <AlertDialog.Title />
+                            <DeleteDialog id={project.id} type="project" />
+                        </AlertDialog.Content>
+                    </AlertDialog.Root>
                     <Button
                         color="blue"
                         variant="solid"
@@ -92,15 +92,5 @@ function ProjectDialog({
         </Dialog.Root>
     );
 }
-
-const DeleteProjectTriggerButton = ({
-    id,
-    handleDelete,
-}: {
-    id: string;
-    handleDelete: () => void;
-}) => {
-    return <DeleteProjectDialog id={id} handleDelete={handleDelete} />;
-};
 
 export default ProjectDialog;

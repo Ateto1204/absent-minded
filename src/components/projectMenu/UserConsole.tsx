@@ -1,6 +1,5 @@
-import { Flex } from "@radix-ui/themes";
-import Image from "next/image";
-import SignoutDialog from "./SignoutDialog";
+import { Avatar, Card, Flex, Text } from "@radix-ui/themes";
+import SignOutDialog from "./SignOutDialog";
 
 const UserConsole = ({
     avatar,
@@ -20,27 +19,16 @@ const UserConsole = ({
             justify="between"
             className="absolute bottom-4 left-4 right-4 text-sm text-zinc-400 mb-2"
         >
-            <Flex align="center" gap="3" className="mb-2">
-                {avatar ? (
-                    <Image
-                        src={avatar}
-                        alt="avatar"
-                        width={32}
-                        height={32}
-                        className="rounded-full object-cover"
-                        loading="lazy"
-                    />
-                ) : (
-                    <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-white text-xs font-bold">
-                        {name ? name[0].toUpperCase() : "?"}
-                    </div>
-                )}
-                <div>
-                    <div>{name}</div>
-                    <div>{email}</div>
-                </div>
-            </Flex>
-            {email !== "" && <SignoutDialog handleSignout={handleSignout} />}
+            <Card mb="3">
+                <Flex align="center" gap="2">
+                    <Avatar src={avatar} size="2" radius="full" fallback="T" />
+                    <Flex direction="column">
+                        <Text size="2">{name}</Text>
+                        <Text size="1">{email}</Text>
+                    </Flex>
+                </Flex>
+            </Card>
+            <SignOutDialog handleSignout={handleSignout} />
         </Flex>
     );
 };
