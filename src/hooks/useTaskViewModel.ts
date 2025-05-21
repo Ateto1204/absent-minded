@@ -125,7 +125,8 @@ const useTaskViewModel = (): TaskViewModel => {
         try {
             const descandents = findAllDescendants(taskId, []);
             const updatedTasks = tasks.map((task) => {
-                return descandents.includes(task.id)
+                return task.status === TaskStatus.Active &&
+                    descandents.includes(task.id)
                     ? { ...task, status }
                     : task;
             });
