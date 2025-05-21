@@ -38,7 +38,13 @@ function ProjectDialog({
                 <span>{project.name}</span>
                 <Dialog.Trigger>
                     <Tooltip content="Edit project info">
-                        <button className="ml-2 text-md px-2 py-0.5 rounded text-white font-bold hover:bg-blue-700">
+                        <button
+                            className={`ml-2 text-md px-2 py-0.5 rounded text-white font-bold ${
+                                isActive
+                                    ? "hover:bg-blue-700"
+                                    : "hover:bg-gray-700"
+                            }`}
+                        >
                             ...
                         </button>
                     </Tooltip>
