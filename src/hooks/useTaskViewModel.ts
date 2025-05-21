@@ -48,27 +48,29 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
+    const findAllDescendants = (
+        id: string,
+        descendants: string[]
+    ): string[] => {
+        if (id === currentRoot) {
+            const ids = tasks.map((t) => t.id);
+            return ids;
+        }
+        descendants.push(id);
+        tasks.forEach((t) => {
+            if (t.parent === id) {
+                findAllDescendants(t.id, descendants);
+            }
+        });
+        return descendants;
+    };
+
     const deleteTask = async (taskId: string) => {
         setLoading(true);
         setSuccess(false);
         setError(null);
         try {
-            const findAllDescendants = (
-                id: string,
-                descendants: string[]
-            ): string[] => {
-                descendants.push(id);
-                tasks.forEach((t) => {
-                    if (t.parent === id) {
-                        findAllDescendants(t.id, descendants);
-                    }
-                });
-                return descendants;
-            };
-            const descendantIds =
-                taskId === currentRoot
-                    ? tasks.map((t) => t.id)
-                    : findAllDescendants(taskId, []);
+            const descendantIds = findAllDescendants(taskId, []);
             await TaskService.removeTasks(descendantIds);
             setTasks((prevTasks) =>
                 taskId === currentRoot
@@ -121,14 +123,14 @@ const useTaskViewModel = (): TaskViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            const updated = tasks.map((task) =>
-                task.id === taskId ? { ...task, status } : task
-            );
-            setTasks(updated);
-            const taskToUpdate = updated.find((t) => t.id === taskId);
-            if (taskToUpdate) {
-                await TaskService.updateTask(taskToUpdate);
-            }
+            const descandents = findAllDescendants(taskId, []);
+            const updatedTasks = tasks.map((task) => {
+                return descandents.includes(task.id)
+                    ? { ...task, status }
+                    : task;
+            });
+            setTasks(updatedTasks);
+            await TaskService.updateTasks(updatedTasks);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
