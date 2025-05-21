@@ -7,6 +7,8 @@ import {
     TextField,
     DataList,
     AlertDialog,
+    Separator,
+    Select,
 } from "@radix-ui/themes";
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
@@ -20,6 +22,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const [deadline, setDeadline] = useState(
         data.deadline ? new Date(data.deadline).toISOString().slice(0, 10) : ""
     );
+    const [taskStatus, setTaskStatus] = useState("Completed");
 
     const handleSave = () => {
         const taskData = {
@@ -83,19 +86,33 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         </DataList.Value>
                     </DataList.Item>
                 </DataList.Root>
-                <Flex justify="end" gapX="4" className="mt-8">
+                <Flex justify="end" gapX="2" className="mt-8">
                     <AlertDialog.Root>
-                        <AlertDialog.Trigger>
-                            <Button
-                                color="red"
-                                variant="solid"
-                                onClick={handleSave}
-                                loading={loading}
-                                disabled={loading}
-                            >
-                                Delete
-                            </Button>
-                        </AlertDialog.Trigger>
+                        <Flex
+                            gapX="2"
+                            className="rounded bg-gray-700 px-2 cursor-pointer border border-gray-600"
+                            align="center"
+                        >
+                            <AlertDialog.Trigger className="hover:opacity-60">
+                                <Text size="1" className="w-16">
+                                    <Flex justify="center">{taskStatus}</Flex>
+                                </Text>
+                            </AlertDialog.Trigger>
+                            <Separator orientation="vertical" size="1" />
+                            <Select.Root size="1" onValueChange={setTaskStatus}>
+                                <Select.Trigger variant="ghost" color="gray">
+                                    <Text className="hover:opacity-60 p-0" />
+                                </Select.Trigger>
+                                <Select.Content>
+                                    <Select.Item value="completed">
+                                        Completed
+                                    </Select.Item>
+                                    <Select.Item value="deprecated">
+                                        Deprecated
+                                    </Select.Item>
+                                </Select.Content>
+                            </Select.Root>
+                        </Flex>
                         <DeleteDialog id={id} type="task" />
                     </AlertDialog.Root>
                     <Button
@@ -105,7 +122,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         loading={loading}
                         disabled={loading}
                     >
-                        Save
+                        <Text size="1">Save</Text>
                     </Button>
                 </Flex>
             </Dialog.Content>
