@@ -1,6 +1,7 @@
 import { Edge, Node } from "@xyflow/react";
 import Task from "@/models/entities/task/Task";
 import { v4 as uuidv4 } from "uuid";
+import TaskStatus from "@/models/entities/task/TaskStatus";
 
 interface NodeTask extends Task {
     type: "task" | "placeholder";
@@ -34,30 +35,33 @@ export function tasksToEdges(tasks: NodeTask[], root: string): Edge[] {
 }
 
 export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
-    if (tasks.length === 0) {
+    const avtiveTasks = tasks.filter((t) => t.status === TaskStatus.Active);
+    if (avtiveTasks.length === 0) {
         return [
             {
                 id: "root",
                 data: { label: "root", description: "", deadline: null },
                 parent: "",
                 project,
+                status: TaskStatus.Active,
                 type: "placeholder",
             },
         ];
     }
     const nodeTasks: NodeTask[] = [];
-    for (const task of tasks) {
+    for (const task of avtiveTasks) {
         nodeTasks.push({
             ...task,
             type: "task",
         });
     }
-    for (const task of tasks) {
+    for (const task of avtiveTasks) {
         nodeTasks.push({
             id: uuidv4(),
             data: { label: "new task", description: "", deadline: null },
             parent: task.id,
             project,
+            status: TaskStatus.Active,
             type: "placeholder",
         });
     }

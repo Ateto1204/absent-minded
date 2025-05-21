@@ -4,6 +4,7 @@ import TaskViewModel from "@/models/entities/viewModel/TaskViewModel";
 import { useEffect, useState } from "react";
 import TaskData from "@/models/entities/task/TaskData";
 import { useProjectContext } from "@/context/ProjectContext";
+import TaskStatus from "@/models/entities/task/TaskStatus";
 
 const useTaskViewModel = (): TaskViewModel => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -47,27 +48,29 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
+    const findAllDescendants = (
+        id: string,
+        descendants: string[]
+    ): string[] => {
+        if (id === currentRoot) {
+            const ids = tasks.map((t) => t.id);
+            return ids;
+        }
+        descendants.push(id);
+        tasks.forEach((t) => {
+            if (t.parent === id) {
+                findAllDescendants(t.id, descendants);
+            }
+        });
+        return descendants;
+    };
+
     const deleteTask = async (taskId: string) => {
         setLoading(true);
         setSuccess(false);
         setError(null);
         try {
-            const findAllDescendants = (
-                id: string,
-                descendants: string[]
-            ): string[] => {
-                descendants.push(id);
-                tasks.forEach((t) => {
-                    if (t.parent === id) {
-                        findAllDescendants(t.id, descendants);
-                    }
-                });
-                return descendants;
-            };
-            const descendantIds =
-                taskId === currentRoot
-                    ? tasks.map((t) => t.id)
-                    : findAllDescendants(taskId, []);
+            const descendantIds = findAllDescendants(taskId, []);
             await TaskService.removeTasks(descendantIds);
             setTasks((prevTasks) =>
                 taskId === currentRoot
@@ -115,12 +118,65 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
+    const archiveTask = async (taskId: string, status: TaskStatus) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            const descandents = findAllDescendants(taskId, []);
+            const updatedTasks = tasks.map((task) => {
+                return task.status === TaskStatus.Active &&
+                    descandents.includes(task.id)
+                    ? { ...task, status }
+                    : task;
+            });
+            await TaskService.updateTasks(updatedTasks);
+            setTasks(updatedTasks);
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to update task status");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resaveTask = async (taskId: string) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            const findParents = (id: string, parents: string[]) => {
+                const task = tasks.find((t) => t.id === id);
+                if (!task) return parents;
+                if (task.status === TaskStatus.Active) return parents;
+                return findParents(task.parent, [...parents, id]);
+            };
+            const parents = findParents(taskId, []);
+            const updatedTasks = tasks.map((task) =>
+                parents.includes(task.id)
+                    ? { ...task, status: TaskStatus.Active }
+                    : task
+            );
+            await TaskService.updateTasks(updatedTasks);
+            setTasks(updatedTasks);
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to update task status");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         tasks,
         addTask,
         deleteTask,
         getTaskById,
         updateTaskData,
+        archiveTask,
+        resaveTask,
         loading,
         success,
         error,

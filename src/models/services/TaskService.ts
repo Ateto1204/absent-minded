@@ -41,6 +41,19 @@ class TaskService {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
         return this.delay(undefined);
     }
+
+    static async updateTasks(updatedTasks: Task[]): Promise<void> {
+        let tasks = TaskService.getAllTasks();
+        tasks = tasks.map((task) => {
+            const updatedTask = updatedTasks.find(
+                (updated) => updated.id === task.id
+            );
+            if (updatedTask) return updatedTask;
+            return task;
+        });
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
+        return this.delay(undefined);
+    }
 }
 
 export default TaskService;

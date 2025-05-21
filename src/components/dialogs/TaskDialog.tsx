@@ -6,12 +6,11 @@ import {
     TextArea,
     TextField,
     DataList,
-    AlertDialog,
 } from "@radix-ui/themes";
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/entities/task/TaskData";
-import DeleteDialog from "./DeleteDialog";
+import TaskStatusUpdateButton from "@/components/buttons/TaskStatusUpdateButton";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const { updateTaskData, loading } = useTaskContext();
@@ -83,21 +82,8 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         </DataList.Value>
                     </DataList.Item>
                 </DataList.Root>
-                <Flex justify="end" gapX="4" className="mt-8">
-                    <AlertDialog.Root>
-                        <AlertDialog.Trigger>
-                            <Button
-                                color="red"
-                                variant="solid"
-                                onClick={handleSave}
-                                loading={loading}
-                                disabled={loading}
-                            >
-                                Delete
-                            </Button>
-                        </AlertDialog.Trigger>
-                        <DeleteDialog id={id} type="task" />
-                    </AlertDialog.Root>
+                <Flex justify="end" gapX="2" className="mt-8">
+                    <TaskStatusUpdateButton id={id} />
                     <Button
                         color="blue"
                         variant="solid"
@@ -105,7 +91,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         loading={loading}
                         disabled={loading}
                     >
-                        Save
+                        <Text size="1">Save</Text>
                     </Button>
                 </Flex>
             </Dialog.Content>
