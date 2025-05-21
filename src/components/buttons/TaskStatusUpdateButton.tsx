@@ -7,10 +7,10 @@ const TaskStatusUpdateButton = ({ id }: { id: string }) => {
     const [taskStatus, setTaskStatus] = useState<TaskStatus>(
         TaskStatus.Completed
     );
-    const { updateTaskStatus } = useTaskContext();
+    const { archiveTask } = useTaskContext();
 
     const handleUpdate = () => {
-        updateTaskStatus(id, taskStatus);
+        archiveTask(id, taskStatus);
     };
 
     return (

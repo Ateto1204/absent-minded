@@ -13,13 +13,17 @@ import { useEffect, useState } from "react";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 
 const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
-    const { tasks } = useTaskContext();
+    const { deleteTask, tasks } = useTaskContext();
     const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
 
     useEffect(() => {
         const completed = tasks.filter((t) => t.status === type);
         setArchivedTasks(completed);
     }, [tasks, type]);
+
+    const handleDelete = (taskId: string) => {
+        deleteTask(taskId);
+    };
 
     return (
         <Flex direction="column" className="h-1/2">
@@ -29,8 +33,8 @@ const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
             </div>
             <div className="flex-1 overflow-y-auto px-2 py-3 space-y-2">
                 {archivedTasks.length > 0 ? (
-                    archivedTasks.map((t) => (
-                        <HoverCard.Root key={t.id}>
+                    archivedTasks.map((task) => (
+                        <HoverCard.Root key={task.id}>
                             <div className="p-2 bg-zinc-800 rounded text-xs border border-zinc-600 break-words">
                                 <Flex
                                     justify="between"
@@ -38,7 +42,7 @@ const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
                                     className="px-2"
                                 >
                                     <HoverCard.Trigger>
-                                        <Text>{t.data.label}</Text>
+                                        <Text>{task.data.label}</Text>
                                     </HoverCard.Trigger>
                                     <DropdownMenu.Root>
                                         <DropdownMenu.Trigger>
@@ -54,14 +58,18 @@ const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
                                             <DropdownMenu.Item>
                                                 Re-save
                                             </DropdownMenu.Item>
-                                            <DropdownMenu.Item>
+                                            <DropdownMenu.Item
+                                                onClick={() =>
+                                                    handleDelete(task.id)
+                                                }
+                                            >
                                                 Delete
                                             </DropdownMenu.Item>
                                         </DropdownMenu.Content>
                                     </DropdownMenu.Root>
                                 </Flex>
                             </div>
-                            <TaskPreviewContent id={t.id} data={t.data} />
+                            <TaskPreviewContent id={task.id} data={task.data} />
                         </HoverCard.Root>
                     ))
                 ) : (
