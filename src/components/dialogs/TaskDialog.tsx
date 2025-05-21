@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/entities/task/TaskData";
-import DeleteTaskDialog from "./DeleteTaskDialog";
+import DeleteDialog from "./DeleteDialog";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const { updateTaskData, loading } = useTaskContext();
@@ -96,7 +96,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                 Delete
                             </Button>
                         </AlertDialog.Trigger>
-                        <DeleteTaskDialog id={id} />
+                        <DeleteDialog id={id} type="task" />
                     </AlertDialog.Root>
                     <Button
                         color="blue"

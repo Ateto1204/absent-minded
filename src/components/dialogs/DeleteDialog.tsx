@@ -1,8 +1,24 @@
+import { useProjectContext } from "@/context/ProjectContext";
 import { useTaskContext } from "@/context/TaskContext";
 import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 
-const DeleteTaskDialog = ({ id }: { id: string }) => {
-    const { deleteTask, loading } = useTaskContext();
+const DeleteDialog = ({
+    id,
+    type,
+}: {
+    id: string;
+    type: "task" | "project";
+}) => {
+    const { deleteTask, loading: taskLoading } = useTaskContext();
+    const { deleteProject, loading: projectLoading } = useProjectContext();
+
+    const handleDelete = () => {
+        if (type === "task") {
+            deleteTask(id);
+        } else {
+            deleteProject(id);
+        }
+    };
 
     return (
         <AlertDialog.Content>
@@ -11,7 +27,7 @@ const DeleteTaskDialog = ({ id }: { id: string }) => {
             </AlertDialog.Title>
             <AlertDialog.Description>
                 <Text size="2">
-                    Are you sure you want to delete task ID: {id}?
+                    {`Are you sure you want to delete ${type} ID: ${id}?`}
                 </Text>
             </AlertDialog.Description>
             <div className="mt-6">
@@ -20,8 +36,8 @@ const DeleteTaskDialog = ({ id }: { id: string }) => {
                         <Button
                             color="red"
                             variant="solid"
-                            onClick={() => deleteTask(id)}
-                            loading={loading}
+                            onClick={handleDelete}
+                            loading={taskLoading || projectLoading}
                         >
                             Yes, Delete
                         </Button>
@@ -35,4 +51,4 @@ const DeleteTaskDialog = ({ id }: { id: string }) => {
     );
 };
 
-export default DeleteTaskDialog;
+export default DeleteDialog;

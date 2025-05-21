@@ -3,7 +3,7 @@ import { AlertDialog, Dialog } from "@radix-ui/themes";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskDialog from "@/components/dialogs/TaskDialog";
 import TaskData from "@/models/entities/task/TaskData";
-import DeleteTaskDialog from "../dialogs/DeleteTaskDialog";
+import DeleteDialog from "@/components/dialogs/DeleteDialog";
 import TaskPreview from "@/components/task/TaskPreview";
 
 function TaskNode({ id, data }: { id: string; data: TaskData }) {
@@ -25,7 +25,7 @@ function TaskNode({ id, data }: { id: string; data: TaskData }) {
                         ×
                     </button>
                 </AlertDialog.Trigger>
-                <DeleteTaskDialog id={id} />
+                <DeleteDialog id={id} type="task" />
             </AlertDialog.Root>
         </div>
     );
