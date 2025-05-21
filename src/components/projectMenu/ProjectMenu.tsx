@@ -51,7 +51,10 @@ function ProjectMenu() {
     };
 
     return (
-        <div className="relative w-64 bg-zinc-900 p-4 border-r border-zinc-700 text-white h-screen">
+        <Flex
+            direction="column"
+            className="relative w-64 bg-zinc-900 p-4 border-r border-zinc-700 text-white h-screen pb-36"
+        >
             <Flex justify="between" align="center" mb="4">
                 <h2 className="text-lg font-semibold text-white">Projects</h2>
                 <Tooltip content="Add project">
@@ -65,23 +68,25 @@ function ProjectMenu() {
                     </Button>
                 </Tooltip>
             </Flex>
-            <ul className="space-y-1">
-                {projects.map((project) => (
-                    <ProjectDialog
-                        key={project.id}
-                        project={project}
-                        isActive={project.id === currentProject}
-                        toggleProject={() => toggleProject(project.id)}
-                    />
-                ))}
-            </ul>
+            <div className="overflow-y-auto flex-1">
+                <ul className="space-y-1">
+                    {projects.map((project) => (
+                        <ProjectDialog
+                            key={project.id}
+                            project={project}
+                            isActive={project.id === currentProject}
+                            toggleProject={() => toggleProject(project.id)}
+                        />
+                    ))}
+                </ul>
+            </div>
             <UserConsole
                 avatar={userAvatar}
                 name={userName}
                 email={userEmail}
                 handleSignout={handleSignout}
             />
-        </div>
+        </Flex>
     );
 }
 
