@@ -13,13 +13,17 @@ import { useEffect, useState } from "react";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 
 const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
-    const { deleteTask, tasks } = useTaskContext();
+    const { resaveTask, deleteTask, tasks } = useTaskContext();
     const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
 
     useEffect(() => {
         const completed = tasks.filter((t) => t.status === type);
         setArchivedTasks(completed);
     }, [tasks, type]);
+
+    const handleResave = (taskId: string) => {
+        resaveTask(taskId);
+    };
 
     const handleDelete = (taskId: string) => {
         deleteTask(taskId);
@@ -55,7 +59,11 @@ const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
                                             </Button>
                                         </DropdownMenu.Trigger>
                                         <DropdownMenu.Content className="z-50">
-                                            <DropdownMenu.Item>
+                                            <DropdownMenu.Item
+                                                onClick={() =>
+                                                    handleResave(task.id)
+                                                }
+                                            >
                                                 Re-save
                                             </DropdownMenu.Item>
                                             <DropdownMenu.Item

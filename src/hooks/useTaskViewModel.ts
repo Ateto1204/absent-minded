@@ -130,8 +130,36 @@ const useTaskViewModel = (): TaskViewModel => {
                     ? { ...task, status }
                     : task;
             });
-            setTasks(updatedTasks);
             await TaskService.updateTasks(updatedTasks);
+            setTasks(updatedTasks);
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to update task status");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resaveTask = async (taskId: string) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            const findParents = (id: string, parents: string[]) => {
+                const task = tasks.find((t) => t.id === id);
+                if (!task) return parents;
+                if (task.status === TaskStatus.Active) return parents;
+                return findParents(task.parent, [...parents, id]);
+            };
+            const parents = findParents(taskId, []);
+            const updatedTasks = tasks.map((task) =>
+                parents.includes(task.id)
+                    ? { ...task, status: TaskStatus.Active }
+                    : task
+            );
+            await TaskService.updateTasks(updatedTasks);
+            setTasks(updatedTasks);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
@@ -148,6 +176,7 @@ const useTaskViewModel = (): TaskViewModel => {
         getTaskById,
         updateTaskData,
         archiveTask,
+        resaveTask,
         loading,
         success,
         error,
