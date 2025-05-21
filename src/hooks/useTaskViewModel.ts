@@ -118,7 +118,7 @@ const useTaskViewModel = (): TaskViewModel => {
         }
     };
 
-    const updateTaskStatus = async (taskId: string, status: TaskStatus) => {
+    const archiveTask = async (taskId: string, status: TaskStatus) => {
         setLoading(true);
         setSuccess(false);
         setError(null);
@@ -147,7 +147,7 @@ const useTaskViewModel = (): TaskViewModel => {
         deleteTask,
         getTaskById,
         updateTaskData,
-        updateTaskStatus,
+        archiveTask,
         loading,
         success,
         error,

@@ -24,11 +24,14 @@ const ArchivedTasksList = () => {
     }, [tasks]);
 
     return (
-        <div className="w-64 h-screen border-l border-zinc-700 bg-zinc-900 text-white flex flex-col">
+        <Flex
+            direction="column"
+            className="w-64 h-screen border-l border-zinc-700 bg-zinc-900 text-white py-5"
+        >
             <div className="px-4 py-3 border-b border-zinc-700 font-bold text-sm sticky top-0 bg-zinc-900">
                 Completed Tasks
             </div>
-            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-2">
+            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-2 mb-5">
                 {completedTasks.length > 0 ? (
                     completedTasks.map((t) => (
                         <div
@@ -67,7 +70,7 @@ const ArchivedTasksList = () => {
                     </Flex>
                 )}
             </div>
-        </div>
+        </Flex>
     );
 };
 

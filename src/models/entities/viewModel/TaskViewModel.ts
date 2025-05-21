@@ -8,7 +8,7 @@ interface TaskViewModel {
     deleteTask: (taskId: string) => void;
     getTaskById: (id: string) => Task | undefined;
     updateTaskData: (taskId: string, newData: TaskData) => void;
-    updateTaskStatus: (taskId: string, status: TaskStatus) => void;
+    archiveTask: (taskId: string, status: TaskStatus) => void;
     loading: boolean;
     success: boolean;
     error: string | null;
