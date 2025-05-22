@@ -1,5 +1,5 @@
 import TaskData from "@/models/entities/task/TaskData";
-import { DataList, HoverCard } from "@radix-ui/themes";
+import { DataList, Flex, HoverCard, Text } from "@radix-ui/themes";
 
 const TaskPreviewContent = ({ id, data }: { id: string; data: TaskData }) => {
     return (
@@ -10,18 +10,31 @@ const TaskPreviewContent = ({ id, data }: { id: string; data: TaskData }) => {
                     <DataList.Value>{id}</DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
-                    <DataList.Label>End at</DataList.Label>
+                    <DataList.Label>Duration</DataList.Label>
                     <DataList.Value>
-                        {data.deadline
-                            ? new Date(data.deadline).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                      year: "numeric",
-                                      month: "long",
-                                      day: "numeric",
-                                  }
-                              )
-                            : "-"}
+                        <Flex gapX="2">
+                            {data.start
+                                ? new Date(data.start).toLocaleDateString(
+                                      "en-US",
+                                      {
+                                          year: "numeric",
+                                          month: "long",
+                                          day: "numeric",
+                                      }
+                                  )
+                                : "-"}
+                            <Text>~</Text>
+                            {data.deadline
+                                ? new Date(data.deadline).toLocaleDateString(
+                                      "en-US",
+                                      {
+                                          year: "numeric",
+                                          month: "long",
+                                          day: "numeric",
+                                      }
+                                  )
+                                : "-"}
+                        </Flex>
                     </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>

@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 import { GrPowerCycle } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { IoBanOutline } from "react-icons/io5";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
     const { resaveTask, deleteTask, tasks } = useTaskContext();
@@ -34,8 +36,19 @@ const ArchivedTasksView = ({ type }: { type: TaskStatus }) => {
     return (
         <Flex direction="column" className="h-1/2">
             <div className="px-4 py-3 border-b border-zinc-700 font-bold text-sm sticky top-0 bg-zinc-900">
-                {type === TaskStatus.Deprecated ? "Deprecated" : "Completed"}{" "}
-                Tasks
+                <Flex gapX="2">
+                    {type === TaskStatus.Deprecated ? (
+                        <IoBanOutline className="relative top-1" />
+                    ) : (
+                        <IoIosCheckmarkCircleOutline className="relative top-1" />
+                    )}
+                    <Text>
+                        {type === TaskStatus.Deprecated
+                            ? "Deprecated"
+                            : "Completed"}{" "}
+                        Tasks: {archivedTasks.length}
+                    </Text>
+                </Flex>
             </div>
             <div className="flex-1 overflow-y-auto px-2 py-3 space-y-2">
                 {archivedTasks.length > 0 ? (

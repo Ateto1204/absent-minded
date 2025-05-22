@@ -19,11 +19,15 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const [deadline, setDeadline] = useState(
         data.deadline ? new Date(data.deadline).toISOString().slice(0, 10) : ""
     );
+    const [start, setStart] = useState(
+        data.start ? new Date(data.start).toISOString().slice(0, 10) : ""
+    );
 
     const handleSave = () => {
         const taskData = {
             label,
             description,
+            start: start ? new Date(start) : null,
             deadline: deadline ? new Date(deadline) : null,
         };
         updateTaskData(id, taskData);
@@ -56,6 +60,29 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                 onChange={(e) => setLabel(e.target.value)}
                                 placeholder="task title"
                                 className="w-full"
+                            />
+                        </DataList.Value>
+                    </DataList.Item>
+                    <DataList.Item>
+                        <DataList.Label>Start</DataList.Label>
+                        <DataList.Value>
+                            <input
+                                type="date"
+                                value={start}
+                                onChange={(e) => {
+                                    const newStart = e.target.value;
+                                    if (
+                                        deadline &&
+                                        new Date(newStart) > new Date(deadline)
+                                    ) {
+                                        alert(
+                                            "The start time cannot be later than the end time"
+                                        );
+                                        return;
+                                    }
+                                    setStart(newStart);
+                                }}
+                                className="border px-2 py-1 rounded border-gray-600"
                             />
                         </DataList.Value>
                     </DataList.Item>

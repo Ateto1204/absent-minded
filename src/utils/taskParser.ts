@@ -13,6 +13,7 @@ export function tasksToNodes(tasks: NodeTask[]): Node[] {
         data: {
             label: task.data.label,
             description: task.data.description,
+            start: task.data.start,
             deadline: task.data.deadline,
         },
         type: task.type,
@@ -40,7 +41,12 @@ export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
         return [
             {
                 id: "root",
-                data: { label: "root", description: "", deadline: null },
+                data: {
+                    label: "root",
+                    description: "",
+                    start: null,
+                    deadline: null,
+                },
                 parent: "",
                 project,
                 status: TaskStatus.Active,
@@ -58,7 +64,12 @@ export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
     for (const task of avtiveTasks) {
         nodeTasks.push({
             id: uuidv4(),
-            data: { label: "new task", description: "", deadline: null },
+            data: {
+                label: "new task",
+                description: "",
+                start: null,
+                deadline: null,
+            },
             parent: task.id,
             project,
             status: TaskStatus.Active,
