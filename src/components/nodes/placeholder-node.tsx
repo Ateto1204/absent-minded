@@ -92,6 +92,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     data: {
                         label: id === "root" ? "root" : "new task",
                         description: "",
+                        start: null,
                         deadline: null,
                     },
                     parent: source,
