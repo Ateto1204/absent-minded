@@ -1,13 +1,20 @@
 "use client";
 
 import { useTaskContext } from "@/context/TaskContext";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import "@fullcalendar/common/main.css";
+import { Dialog, HoverCard } from "@radix-ui/themes";
+import TaskDialog from "@/components/dialogs/TaskDialog";
+import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 
 const GanttChart = () => {
     const { tasks } = useTaskContext();
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
     const getColorFromId = (id: string) => {
         const colors = [
@@ -26,9 +33,38 @@ const GanttChart = () => {
         return colors[index];
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleEventClick = (info: any) => {
+        setSelectedTaskId(info.event.id);
+        setDialogOpen(true);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const renderEventContent = (arg: any) => {
+        const task = tasks.find((t) => t.id === arg.event.id);
+        if (!task) return arg.event.title;
+        return (
+            <HoverCard.Root>
+                <HoverCard.Trigger>
+                    <div
+                        className="truncate px-1 py-px rounded text-white"
+                        style={{ backgroundColor: arg.event.backgroundColor }}
+                    >
+                        {arg.event.title}
+                    </div>
+                </HoverCard.Trigger>
+                <TaskPreviewContent id={task.id} data={task.data} />
+            </HoverCard.Root>
+        );
+    };
+
     const events = useMemo(() => {
         return tasks
-            .filter((t) => t.data.start || t.data.deadline)
+            .filter(
+                (t) =>
+                    t.status === TaskStatus.Active &&
+                    (t.data.start || t.data.deadline)
+            )
             .map((t) => {
                 const start = t.data.start
                     ? new Date(t.data.start)
@@ -56,7 +92,17 @@ const GanttChart = () => {
                 initialView="dayGridMonth"
                 height="100%"
                 events={events}
+                eventClick={handleEventClick}
+                eventContent={renderEventContent}
             />
+            {selectedTaskId && (
+                <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <TaskDialog
+                        id={selectedTaskId!}
+                        data={tasks.find((t) => t.id === selectedTaskId)!.data}
+                    />
+                </Dialog.Root>
+            )}
         </div>
     );
 };
