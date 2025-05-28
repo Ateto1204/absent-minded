@@ -5,6 +5,7 @@ import { memo, useEffect, useState } from "react";
 import ArchivedTasksList from "@/components/archived/ArchivedTasksList";
 import { useProjectContext } from "@/context/ProjectContext";
 import GanttChart from "@/components/GanttChart";
+import Kanban from "@/components/Kanban";
 
 const FlowView = () => {
     const { currentProject } = useProjectContext();
@@ -36,6 +37,9 @@ const FlowView = () => {
                                     <Select.Item value="gantt">
                                         Gantt chart
                                     </Select.Item>
+                                    <Select.Item value="kanban">
+                                        Kanban
+                                    </Select.Item>
                                 </Select.Content>
                             </Select.Root>
                         </Flex>
@@ -43,6 +47,7 @@ const FlowView = () => {
                     <div className="flex-1 overflow-y-auto p-6 bg-zinc-950">
                         {mode === "flow" && <Flow />}
                         {mode === "gantt" && <GanttChart />}
+                        {mode === "kanban" && <Kanban />}
                     </div>
                 </div>
                 <ArchivedTasksList />
