@@ -92,7 +92,19 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                             <input
                                 type="date"
                                 value={deadline}
-                                onChange={(e) => setDeadline(e.target.value)}
+                                onChange={(e) => {
+                                    const newDeadline = e.target.value;
+                                    if (
+                                        start &&
+                                        new Date(start) > new Date(newDeadline)
+                                    ) {
+                                        alert(
+                                            "The start time cannot be later than the end time"
+                                        );
+                                        return;
+                                    }
+                                    setDeadline(newDeadline);
+                                }}
                                 className="border px-2 py-1 rounded border-gray-600"
                             />
                         </DataList.Value>

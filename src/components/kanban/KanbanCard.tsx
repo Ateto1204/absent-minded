@@ -24,7 +24,7 @@ const KanbanCard = ({ task, index, onOpenDialog }: KanbanCardProps) => (
                             if (task.status === TaskStatus.Active)
                                 onOpenDialog(task.id);
                         }}
-                        className={`p-2 my-3 ${
+                        className={`p-2 my-3 hover:shadow-md shadow-gray-700 transition-shadow ${
                             snapshot.isDragging
                                 ? "bg-blue-700"
                                 : "bg-neutral-800"

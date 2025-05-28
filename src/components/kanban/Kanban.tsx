@@ -9,6 +9,7 @@ import { Dialog } from "@radix-ui/themes";
 import TaskDialog from "@/components/dialogs/TaskDialog";
 import KanbanColumn from "@/components/kanban/KanbanColumn";
 import KanbanHint from "@/components/kanban/KanbanHint";
+import StateBar from "@/components/flows/StateBar";
 
 const statusColumns: { title: string; status: TaskStatus; color: string }[] = [
     { title: "Active", status: TaskStatus.Active, color: "blue" },
@@ -111,6 +112,7 @@ const Kanban = () => {
                     />
                 </Dialog.Root>
             )}
+            <StateBar />
         </>
     );
 };
