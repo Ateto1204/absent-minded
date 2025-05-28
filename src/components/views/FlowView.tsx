@@ -1,14 +1,23 @@
 import Flow from "@/components/flows/Flow";
 import ProjectMenu from "@/components/projectMenu/ProjectMenu";
 import { Flex, Select, Text } from "@radix-ui/themes";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import ArchivedTasksList from "@/components/archived/ArchivedTasksList";
 import { useProjectContext } from "@/context/ProjectContext";
-import GanttChart from "../GanttChart";
+import GanttChart from "@/components/GanttChart";
 
 const FlowView = () => {
     const { currentProject } = useProjectContext();
-    const [mode, setMode] = useState("flow");
+    const [mode, setMode] = useState(() => {
+        if (typeof window !== "undefined") {
+            return (localStorage.getItem("aminded-mode") as string) || "flow";
+        }
+        return "flow";
+    });
+
+    useEffect(() => {
+        localStorage.setItem("aminded-mode", mode);
+    }, [mode]);
 
     return (
         <main className="w-screen h-screen bg-zinc-950 text-white">
