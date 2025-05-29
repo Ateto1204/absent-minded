@@ -101,6 +101,7 @@ const GanttChart = () => {
             {selectedTaskId && (
                 <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
                     <TaskDialog
+                        key={selectedTaskId}
                         id={selectedTaskId!}
                         data={tasks.find((t) => t.id === selectedTaskId)!.data}
                     />
