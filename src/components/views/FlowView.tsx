@@ -6,7 +6,7 @@ import ArchivedTasksList from "@/components/archived/ArchivedTasksList";
 import { useProjectContext } from "@/context/ProjectContext";
 import GanttChart from "@/components/GanttChart";
 import Kanban from "@/components/kanban/Kanban";
-import ChatTaskGenerator from "../ChatTaskGenerator";
+import ChatTaskGenerator from "../chatRoom/ChatTaskGenerator";
 
 const FlowView = () => {
     const { currentProject } = useProjectContext();
