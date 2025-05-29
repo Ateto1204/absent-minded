@@ -6,6 +6,7 @@ import ArchivedTasksList from "@/components/archived/ArchivedTasksList";
 import { useProjectContext } from "@/context/ProjectContext";
 import GanttChart from "@/components/GanttChart";
 import Kanban from "@/components/kanban/Kanban";
+import ChatTaskGenerator from "../ChatTaskGenerator";
 
 const FlowView = () => {
     const { currentProject } = useProjectContext();
@@ -28,20 +29,30 @@ const FlowView = () => {
                     <div className="px-6 py-4 border-b border-zinc-800 text-sm font-semibold bg-zinc-900">
                         <Flex justify="between">
                             <Text>{currentProject}</Text>
-                            <Select.Root value={mode} onValueChange={setMode}>
-                                <Select.Trigger>
-                                    <Text className="capitalize">{mode}</Text>
-                                </Select.Trigger>
-                                <Select.Content>
-                                    <Select.Item value="flow">Flow</Select.Item>
-                                    <Select.Item value="gantt">
-                                        Gantt chart
-                                    </Select.Item>
-                                    <Select.Item value="kanban">
-                                        Kanban
-                                    </Select.Item>
-                                </Select.Content>
-                            </Select.Root>
+                            <Flex gapX="4">
+                                <ChatTaskGenerator />
+                                <Select.Root
+                                    value={mode}
+                                    onValueChange={setMode}
+                                >
+                                    <Select.Trigger>
+                                        <Text className="capitalize">
+                                            {mode}
+                                        </Text>
+                                    </Select.Trigger>
+                                    <Select.Content>
+                                        <Select.Item value="flow">
+                                            Flow
+                                        </Select.Item>
+                                        <Select.Item value="gantt">
+                                            Gantt chart
+                                        </Select.Item>
+                                        <Select.Item value="kanban">
+                                            Kanban
+                                        </Select.Item>
+                                    </Select.Content>
+                                </Select.Root>
+                            </Flex>
                         </Flex>
                     </div>
                     <div className="flex-1 overflow-y-auto p-6 bg-zinc-950">
