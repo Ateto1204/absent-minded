@@ -38,6 +38,9 @@ export default function HomePage() {
             >
                 {language === "en" ? "Get Started" : "開 始"}
             </Button>
+            <footer className="absolute bottom-4 text-sm text-zinc-500">
+                © 2025 東毅中. All rights reserved.
+            </footer>
         </main>
     );
 }
