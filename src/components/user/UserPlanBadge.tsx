@@ -1,7 +1,7 @@
 import { useUserContext } from "@/context/UserContext";
 import UserPlanEnum from "@/models/enums/UserPlanEnum";
 import { Badge, Dialog, Flex, Text } from "@radix-ui/themes";
-import UserPlanBadgeDialog from "@/components/projectMenu/UserPlanBadgeDialog";
+import UserPlanBadgeDialog from "@/components/user/UserPlanBadgeDialog";
 
 const UserPlanBadge = () => {
     const { userPlan } = useUserContext();

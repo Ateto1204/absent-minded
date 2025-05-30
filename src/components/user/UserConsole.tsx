@@ -1,7 +1,7 @@
 import { Avatar, Card, Dialog, Flex, Text } from "@radix-ui/themes";
 import { LuUser } from "react-icons/lu";
-import UserDialog from "@/components/projectMenu/UserDialog";
-import UserConsoleProps from "@/components/projectMenu/UserConsoleProps";
+import UserDialog from "@/components/user/UserDialog";
+import UserConsoleProps from "@/models/interfaces/dto/UserConsoleProps";
 
 const UserConsole = ({
     avatar,

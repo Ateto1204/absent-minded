@@ -1,8 +1,9 @@
-import Task from "@/models/entities/task/Task";
-import TaskData from "@/models/entities/task/TaskData";
+import Task from "@/models/interfaces/task/Task";
+import TaskData from "@/models/interfaces/task/TaskData";
 import TaskStatus from "@/models/enums/TaskStatus";
 
 interface TaskViewModel {
+    allTasks: Task[];
     tasks: Task[];
     addTask: (newTask: Task) => void;
     deleteTask: (taskId: string) => void;

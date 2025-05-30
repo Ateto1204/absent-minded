@@ -7,7 +7,7 @@ const SignOutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
             <AlertDialog.Trigger>
                 <Button size="1" color="gray" variant="soft">
                     <Tooltip content="Sign out">
-                        <Flex align="center" gap="3">
+                        <Flex align="center" gap="2">
                             <Text size="2">sign out</Text>
                             <PiSignOutBold />
                         </Flex>

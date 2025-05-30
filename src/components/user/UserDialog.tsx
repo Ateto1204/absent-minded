@@ -10,8 +10,8 @@ import SignOutDialog from "@/components/dialogs/SignOutDialog";
 import { LuUser } from "react-icons/lu";
 import { useUserContext } from "@/context/UserContext";
 import { useState } from "react";
-import UserConsoleProps from "@/components/projectMenu/UserConsoleProps";
-import UserPlanBadge from "@/components/projectMenu/UserPlanBadge";
+import UserConsoleProps from "@/models/interfaces/dto/UserConsoleProps";
+import UserPlanBadge from "@/components/user/UserPlanBadge";
 
 const UserDialog = ({
     avatar,
@@ -32,7 +32,7 @@ const UserDialog = ({
     };
     return (
         <Dialog.Content>
-            <Flex direction="column" justify="center" gap="4" className="py-3">
+            <Flex direction="column" justify="center" gap="3" className="py-3">
                 <Dialog.Title>
                     <Flex justify="start" align="center" gap="3">
                         <Avatar
@@ -68,7 +68,9 @@ const UserDialog = ({
                         {saveStatus}
                     </Button>
                 </Flex>
-                <SignOutDialog handleSignout={handleSignout} />
+                <Dialog.Description>
+                    <SignOutDialog handleSignout={handleSignout} />
+                </Dialog.Description>
             </Flex>
         </Dialog.Content>
     );

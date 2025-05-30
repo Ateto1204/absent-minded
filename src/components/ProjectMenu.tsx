@@ -6,7 +6,7 @@ import { useProjectContext } from "@/context/ProjectContext";
 import { Button, Flex, Tooltip } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/lib/supabase";
-import UserConsole from "@/components/projectMenu/UserConsole";
+import UserConsole from "@/components/user/UserConsole";
 import { useUserContext } from "@/context/UserContext";
 
 function ProjectMenu() {

@@ -1,5 +1,5 @@
 import Flow from "@/components/flows/Flow";
-import ProjectMenu from "@/components/projectMenu/ProjectMenu";
+import ProjectMenu from "@/components/ProjectMenu";
 import { Flex, Select, Text } from "@radix-ui/themes";
 import { memo, useEffect, useState } from "react";
 import ArchivedTasksList from "@/components/archived/ArchivedTasksList";

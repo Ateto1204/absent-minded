@@ -5,21 +5,38 @@ import { useEffect, useState } from "react";
 import TaskData from "@/models/interfaces/task/TaskData";
 import { useProjectContext } from "@/context/ProjectContext";
 import TaskStatus from "@/models/enums/TaskStatus";
+import { useUserContext } from "@/context/UserContext";
 
 const useTaskViewModel = (): TaskViewModel => {
+    const [allTasks, setAllTasks] = useState<Task[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { currentProject, currentRoot, setupRootTask } = useProjectContext();
+    const { userEmail } = useUserContext();
 
     useEffect(() => {
-        const fetchTasks = async () => {
+        const fetchTasksByUser = async () => {
+            try {
+                const fetchedTasks = await TaskService.getTasksByUser(
+                    userEmail
+                );
+                setAllTasks(fetchedTasks);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (err: any) {
+                setError(err.message || "Failed to fetch tasks");
+            }
+        };
+
+        const fetchTasksByProject = async () => {
             setLoading(true);
             setSuccess(false);
             setError(null);
             try {
-                const fetchedTasks = await TaskService.getTasks(currentProject);
+                const fetchedTasks = await TaskService.getTasksByProject(
+                    currentProject
+                );
                 setTasks(fetchedTasks);
                 setSuccess(true);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,8 +46,10 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         };
-        fetchTasks();
-    }, [currentProject]);
+
+        fetchTasksByProject();
+        fetchTasksByUser();
+    }, [userEmail, currentProject]);
 
     const addTask = async (task: Task) => {
         setLoading(true);
@@ -170,6 +189,7 @@ const useTaskViewModel = (): TaskViewModel => {
     };
 
     return {
+        allTasks,
         tasks,
         addTask,
         deleteTask,
