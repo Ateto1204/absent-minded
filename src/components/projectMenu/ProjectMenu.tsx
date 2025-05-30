@@ -1,39 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ProjectDialog from "@/components/dialogs/ProjectDialog";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Button, Flex, Tooltip } from "@radix-ui/themes";
 import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@/app/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import UserConsole from "@/components/projectMenu/UserConsole";
+import { useUserContext } from "@/context/UserContext";
 
 function ProjectMenu() {
     const { projects, addProject, toggleProject, currentProject } =
         useProjectContext();
-
-    const [userEmail, setUserEmail] = useState("");
-    const [userName, setUserName] = useState("");
-    const [userAvatar, setUserAvatar] = useState("");
+    const { userEmail, userName, userAvatar } = useUserContext();
 
     const router = useRouter();
-
-    useEffect(() => {
-        const getUserInfo = async () => {
-            const { data } = await supabase.auth.getUser();
-            if (data?.user) {
-                setUserEmail(data.user.email ?? "");
-                setUserName(data.user.user_metadata.full_name ?? "");
-                const avatar =
-                    data.user.user_metadata.avatar_url ??
-                    data.user.user_metadata.picture ??
-                    "";
-                setUserAvatar(avatar);
-            }
-        };
-        getUserInfo();
-    }, []);
 
     const handleAddProject = () => {
         const id = uuidv4();

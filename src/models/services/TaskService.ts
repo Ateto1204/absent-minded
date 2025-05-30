@@ -1,4 +1,4 @@
-import Task from "@/models/entities/task/Task";
+import Task from "@/models/interfaces/task/Task";
 
 class TaskService {
     private static STORAGE_KEY = "tasks";

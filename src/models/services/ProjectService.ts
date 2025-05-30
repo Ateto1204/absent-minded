@@ -1,4 +1,4 @@
-import Project from "@/models/entities/project/Project";
+import Project from "@/models/interfaces/project/Project";
 
 class ProjectService {
     private static STORAGE_KEY = "projects";

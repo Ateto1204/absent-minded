@@ -6,6 +6,7 @@ interface Task {
     data: TaskData;
     parent: string;
     project: string;
+    user: string;
     status: TaskStatus;
 }
 

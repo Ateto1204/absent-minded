@@ -5,6 +5,7 @@ import TaskStatus from "@/models/enums/TaskStatus";
 import { Button, DataList, Flex, Separator } from "@radix-ui/themes";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useUserContext } from "@/context/UserContext";
 
 enum AppliedStatus {
     Apply = "apply",
@@ -25,7 +26,10 @@ const MessageBubble = ({
     const [appliedStatus, setAppliedStatus] = useState<AppliedStatus>(
         AppliedStatus.Apply
     );
+    const { userEmail } = useUserContext();
+
     let jsonObj = null;
+
     if (
         sender === "bot" &&
         typeof text === "string" &&
@@ -47,6 +51,7 @@ const MessageBubble = ({
             data: jsonObj,
             parent: currentRoot,
             project: currentProject,
+            user: userEmail,
             status: TaskStatus.Active,
         };
         setAppliedStatus(AppliedStatus.Loading);

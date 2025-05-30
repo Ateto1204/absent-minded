@@ -35,7 +35,11 @@ export function tasksToEdges(tasks: NodeTask[], root: string): Edge[] {
         }));
 }
 
-export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
+export function tasksToNodeTasks(
+    tasks: Task[],
+    project: string,
+    user: string
+): NodeTask[] {
     const avtiveTasks = tasks.filter((t) => t.status === TaskStatus.Active);
     if (avtiveTasks.length === 0) {
         return [
@@ -51,6 +55,7 @@ export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
                 project,
                 status: TaskStatus.Active,
                 type: "placeholder",
+                user,
             },
         ];
     }
@@ -74,6 +79,7 @@ export function tasksToNodeTasks(tasks: Task[], project: string): NodeTask[] {
             project,
             status: TaskStatus.Active,
             type: "placeholder",
+            user,
         });
     }
     return nodeTasks;
