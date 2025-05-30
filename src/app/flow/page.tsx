@@ -1,13 +1,13 @@
 "use client";
 
 import { ReactFlowProvider } from "@xyflow/react";
-import { NodeSelectionProvider } from "@/context/NodeSelectionContext";
 import { TaskProvider } from "@/context/TaskContext";
 import { ProjectProvider } from "@/context/ProjectContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import FlowView from "@/components/views/FlowView";
+import { ServerUriProvider } from "@/context/ServerUriContext";
 
 export default function Home() {
     const [mounted, setMounted] = useState(false);
@@ -26,11 +26,11 @@ export default function Home() {
     return (
         <ProjectProvider>
             <TaskProvider>
-                <NodeSelectionProvider>
+                <ServerUriProvider>
                     <ReactFlowProvider>
                         {mounted && <FlowView />}
                     </ReactFlowProvider>
-                </NodeSelectionProvider>
+                </ServerUriProvider>
             </TaskProvider>
         </ProjectProvider>
     );
