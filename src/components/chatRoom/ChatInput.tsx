@@ -1,26 +1,35 @@
-import { Button, TextField } from "@radix-ui/themes";
+import { useChatContext } from "@/context/ChatContext";
+import { Button, Flex, TextField } from "@radix-ui/themes";
+import { useState } from "react";
 
-const ChatInput = ({
-    value,
-    onChange,
-    onSend,
-}: {
-    value: string;
-    onChange: (v: string) => void;
-    onSend: () => void;
-}) => (
-    <div className="flex gap-2 p-3 border-t bg-white">
-        <TextField.Root
-            className="flex-1"
-            placeholder="Type your message..."
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onKeyDown={(e) => {
-                if (e.key === "Enter") onSend();
-            }}
-        />
-        <Button onClick={onSend}>Send</Button>
-    </div>
-);
+const ChatInput = () => {
+    const { sendMessage, loading } = useChatContext();
+    const [input, setInput] = useState("");
+
+    const handleSendMessage = () => {
+        if (input.trim() === "") return;
+        const prompt = input;
+        setInput("");
+        sendMessage(prompt);
+    };
+
+    return (
+        <Flex gap="2" p="3" className="border-t bg-white">
+            <TextField.Root
+                disabled={loading}
+                className="flex-1"
+                placeholder="Type your message..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSendMessage();
+                }}
+            />
+            <Button disabled={loading} onClick={handleSendMessage}>
+                Send
+            </Button>
+        </Flex>
+    );
+};
 
 export default ChatInput;

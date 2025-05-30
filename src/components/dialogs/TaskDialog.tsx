@@ -123,15 +123,17 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                 </DataList.Root>
                 <Flex justify="end" gapX="2" className="mt-8">
                     <TaskStatusUpdateButton id={id} />
-                    <Button
-                        color="blue"
-                        variant="solid"
-                        onClick={handleSave}
-                        loading={loading}
-                        disabled={loading}
-                    >
-                        <Text size="1">Save</Text>
-                    </Button>
+                    <Dialog.Close>
+                        <Button
+                            color="blue"
+                            variant="solid"
+                            onClick={handleSave}
+                            loading={loading}
+                            disabled={loading}
+                        >
+                            <Text size="1">Save</Text>
+                        </Button>
+                    </Dialog.Close>
                 </Flex>
             </Dialog.Content>
         </Flex>

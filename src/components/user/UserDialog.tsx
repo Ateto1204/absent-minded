@@ -16,7 +16,7 @@ import { useTaskContext } from "@/context/TaskContext";
 import UserPlanHint from "@/components/user/UserPlanHint";
 
 const UserDialog = ({ handleSignout }: { handleSignout: () => void }) => {
-    const { userEmail, userName, userAvatar } = useUserContext();
+    const { userEmail, userName, userAvatar, userCreated } = useUserContext();
     const { serverUri, setServerUri } = useUserContext();
     const [uriState, setUriState] = useState(serverUri);
     const [saveStatus, setSaveStatus] = useState<"Save" | "Done">("Save");
@@ -54,6 +54,16 @@ const UserDialog = ({ handleSignout }: { handleSignout: () => void }) => {
                         </Flex>
                     </Flex>
                 </Dialog.Title>
+                <Text size="1" color="gray">
+                    Create at:{" "}
+                    {new Date(userCreated).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                    })}
+                </Text>
                 <Flex justify="between" align="center" className="pb-5">
                     <Flex align="center" gap="2">
                         <UserPlanHint />

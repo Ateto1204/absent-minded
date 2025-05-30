@@ -38,15 +38,18 @@ function ProjectDialog({
                 <span>{project.name}</span>
                 <Tooltip content="Edit project info">
                     <Dialog.Trigger>
-                        <button
+                        <Button
+                            onClick={(e) => e.stopPropagation()}
                             className={`ml-2 text-md px-2 py-0.5 rounded text-white font-bold ${
                                 isActive
                                     ? "hover:bg-blue-700"
                                     : "hover:bg-gray-700"
                             }`}
+                            variant="ghost"
+                            size="3"
                         >
                             ...
-                        </button>
+                        </Button>
                     </Dialog.Trigger>
                 </Tooltip>
             </li>
@@ -62,7 +65,9 @@ function ProjectDialog({
                     </Flex>
                 </Dialog.Title>
                 <Flex gapX="2" my="5">
-                    <Text className="relative pt-0.5">name :</Text>
+                    <Dialog.Description>
+                        <Text className="relative pt-0.5">name :</Text>
+                    </Dialog.Description>
                     <TextField.Root
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -82,17 +87,20 @@ function ProjectDialog({
                         </AlertDialog.Trigger>
                         <AlertDialog.Content>
                             <AlertDialog.Title />
+                            <AlertDialog.Description />
                             <DeleteDialog id={project.id} type="project" />
                         </AlertDialog.Content>
                     </AlertDialog.Root>
-                    <Button
-                        color="blue"
-                        variant="solid"
-                        onClick={handleSave}
-                        loading={loading}
-                    >
-                        Save
-                    </Button>
+                    <Dialog.Close>
+                        <Button
+                            color="blue"
+                            variant="solid"
+                            onClick={handleSave}
+                            loading={loading}
+                        >
+                            Save
+                        </Button>
+                    </Dialog.Close>
                 </div>
             </Dialog.Content>
         </Dialog.Root>

@@ -2,42 +2,38 @@ import { useProjectContext } from "@/context/ProjectContext";
 import { useTaskContext } from "@/context/TaskContext";
 import Task from "@/models/interfaces/task/Task";
 import TaskStatus from "@/models/enums/TaskStatus";
-import { Button, DataList, Flex, Separator } from "@radix-ui/themes";
+import { Button, DataList, Flex, Separator, Spinner } from "@radix-ui/themes";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useUserContext } from "@/context/UserContext";
+import Message from "@/models/interfaces/message/Message";
+import MsgSender from "@/models/enums/MsgSender";
+import GptAppliedStatus from "@/models/enums/GptAppliedStatus";
 
-enum AppliedStatus {
-    Apply = "apply",
-    Applied = "applied",
-    Failed = "failed",
-    Loading = "loading",
-}
-
-const MessageBubble = ({
-    text,
-    sender,
-}: {
-    text: string;
-    sender: "user" | "bot";
-}) => {
+const MessageBubble = ({ text, sender }: Message) => {
     const { addTask, success, error } = useTaskContext();
     const { currentProject, currentRoot } = useProjectContext();
-    const [appliedStatus, setAppliedStatus] = useState<AppliedStatus>(
-        AppliedStatus.Apply
+    const [appliedStatus, setAppliedStatus] = useState<GptAppliedStatus>(
+        GptAppliedStatus.Apply
     );
     const { userEmail } = useUserContext();
 
     let jsonObj = null;
 
     if (
-        sender === "bot" &&
+        sender === MsgSender.Gpt &&
         typeof text === "string" &&
         text.trim().startsWith("{") &&
         text.trim().endsWith("}")
     ) {
         try {
             jsonObj = JSON.parse(text);
+            const today = new Date().toISOString().split("T")[0];
+            jsonObj = {
+                ...jsonObj,
+                start: today,
+                deadline: today,
+            };
         } catch {}
     }
 
@@ -54,12 +50,12 @@ const MessageBubble = ({
             user: userEmail,
             status: TaskStatus.Active,
         };
-        setAppliedStatus(AppliedStatus.Loading);
-        await addTask(task);
+        setAppliedStatus(GptAppliedStatus.Loading);
+        addTask(task);
         if (success) {
-            setAppliedStatus(AppliedStatus.Applied);
+            setAppliedStatus(GptAppliedStatus.Applied);
         } else if (error) {
-            setAppliedStatus(AppliedStatus.Failed);
+            setAppliedStatus(GptAppliedStatus.Failed);
         }
     };
 
@@ -80,7 +76,7 @@ const MessageBubble = ({
                             size="1"
                             color="gray"
                             onClick={handleApply}
-                            disabled={appliedStatus !== AppliedStatus.Apply}
+                            disabled={appliedStatus !== GptAppliedStatus.Apply}
                         >
                             {appliedStatus}
                         </Button>
@@ -100,15 +96,19 @@ const MessageBubble = ({
                     </DataList.Root>
                 </Flex>
             ) : (
-                <div
-                    className={`px-3 py-2 rounded-2xl shadow max-w-[70%] text-sm leading-snug ${
+                <Flex
+                    align="center"
+                    gap="2"
+                    className={`px-3 py-2 rounded-2xl shadow max-w-[70%] text-sm leading-snug whitespace-pre-line ${
                         sender === "user"
                             ? "bg-blue-500 text-white rounded-br-none"
                             : "bg-gray-200 text-gray-900 rounded-bl-none"
                     }`}
                 >
+                    {sender === MsgSender.Gpt &&
+                        text.toLowerCase().startsWith("think") && <Spinner />}
                     {text}
-                </div>
+                </Flex>
             )}
         </div>
     );

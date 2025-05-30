@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import FlowView from "@/components/flows/FlowView";
 import { UserProvider } from "@/context/UserContext";
+import { ChatProvider } from "@/context/ChatContext";
 
 export default function Home() {
     const [mounted, setMounted] = useState(false);
@@ -27,9 +28,11 @@ export default function Home() {
         <UserProvider>
             <ProjectProvider>
                 <TaskProvider>
-                    <ReactFlowProvider>
-                        {mounted && <FlowView />}
-                    </ReactFlowProvider>
+                    <ChatProvider>
+                        <ReactFlowProvider>
+                            {mounted && <FlowView />}
+                        </ReactFlowProvider>
+                    </ChatProvider>
                 </TaskProvider>
             </ProjectProvider>
         </UserProvider>

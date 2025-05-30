@@ -11,7 +11,11 @@ const UpgradeDialogContent = () => {
                     Upgrade to Pro plan
                 </Text>
             </Dialog.Title>
-            <Text size="2">Unlock the Cloud solution and AI assistant.</Text>
+            <Dialog.Description>
+                <Text size="2">
+                    Unlock the Cloud solution and AI assistant.
+                </Text>
+            </Dialog.Description>
             <Flex gap="3" mt="2" align="center">
                 <AlertDialog.Root>
                     <AlertDialog.Trigger>
