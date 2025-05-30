@@ -1,41 +1,46 @@
-import { Avatar, Card, Flex, Text } from "@radix-ui/themes";
-import SignOutDialog from "@/components/dialogs/SignOutDialog";
+import { Avatar, Card, Dialog, Flex, Text } from "@radix-ui/themes";
 import { LuUser } from "react-icons/lu";
+import UserDialog from "@/components/projectMenu/UserDialog";
+import UserConsoleProps from "@/components/projectMenu/UserConsoleProps";
 
 const UserConsole = ({
     avatar,
     name,
     email,
     handleSignout,
-}: {
-    avatar: string;
-    name: string;
-    email: string;
-    handleSignout: () => void;
-}) => {
+}: UserConsoleProps) => {
     return (
-        <Flex
-            direction="column"
-            align="start"
-            justify="between"
-            className="absolute bottom-4 left-3 right-4 text-zinc-400 mb-2"
-        >
-            <Card mb="3">
-                <Flex align="center" gap="2">
-                    <Avatar
-                        src={avatar}
-                        size="2"
-                        radius="full"
-                        fallback={<LuUser />}
-                    />
-                    <Flex direction="column">
-                        <Text size="2">{name}</Text>
-                        <Text size="1">{email}</Text>
-                    </Flex>
-                    <SignOutDialog handleSignout={handleSignout} />
-                </Flex>
-            </Card>
-        </Flex>
+        <Dialog.Root>
+            <Flex
+                direction="column"
+                align="center"
+                justify="between"
+                className="absolute bottom-4 left-3 right-4 text-zinc-400 mb-2"
+            >
+                <Dialog.Trigger>
+                    <Card mb="1">
+                        <Flex align="center" gap="2">
+                            <Avatar
+                                src={avatar}
+                                size="2"
+                                radius="full"
+                                fallback={<LuUser />}
+                            />
+                            <Flex direction="column">
+                                <Text size="2">{name}</Text>
+                                <Text size="1">{email}</Text>
+                            </Flex>
+                        </Flex>
+                    </Card>
+                </Dialog.Trigger>
+                <UserDialog
+                    avatar={avatar}
+                    name={name}
+                    email={email}
+                    handleSignout={handleSignout}
+                />
+            </Flex>
+        </Dialog.Root>
     );
 };
 
