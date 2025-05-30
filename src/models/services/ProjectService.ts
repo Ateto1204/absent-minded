@@ -13,9 +13,9 @@ class ProjectService {
         return projects;
     }
 
-    static async getProjects(id: string): Promise<Project[]> {
+    static async getProjects(user: string): Promise<Project[]> {
         const allProjects = ProjectService.getAllProjects();
-        const projects = allProjects.filter((p) => p.user === id);
+        const projects = allProjects.filter((p) => p.user === user);
         return this.delay(projects);
     }
 

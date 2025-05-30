@@ -39,15 +39,6 @@ class TaskService {
         return this.delay(undefined);
     }
 
-    static async updateTask(updatedTask: Task): Promise<void> {
-        let tasks = TaskService.getAllTasks();
-        tasks = tasks.map((task) =>
-            task.id === updatedTask.id ? updatedTask : task
-        );
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
-        return this.delay(undefined);
-    }
-
     static async updateTasks(updatedTasks: Task[]): Promise<void> {
         let tasks = TaskService.getAllTasks();
         tasks = tasks.map((task) => {

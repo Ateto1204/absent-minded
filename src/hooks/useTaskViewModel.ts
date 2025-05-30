@@ -122,7 +122,7 @@ const useTaskViewModel = (): TaskViewModel => {
             setTasks(updated);
             const taskToUpdate = updated.find((t) => t.id === taskId);
             if (taskToUpdate) {
-                await TaskService.updateTask(taskToUpdate);
+                await TaskService.updateTasks([taskToUpdate]);
             }
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
