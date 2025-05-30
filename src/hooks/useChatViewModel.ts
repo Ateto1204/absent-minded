@@ -34,6 +34,7 @@ const useChatViewModel = (): ChatViewModel => {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({ message: prompt }),
             });
             let botText = "";
