@@ -5,7 +5,7 @@ import { TaskProvider } from "@/context/TaskContext";
 import { ProjectProvider } from "@/context/ProjectContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/app/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import FlowView from "@/components/views/FlowView";
 import { UserProvider } from "@/context/UserContext";
 
@@ -24,14 +24,14 @@ export default function Home() {
     }, [router]);
 
     return (
-        <ProjectProvider>
-            <TaskProvider>
-                <UserProvider>
+        <UserProvider>
+            <ProjectProvider>
+                <TaskProvider>
                     <ReactFlowProvider>
                         {mounted && <FlowView />}
                     </ReactFlowProvider>
-                </UserProvider>
-            </TaskProvider>
-        </ProjectProvider>
+                </TaskProvider>
+            </ProjectProvider>
+        </UserProvider>
     );
 }
