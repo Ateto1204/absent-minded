@@ -15,9 +15,11 @@ const UnsubscribeDialogContent = () => {
                 <Text size="2" align="center">
                     Enjoy cloud sync and advanced AI assistant features.
                 </Text>
-                <Text size="2" align="center">
-                    Thank you for being a Pro user!
-                </Text>
+                <Dialog.Description>
+                    <Text size="2" align="center">
+                        Thank you for being a Pro user!
+                    </Text>
+                </Dialog.Description>
             </Flex>
             <Flex gap="3" mt="2" align="center">
                 <Dialog.Close>

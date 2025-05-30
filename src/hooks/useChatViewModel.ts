@@ -75,14 +75,24 @@ const useChatViewModel = (): ChatViewModel => {
                     return [
                         ...prev,
                         {
-                            text: `Oops! Something went wrong: ${e}`,
+                            text: `[${e}]
+                            Oops! Something went wrong, please check with the steps: \n
+                            1. Open the user console
+                            2. Check the server URI is correct
+                            3. Check your server is accessible
+                            `,
                             sender: MsgSender.Gpt,
                         },
                     ];
                 const realIndex = prev.length - 1 - index;
                 const newMessages = [...prev];
                 newMessages[realIndex] = {
-                    text: `Oops! Something went wrong: ${e}`,
+                    text: `[${e}]
+                            Oops! Something went wrong, please check with the steps: \n
+                            1. Open the user console
+                            2. Check the server URI is correct
+                            3. Check your server is accessible
+                            `,
                     sender: MsgSender.Gpt,
                 };
                 return newMessages;

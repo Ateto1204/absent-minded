@@ -7,6 +7,7 @@ const ChatInput = () => {
     const [input, setInput] = useState("");
 
     const handleSendMessage = () => {
+        if (input.trim() === "") return;
         const prompt = input;
         setInput("");
         sendMessage(prompt);
