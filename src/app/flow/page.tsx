@@ -6,7 +6,7 @@ import { ProjectProvider } from "@/context/ProjectContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import FlowView from "@/components/views/FlowView";
+import FlowView from "@/components/flows/FlowView";
 import { UserProvider } from "@/context/UserContext";
 
 export default function Home() {

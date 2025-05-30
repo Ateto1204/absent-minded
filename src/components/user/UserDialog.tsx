@@ -12,6 +12,8 @@ import { useUserContext } from "@/context/UserContext";
 import { useState } from "react";
 import UserConsoleProps from "@/models/interfaces/dto/UserConsoleProps";
 import UserPlanBadge from "@/components/user/UserPlanBadge";
+import PieChart from "@/components/PieChart";
+import { useTaskContext } from "@/context/TaskContext";
 
 const UserDialog = ({
     avatar,
@@ -22,6 +24,7 @@ const UserDialog = ({
     const { serverUri, setServerUri } = useUserContext();
     const [uriState, setUriState] = useState(serverUri);
     const [saveStatus, setSaveStatus] = useState<"Save" | "Done">("Save");
+    const { allTasks } = useTaskContext();
 
     const handleSave = (newUri: string) => {
         setTimeout(() => {
@@ -30,6 +33,7 @@ const UserDialog = ({
         setServerUri(newUri);
         setSaveStatus("Done");
     };
+
     return (
         <Dialog.Content>
             <Flex direction="column" justify="center" gap="3" className="py-3">
@@ -67,6 +71,18 @@ const UserDialog = ({
                     <Button size="2" onClick={() => handleSave(uriState)}>
                         {saveStatus}
                     </Button>
+                </Flex>
+                <Flex
+                    justify="center"
+                    my="5"
+                    direction="column"
+                    align="center"
+                    gap="4"
+                >
+                    <Text size="3" weight="bold" className="mb-2 text-zinc-100">
+                        Pie Chart of All Task Status
+                    </Text>
+                    <PieChart tasks={allTasks} />
                 </Flex>
                 <Dialog.Description>
                     <SignOutDialog handleSignout={handleSignout} />
