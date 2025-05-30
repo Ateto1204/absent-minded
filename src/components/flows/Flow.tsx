@@ -28,6 +28,7 @@ import {
 import { useProjectContext } from "@/context/ProjectContext";
 import { Flex } from "@radix-ui/themes";
 import StateBar from "./StateBar";
+import { useUserContext } from "@/context/UserContext";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };
 
@@ -38,6 +39,7 @@ export default function Flow() {
     const { tasks, loading, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
     const { currentProject, currentRoot } = useProjectContext();
+    const { userEmail } = useUserContext();
 
     useEffect(() => {
         fitView({ duration: 500, padding: 1 });
@@ -97,7 +99,7 @@ export default function Flow() {
 
     useEffect(() => {
         if ((!mounted && loading) || !currentProject) return;
-        const nodeTasks = tasksToNodeTasks(tasks, currentProject);
+        const nodeTasks = tasksToNodeTasks(tasks, currentProject, userEmail);
         const initNodes = tasksToNodes(nodeTasks);
         const initEdges = tasksToEdges(nodeTasks, currentRoot);
         const { layoutedNodes, layoutedEdges } = getLayoutedElements(
@@ -116,6 +118,7 @@ export default function Flow() {
         mounted,
         currentProject,
         currentRoot,
+        userEmail,
     ]);
 
     return (

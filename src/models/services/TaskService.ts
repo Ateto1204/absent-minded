@@ -1,4 +1,4 @@
-import Task from "@/models/entities/task/Task";
+import Task from "@/models/interfaces/task/Task";
 
 class TaskService {
     private static STORAGE_KEY = "tasks";
@@ -13,7 +13,13 @@ class TaskService {
         return allTasks;
     }
 
-    static async getTasks(projectId: string): Promise<Task[]> {
+    static async getTasksByUser(user: string): Promise<Task[]> {
+        const allTasks = TaskService.getAllTasks();
+        const tasks = allTasks.filter((task) => task.user === user);
+        return this.delay(tasks);
+    }
+
+    static async getTasksByProject(projectId: string): Promise<Task[]> {
         const allTasks = TaskService.getAllTasks();
         const tasks = allTasks.filter((task) => task.project === projectId);
         return this.delay(tasks);

@@ -1,4 +1,4 @@
-import { Button, AlertDialog, Flex, Tooltip } from "@radix-ui/themes";
+import { Button, AlertDialog, Flex, Tooltip, Text } from "@radix-ui/themes";
 import { PiSignOutBold } from "react-icons/pi";
 
 const SignOutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
@@ -7,7 +7,10 @@ const SignOutDialog = ({ handleSignout }: { handleSignout: () => void }) => {
             <AlertDialog.Trigger>
                 <Button size="1" color="gray" variant="soft">
                     <Tooltip content="Sign out">
-                        <PiSignOutBold />
+                        <Flex align="center" gap="2">
+                            <Text size="2">sign out</Text>
+                            <PiSignOutBold />
+                        </Flex>
                     </Tooltip>
                 </Button>
             </AlertDialog.Trigger>

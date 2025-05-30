@@ -1,4 +1,4 @@
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 import { Flex } from "@radix-ui/themes";
 import ArchivedTasksView from "./ArchivedTasksView";
 

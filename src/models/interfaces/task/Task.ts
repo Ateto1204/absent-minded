@@ -1,11 +1,12 @@
 import TaskData from "./TaskData";
-import TaskStatus from "./TaskStatus";
+import TaskStatus from "../../enums/TaskStatus";
 
 interface Task {
     id: string;
     data: TaskData;
     parent: string;
     project: string;
+    user: string;
     status: TaskStatus;
 }
 

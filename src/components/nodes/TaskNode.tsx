@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { AlertDialog, Dialog, Tooltip } from "@radix-ui/themes";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskDialog from "@/components/dialogs/TaskDialog";
-import TaskData from "@/models/entities/task/TaskData";
+import TaskData from "@/models/interfaces/task/TaskData";
 import DeleteDialog from "@/components/dialogs/DeleteDialog";
 import TaskPreview from "@/components/task/TaskPreview";
 import { TiDelete } from "react-icons/ti";

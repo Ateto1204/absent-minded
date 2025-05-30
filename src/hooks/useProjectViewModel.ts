@@ -1,6 +1,6 @@
-import { supabase } from "@/app/lib/supabase";
-import Project from "@/models/entities/project/Project";
-import ProjectViewModel from "@/models/entities/viewModel/ProjectViewModel";
+import { useUserContext } from "@/context/UserContext";
+import Project from "@/models/interfaces/project/Project";
+import ProjectViewModel from "@/models/interfaces/viewModel/ProjectViewModel";
 import ProjectService from "@/models/services/ProjectService";
 import { useCallback, useEffect, useState } from "react";
 
@@ -13,27 +13,17 @@ const useProjectViewModel = (): ProjectViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [email, setEmail] = useState("");
-
-    useEffect(() => {
-        const getUserInfo = async () => {
-            const { data } = await supabase.auth.getUser();
-            if (data?.user) {
-                setEmail(data.user.email ?? "");
-            }
-        };
-        getUserInfo();
-    }, []);
+    const { userEmail } = useUserContext();
 
     useEffect(() => {
         const loadProjects = async () => {
-            const all = await ProjectService.getProjects(email);
+            const all = await ProjectService.getProjects(userEmail);
             setProjects(all);
             setLoading(false);
             setSuccess(true);
         };
         loadProjects();
-    }, [projects, email]);
+    }, [projects, userEmail]);
 
     useEffect(() => {
         if (currentProject !== "") return;

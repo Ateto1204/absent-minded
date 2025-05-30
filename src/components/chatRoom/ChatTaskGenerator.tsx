@@ -1,6 +1,7 @@
 import { Button } from "@radix-ui/themes";
 import { useState } from "react";
 import ChatRoom from "./ChatRoom";
+import { useUserContext } from "@/context/UserContext";
 
 const ChatTaskGenerator = () => {
     const [open, setOpen] = useState(false);
@@ -8,20 +9,19 @@ const ChatTaskGenerator = () => {
         { text: string; sender: "user" | "bot" }[]
     >([{ text: "Hello! What do you want to do?", sender: "bot" }]);
     const [input, setInput] = useState("");
+    const { serverUri } = useUserContext();
 
     const handleSend = async () => {
         if (input.trim() === "") return;
         const userMessage = input;
         setMessages((prev) => [...prev, { text: userMessage, sender: "user" }]);
         setInput("");
-        // Add temporary "Thinking..." message
         setMessages((prev) => [
             ...prev,
             { text: "Thinking...", sender: "bot" },
         ]);
         try {
-            const server = process.env.NEXT_PUBLIC_SERVER;
-            const response = await fetch(`${server}/gpt`, {
+            const response = await fetch(`${serverUri}/gpt`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -29,16 +29,13 @@ const ChatTaskGenerator = () => {
                 body: JSON.stringify({ message: userMessage }),
             });
             let botText = "";
-            // Try to parse as text or JSON
             const contentType = response.headers.get("content-type") || "";
             if (contentType.includes("application/json")) {
                 const data = await response.json();
-                // If response is { text: ... } or similar, fallback to stringify if not
                 botText = data.text || JSON.stringify(data);
             } else {
                 botText = await response.text();
             }
-            // Replace last "Thinking..." message with real response
             setMessages((prev) => {
                 const index = [...prev]
                     .reverse()
