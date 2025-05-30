@@ -6,6 +6,8 @@ const STORAGE_KEY_PLAN = "aminded-user-plan";
 
 type UserContextType = {
     userPlan: UserPlanEnum;
+    upgradeUserPlan: () => void;
+    unsubscribeUserPlan: () => void;
     serverUri: string;
     setServerUri: (uri: string) => void;
 };
@@ -21,7 +23,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             ? localStorage.getItem(STORAGE_KEY_URI) || defaultUri
             : defaultUri
     );
-    const [userPlan] = useState(() =>
+    const [userPlan, setUserPlan] = useState(() =>
         typeof window !== "undefined"
             ? (localStorage.getItem(STORAGE_KEY_PLAN) as UserPlanEnum) ||
               defaultPlan
@@ -35,9 +37,29 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const handleUpgradeUserPlan = () => {
+        setUserPlan(UserPlanEnum.Pro);
+        if (typeof window !== "undefined") {
+            localStorage.setItem(STORAGE_KEY_PLAN, UserPlanEnum.Pro);
+        }
+    };
+
+    const handleUnsubscribeUserPlan = () => {
+        setUserPlan(UserPlanEnum.Free);
+        if (typeof window !== "undefined") {
+            localStorage.setItem(STORAGE_KEY_PLAN, UserPlanEnum.Free);
+        }
+    };
+
     return (
         <UserContext.Provider
-            value={{ userPlan, serverUri, setServerUri: handleSetServerUri }}
+            value={{
+                userPlan,
+                upgradeUserPlan: handleUpgradeUserPlan,
+                unsubscribeUserPlan: handleUnsubscribeUserPlan,
+                serverUri,
+                setServerUri: handleSetServerUri,
+            }}
         >
             {children}
         </UserContext.Provider>

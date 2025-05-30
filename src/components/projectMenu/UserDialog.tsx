@@ -8,9 +8,10 @@ import {
 } from "@radix-ui/themes";
 import SignOutDialog from "@/components/dialogs/SignOutDialog";
 import { LuUser } from "react-icons/lu";
-import { useServerUri } from "@/context/ServerUriContext";
+import { useUserContext } from "@/context/UserContext";
 import { useState } from "react";
 import UserConsoleProps from "@/components/projectMenu/UserConsoleProps";
+import UserPlanBadge from "@/components/projectMenu/UserPlanBadge";
 
 const UserDialog = ({
     avatar,
@@ -18,7 +19,7 @@ const UserDialog = ({
     email,
     handleSignout,
 }: UserConsoleProps) => {
-    const { serverUri, setServerUri } = useServerUri();
+    const { serverUri, setServerUri } = useUserContext();
     const [uriState, setUriState] = useState(serverUri);
     const [saveStatus, setSaveStatus] = useState<"Save" | "Done">("Save");
 
@@ -41,10 +42,15 @@ const UserDialog = ({
                             fallback={<LuUser />}
                         />
                         <Flex direction="column" gap="1" align="start">
-                            <Text size="4" weight="bold">
-                                {name}
+                            <Flex align="center" gap="2">
+                                <Text size="4" weight="bold">
+                                    {name}
+                                </Text>
+                                <UserPlanBadge />
+                            </Flex>
+                            <Text size="2" weight="regular">
+                                {email}
                             </Text>
-                            <Text size="2">{email}</Text>
                         </Flex>
                     </Flex>
                 </Dialog.Title>

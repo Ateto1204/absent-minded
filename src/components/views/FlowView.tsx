@@ -7,8 +7,11 @@ import { useProjectContext } from "@/context/ProjectContext";
 import GanttChart from "@/components/GanttChart";
 import Kanban from "@/components/kanban/Kanban";
 import ChatTaskGenerator from "../chatRoom/ChatTaskGenerator";
+import { useUserContext } from "@/context/UserContext";
+import UserPlanEnum from "@/models/enums/UserPlanEnum";
 
 const FlowView = () => {
+    const { userPlan } = useUserContext();
     const { currentProject } = useProjectContext();
     const [mode, setMode] = useState(() => {
         if (typeof window !== "undefined") {
@@ -30,7 +33,9 @@ const FlowView = () => {
                         <Flex justify="between">
                             <Text>{currentProject}</Text>
                             <Flex gapX="4">
-                                <ChatTaskGenerator />
+                                {userPlan === UserPlanEnum.Pro && (
+                                    <ChatTaskGenerator />
+                                )}
                                 <Select.Root
                                     value={mode}
                                     onValueChange={setMode}
