@@ -13,6 +13,7 @@ import { useState } from "react";
 import UserPlanBadge from "@/components/user/UserPlanBadge";
 import PieChart from "@/components/PieChart";
 import { useTaskContext } from "@/context/TaskContext";
+import UserPlanHint from "@/components/user/UserPlanHint";
 
 const UserDialog = ({ handleSignout }: { handleSignout: () => void }) => {
     const { userEmail, userName, userAvatar } = useUserContext();
@@ -54,9 +55,12 @@ const UserDialog = ({ handleSignout }: { handleSignout: () => void }) => {
                     </Flex>
                 </Dialog.Title>
                 <Flex justify="between" align="center" className="pb-5">
-                    <Text size="2" className="w-fit">
-                        Server URI :{" "}
-                    </Text>
+                    <Flex align="center" gap="2">
+                        <UserPlanHint />
+                        <Text size="2" className="w-fit">
+                            Server URI :{" "}
+                        </Text>
+                    </Flex>
                     <TextField.Root
                         value={uriState}
                         onChange={(e) => setUriState(e.target.value)}
