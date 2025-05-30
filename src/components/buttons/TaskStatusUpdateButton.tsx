@@ -1,5 +1,5 @@
 import { useTaskContext } from "@/context/TaskContext";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 import { Flex, Select, Separator, Text } from "@radix-ui/themes";
 import { useState } from "react";
 

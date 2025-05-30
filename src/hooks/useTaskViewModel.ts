@@ -1,10 +1,10 @@
 import TaskService from "@/models/services/TaskService";
-import Task from "@/models/entities/task/Task";
-import TaskViewModel from "@/models/entities/viewModel/TaskViewModel";
+import Task from "@/models/interfaces/task/Task";
+import TaskViewModel from "@/models/interfaces/viewModel/TaskViewModel";
 import { useEffect, useState } from "react";
-import TaskData from "@/models/entities/task/TaskData";
+import TaskData from "@/models/interfaces/task/TaskData";
 import { useProjectContext } from "@/context/ProjectContext";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 
 const useTaskViewModel = (): TaskViewModel => {
     const [tasks, setTasks] = useState<Task[]>([]);

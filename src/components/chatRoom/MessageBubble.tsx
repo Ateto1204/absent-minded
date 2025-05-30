@@ -1,7 +1,7 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { useTaskContext } from "@/context/TaskContext";
-import Task from "@/models/entities/task/Task";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import Task from "@/models/interfaces/task/Task";
+import TaskStatus from "@/models/enums/TaskStatus";
 import { Button, DataList, Flex, Separator } from "@radix-ui/themes";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";

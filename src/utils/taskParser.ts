@@ -1,7 +1,7 @@
 import { Edge, Node } from "@xyflow/react";
-import Task from "@/models/entities/task/Task";
+import Task from "@/models/interfaces/task/Task";
 import { v4 as uuidv4 } from "uuid";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 
 interface NodeTask extends Task {
     type: "task" | "placeholder";

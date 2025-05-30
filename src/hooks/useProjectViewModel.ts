@@ -1,6 +1,6 @@
 import { supabase } from "@/app/lib/supabase";
-import Project from "@/models/entities/project/Project";
-import ProjectViewModel from "@/models/entities/viewModel/ProjectViewModel";
+import Project from "@/models/interfaces/project/Project";
+import ProjectViewModel from "@/models/interfaces/viewModel/ProjectViewModel";
 import ProjectService from "@/models/services/ProjectService";
 import { useCallback, useEffect, useState } from "react";
 

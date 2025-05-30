@@ -7,7 +7,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import "@fullcalendar/common/main.css";
 import { Dialog, HoverCard } from "@radix-ui/themes";
 import TaskDialog from "@/components/dialogs/TaskDialog";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 import StateBar from "@/components/flows/StateBar";
 

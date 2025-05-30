@@ -1,4 +1,4 @@
-import TaskData from "@/models/entities/task/TaskData";
+import TaskData from "@/models/interfaces/task/TaskData";
 import { DataList, Flex, HoverCard, Text } from "@radix-ui/themes";
 
 const TaskPreviewContent = ({ id, data }: { id: string; data: TaskData }) => {

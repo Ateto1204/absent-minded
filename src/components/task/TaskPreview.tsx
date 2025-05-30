@@ -1,4 +1,4 @@
-import TaskData from "@/models/entities/task/TaskData";
+import TaskData from "@/models/interfaces/task/TaskData";
 import { HoverCard } from "@radix-ui/themes";
 import TaskPreviewContent from "./TaskPreviewContent";
 import TaskNodeView from "./TaskNodeView";

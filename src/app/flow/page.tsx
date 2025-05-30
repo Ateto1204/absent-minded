@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import FlowView from "@/components/views/FlowView";
-import { ServerUriProvider } from "@/context/ServerUriContext";
+import { UserProvider } from "@/context/UserContext";
 
 export default function Home() {
     const [mounted, setMounted] = useState(false);
@@ -26,11 +26,11 @@ export default function Home() {
     return (
         <ProjectProvider>
             <TaskProvider>
-                <ServerUriProvider>
+                <UserProvider>
                     <ReactFlowProvider>
                         {mounted && <FlowView />}
                     </ReactFlowProvider>
-                </ServerUriProvider>
+                </UserProvider>
             </TaskProvider>
         </ProjectProvider>
     );

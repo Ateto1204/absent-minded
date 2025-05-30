@@ -1,6 +1,6 @@
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 import { Draggable } from "@hello-pangea/dnd";
-import { Card, HoverCard, Text } from "@radix-ui/themes";
+import { Card, Flex, HoverCard, Text } from "@radix-ui/themes";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 
 type KanbanCardProps = {
@@ -24,18 +24,22 @@ const KanbanCard = ({ task, index, onOpenDialog }: KanbanCardProps) => (
                             if (task.status === TaskStatus.Active)
                                 onOpenDialog(task.id);
                         }}
-                        className={`p-2 my-3 hover:shadow-md shadow-gray-700 transition-shadow ${
+                        className={`p-2 hover:shadow-md shadow-gray-700 transition-shadow ${
                             snapshot.isDragging
                                 ? "bg-blue-700"
                                 : "bg-neutral-800"
                         }`}
                     >
-                        <Text className="font-medium">{task.data.label}</Text>
-                        {task.data.description && (
-                            <Text size="1" color="gray">
-                                {task.data.description}
+                        <Flex direction="column" gap="2">
+                            <Text className="font-medium">
+                                {task.data.label}
                             </Text>
-                        )}
+                            {task.data.description && (
+                                <Text size="1" color="gray">
+                                    {task.data.description}
+                                </Text>
+                            )}
+                        </Flex>
                     </Card>
                 </HoverCard.Trigger>
                 <TaskPreviewContent id={task.id} data={task.data} />

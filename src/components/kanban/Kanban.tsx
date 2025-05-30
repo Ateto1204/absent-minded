@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 import { Flex } from "@radix-ui/themes";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { Dialog } from "@radix-ui/themes";

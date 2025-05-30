@@ -11,10 +11,10 @@ import {
 import { BaseNode } from "@/components/nodes/base-node";
 import { v4 as uuidv4 } from "uuid";
 import { useTaskContext } from "@/context/TaskContext";
-import Task from "@/models/entities/task/Task";
+import Task from "@/models/interfaces/task/Task";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Tooltip } from "@radix-ui/themes";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;

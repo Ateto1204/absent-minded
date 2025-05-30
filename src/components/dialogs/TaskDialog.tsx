@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/themes";
 import { useState } from "react";
 import { useTaskContext } from "@/context/TaskContext";
-import TaskData from "@/models/entities/task/TaskData";
+import TaskData from "@/models/interfaces/task/TaskData";
 import TaskStatusUpdateButton from "@/components/buttons/TaskStatusUpdateButton";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {

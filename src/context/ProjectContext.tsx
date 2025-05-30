@@ -1,7 +1,7 @@
 "use client";
 
 import useProjectViewModel from "@/hooks/useProjectViewModel";
-import ProjectViewModel from "@/models/entities/viewModel/ProjectViewModel";
+import ProjectViewModel from "@/models/interfaces/viewModel/ProjectViewModel";
 import { createContext, useContext, ReactNode } from "react";
 
 const ProjectContext = createContext<ProjectViewModel | undefined>(undefined);

@@ -1,6 +1,6 @@
 import Task from "@/models/entities/task/Task";
 import TaskData from "@/models/entities/task/TaskData";
-import TaskStatus from "@/models/entities/task/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 
 interface TaskViewModel {
     tasks: Task[];
