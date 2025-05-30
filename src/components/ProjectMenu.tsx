@@ -12,7 +12,7 @@ import { useUserContext } from "@/context/UserContext";
 function ProjectMenu() {
     const { projects, addProject, toggleProject, currentProject } =
         useProjectContext();
-    const { userEmail, userName, userAvatar } = useUserContext();
+    const { userEmail } = useUserContext();
 
     const router = useRouter();
 
@@ -61,12 +61,7 @@ function ProjectMenu() {
                     ))}
                 </ul>
             </div>
-            <UserConsole
-                avatar={userAvatar}
-                name={userName}
-                email={userEmail}
-                handleSignout={handleSignout}
-            />
+            <UserConsole handleSignout={handleSignout} />
         </Flex>
     );
 }

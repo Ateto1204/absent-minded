@@ -1,14 +1,11 @@
 import { Avatar, Card, Dialog, Flex, Text } from "@radix-ui/themes";
 import { LuUser } from "react-icons/lu";
 import UserDialog from "@/components/user/UserDialog";
-import UserConsoleProps from "@/models/interfaces/dto/UserConsoleProps";
+import { useUserContext } from "@/context/UserContext";
 
-const UserConsole = ({
-    avatar,
-    name,
-    email,
-    handleSignout,
-}: UserConsoleProps) => {
+const UserConsole = ({ handleSignout }: { handleSignout: () => void }) => {
+    const { userEmail, userName, userAvatar } = useUserContext();
+
     return (
         <Dialog.Root>
             <Flex
@@ -18,27 +15,24 @@ const UserConsole = ({
                 className="absolute bottom-4 left-3 right-4 text-zinc-400 mb-2"
             >
                 <Dialog.Trigger>
-                    <Card mb="1">
-                        <Flex align="center" gap="2">
-                            <Avatar
-                                src={avatar}
-                                size="2"
-                                radius="full"
-                                fallback={<LuUser />}
-                            />
-                            <Flex direction="column">
-                                <Text size="2">{name}</Text>
-                                <Text size="1">{email}</Text>
+                    <div className="cursor-pointer">
+                        <Card mb="1">
+                            <Flex align="center" gap="2">
+                                <Avatar
+                                    src={userAvatar}
+                                    size="2"
+                                    radius="full"
+                                    fallback={<LuUser />}
+                                />
+                                <Flex direction="column">
+                                    <Text size="2">{userName}</Text>
+                                    <Text size="1">{userEmail}</Text>
+                                </Flex>
                             </Flex>
-                        </Flex>
-                    </Card>
+                        </Card>
+                    </div>
                 </Dialog.Trigger>
-                <UserDialog
-                    avatar={avatar}
-                    name={name}
-                    email={email}
-                    handleSignout={handleSignout}
-                />
+                <UserDialog handleSignout={handleSignout} />
             </Flex>
         </Dialog.Root>
     );

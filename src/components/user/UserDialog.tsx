@@ -10,17 +10,12 @@ import SignOutDialog from "@/components/dialogs/SignOutDialog";
 import { LuUser } from "react-icons/lu";
 import { useUserContext } from "@/context/UserContext";
 import { useState } from "react";
-import UserConsoleProps from "@/models/interfaces/dto/UserConsoleProps";
 import UserPlanBadge from "@/components/user/UserPlanBadge";
 import PieChart from "@/components/PieChart";
 import { useTaskContext } from "@/context/TaskContext";
 
-const UserDialog = ({
-    avatar,
-    name,
-    email,
-    handleSignout,
-}: UserConsoleProps) => {
+const UserDialog = ({ handleSignout }: { handleSignout: () => void }) => {
+    const { userEmail, userName, userAvatar } = useUserContext();
     const { serverUri, setServerUri } = useUserContext();
     const [uriState, setUriState] = useState(serverUri);
     const [saveStatus, setSaveStatus] = useState<"Save" | "Done">("Save");
@@ -40,7 +35,7 @@ const UserDialog = ({
                 <Dialog.Title>
                     <Flex justify="start" align="center" gap="3">
                         <Avatar
-                            src={avatar}
+                            src={userAvatar}
                             size="4"
                             radius="full"
                             fallback={<LuUser />}
@@ -48,12 +43,12 @@ const UserDialog = ({
                         <Flex direction="column" gap="1" align="start">
                             <Flex align="center" gap="3">
                                 <Text size="4" weight="bold">
-                                    {name}
+                                    {userName}
                                 </Text>
                                 <UserPlanBadge />
                             </Flex>
                             <Text size="2" weight="regular">
-                                {email}
+                                {userEmail}
                             </Text>
                         </Flex>
                     </Flex>
