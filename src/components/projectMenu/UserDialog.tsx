@@ -42,7 +42,7 @@ const UserDialog = ({
                             fallback={<LuUser />}
                         />
                         <Flex direction="column" gap="1" align="start">
-                            <Flex align="center" gap="2">
+                            <Flex align="center" gap="3">
                                 <Text size="4" weight="bold">
                                     {name}
                                 </Text>

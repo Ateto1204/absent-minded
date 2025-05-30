@@ -8,12 +8,19 @@ const UserPlanBadge = () => {
     return (
         <Dialog.Root>
             <Dialog.Trigger>
-                <Badge
-                    color={userPlan === UserPlanEnum.Free ? "gray" : "blue"}
-                    style={{ cursor: "pointer" }}
-                >
-                    {userPlan}
-                </Badge>
+                <Flex align="center" gap="2" className="cursor-pointer">
+                    <Badge
+                        color={userPlan === UserPlanEnum.Free ? "gray" : "blue"}
+                        style={{ cursor: "pointer" }}
+                    >
+                        {userPlan}
+                    </Badge>
+                    {userPlan === UserPlanEnum.Free && (
+                        <Text size="1" color="blue">
+                            Upgrade
+                        </Text>
+                    )}
+                </Flex>
             </Dialog.Trigger>
             <Dialog.Content>
                 {userPlan === UserPlanEnum.Free ? (
@@ -34,7 +41,7 @@ const UserPlanBadge = () => {
                                     size="1"
                                     onClick={upgradeUserPlan}
                                 >
-                                    Upgrade
+                                    Upgrade ($1.99/mon)
                                 </Button>
                             </Dialog.Close>
                             <Dialog.Close>
