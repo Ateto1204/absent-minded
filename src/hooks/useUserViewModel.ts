@@ -26,18 +26,25 @@ const useUserViewModel = (): UserViewModel => {
     const [userEmail, setUserEmail] = useState("");
     const [userName, setUserName] = useState("");
     const [userAvatar, setUserAvatar] = useState("");
+    const [userCreated, setUserCreated] = useState("");
+    const [authToken, setAuthToken] = useState("");
 
     useEffect(() => {
         const getUserInfo = async () => {
-            const { data } = await supabase.auth.getUser();
-            if (data?.user) {
-                setUserEmail(data.user.email ?? "");
-                setUserName(data.user.user_metadata.full_name ?? "");
+            const { data: userData } = await supabase.auth.getUser();
+            const { data: sessionData } = await supabase.auth.getSession();
+            if (sessionData?.session?.access_token) {
+                setAuthToken(sessionData.session.access_token);
+            }
+            if (userData?.user) {
+                setUserEmail(userData.user.email ?? "");
+                setUserName(userData.user.user_metadata.full_name ?? "");
                 const avatar =
-                    data.user.user_metadata.avatar_url ??
-                    data.user.user_metadata.picture ??
+                    userData.user.user_metadata.avatar_url ??
+                    userData.user.user_metadata.picture ??
                     "";
                 setUserAvatar(avatar);
+                setUserCreated(userData.user.created_at);
             }
         };
         getUserInfo();
@@ -68,11 +75,13 @@ const useUserViewModel = (): UserViewModel => {
         userEmail,
         userName,
         userAvatar,
+        userCreated,
         serverUri,
         userPlan,
         upgradeUserPlan: handleUpgradeUserPlan,
         unsubscribeUserPlan: handleUnsubscribeUserPlan,
         setServerUri: handleSetServerUri,
+        authToken,
     };
 };
 
