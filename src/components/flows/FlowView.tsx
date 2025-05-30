@@ -1,23 +1,25 @@
 import Flow from "@/components/flows/Flow";
 import ProjectMenu from "@/components/ProjectMenu";
-import { Flex, Select, Text } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { memo, useEffect, useState } from "react";
 import ArchivedTasksList from "@/components/archived/ArchivedTasksList";
-import { useProjectContext } from "@/context/ProjectContext";
 import GanttChart from "@/components/GanttChart";
 import Kanban from "@/components/kanban/Kanban";
-import ChatTaskGenerator from "../chatRoom/ChatTaskGenerator";
-import { useUserContext } from "@/context/UserContext";
-import UserPlanEnum from "@/models/enums/UserPlanEnum";
+import ListMode from "@/models/enums/ListMode";
+import ModeSelector from "@/components/flows/ModeSelector";
+import PieChartView from "@/components/flows/PieChartView";
+
+const STORAGE_KEY_MODE = "aminded-mode";
 
 const FlowView = () => {
-    const { userPlan } = useUserContext();
-    const { currentProject } = useProjectContext();
-    const [mode, setMode] = useState(() => {
+    const [mode, setMode] = useState<ListMode>(() => {
         if (typeof window !== "undefined") {
-            return (localStorage.getItem("aminded-mode") as string) || "flow";
+            return (
+                (localStorage.getItem(STORAGE_KEY_MODE) as ListMode) ||
+                ListMode.Flow
+            );
         }
-        return "flow";
+        return ListMode.Flow;
     });
 
     useEffect(() => {
@@ -28,44 +30,15 @@ const FlowView = () => {
         <main className="w-screen h-screen bg-zinc-950 text-white">
             <Flex className="h-full">
                 <ProjectMenu />
-                <div className="flex-1 flex flex-col overflow-hidden">
-                    <div className="px-6 py-4 border-b border-zinc-800 text-sm font-semibold bg-zinc-900">
-                        <Flex justify="between">
-                            <Text>{currentProject}</Text>
-                            <Flex gapX="4">
-                                {userPlan === UserPlanEnum.Pro && (
-                                    <ChatTaskGenerator />
-                                )}
-                                <Select.Root
-                                    value={mode}
-                                    onValueChange={setMode}
-                                >
-                                    <Select.Trigger>
-                                        <Text className="capitalize">
-                                            {mode}
-                                        </Text>
-                                    </Select.Trigger>
-                                    <Select.Content>
-                                        <Select.Item value="flow">
-                                            Flow
-                                        </Select.Item>
-                                        <Select.Item value="gantt">
-                                            Gantt chart
-                                        </Select.Item>
-                                        <Select.Item value="kanban">
-                                            Kanban
-                                        </Select.Item>
-                                    </Select.Content>
-                                </Select.Root>
-                            </Flex>
-                        </Flex>
-                    </div>
+                <Flex direction="column" className="flex-1 overflow-hidden">
+                    <ModeSelector mode={mode} setMode={setMode} />
                     <div className="flex-1 overflow-y-auto p-6 bg-zinc-950">
                         {mode === "flow" && <Flow />}
                         {mode === "gantt" && <GanttChart />}
                         {mode === "kanban" && <Kanban />}
+                        {mode === "pie" && <PieChartView />}
                     </div>
-                </div>
+                </Flex>
                 <ArchivedTasksList />
             </Flex>
         </main>
