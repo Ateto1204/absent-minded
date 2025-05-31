@@ -1,6 +1,4 @@
 import ChatTaskGenerator from "@/components/chatRoom/ChatTaskGenerator";
-import { useUserContext } from "@/context/UserContext";
-import UserPlanEnum from "@/models/enums/UserPlanEnum";
 import { useProjectContext } from "@/context/ProjectContext";
 import ListMode from "@/models/enums/ListMode";
 import { Flex, Select, Text } from "@radix-ui/themes";
@@ -12,7 +10,6 @@ const ModeSelector = ({
     mode: ListMode;
     setMode: (mode: ListMode) => void;
 }) => {
-    const { userPlan } = useUserContext();
     const { currentProject } = useProjectContext();
 
     return (
@@ -20,7 +17,7 @@ const ModeSelector = ({
             <Flex justify="between">
                 <Text>{currentProject}</Text>
                 <Flex gapX="4">
-                    {userPlan === UserPlanEnum.Pro && <ChatTaskGenerator />}
+                    <ChatTaskGenerator />
                     <Select.Root
                         value={mode}
                         onValueChange={(m) => setMode(m as ListMode)}
