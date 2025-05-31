@@ -1,5 +1,5 @@
 import TaskData from "./TaskData";
-import TaskStatus from "../../enums/TaskStatus";
+import TaskStatus from "@/models/enums/TaskStatus";
 
 interface Task {
     id: string;
