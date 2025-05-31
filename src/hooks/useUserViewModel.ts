@@ -27,14 +27,14 @@ const useUserViewModel = (): UserViewModel => {
     const [userName, setUserName] = useState("");
     const [userAvatar, setUserAvatar] = useState("");
     const [userCreated, setUserCreated] = useState("");
-    const [authToken, setAuthToken] = useState("");
+    const [accessToken, setAccessToken] = useState("");
 
     useEffect(() => {
         const getUserInfo = async () => {
             const { data: userData } = await supabase.auth.getUser();
             const { data: sessionData } = await supabase.auth.getSession();
             if (sessionData?.session?.access_token) {
-                setAuthToken(sessionData.session.access_token);
+                setAccessToken(sessionData.session.access_token);
             }
             if (userData?.user) {
                 setUserEmail(userData.user.email ?? "");
@@ -81,7 +81,7 @@ const useUserViewModel = (): UserViewModel => {
         upgradeUserPlan: handleUpgradeUserPlan,
         unsubscribeUserPlan: handleUnsubscribeUserPlan,
         setServerUri: handleSetServerUri,
-        authToken,
+        accessToken,
     };
 };
 

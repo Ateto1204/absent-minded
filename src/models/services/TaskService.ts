@@ -33,10 +33,13 @@ class TaskService {
 
     static async getTasksByUser(accessToken: string): Promise<Task[]> {
         try {
-            return await this.request<Task[]>("http://localhost:8080/tasks", {
-                method: "GET",
-                accessToken,
-            });
+            return await this.request<Task[]>(
+                "http://localhost:8080/api/tasks",
+                {
+                    method: "GET",
+                    accessToken,
+                }
+            );
         } catch (err) {
             console.error("GET /tasks 失敗，使用 local:", err);
             return this.getLocal();
@@ -49,7 +52,7 @@ class TaskService {
     ): Promise<Task[]> {
         try {
             return await this.request<Task[]>(
-                `http://localhost:8080/tasks/project/${projectId}`,
+                `http://localhost:8080/api/tasks/project/${projectId}`,
                 { method: "GET", accessToken }
             );
         } catch (err) {
@@ -60,7 +63,7 @@ class TaskService {
 
     static async addTasks(tasks: Task[], accessToken: string): Promise<void> {
         try {
-            await this.request<void>("http://localhost:8080/tasks", {
+            await this.request<void>("http://localhost:8080/api/tasks", {
                 method: "POST",
                 body: JSON.stringify(tasks),
                 accessToken,
@@ -77,7 +80,7 @@ class TaskService {
         accessToken: string
     ): Promise<void> {
         try {
-            await this.request<void>("http://localhost:8080/tasks", {
+            await this.request<void>("http://localhost:8080/api/tasks", {
                 method: "PUT",
                 body: JSON.stringify(tasks),
                 accessToken,
@@ -97,7 +100,7 @@ class TaskService {
         accessToken: string
     ): Promise<void> {
         try {
-            await this.request<void>("http://localhost:8080/tasks", {
+            await this.request<void>("http://localhost:8080/api/tasks", {
                 method: "DELETE",
                 body: JSON.stringify(ids),
                 accessToken,

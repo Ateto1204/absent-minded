@@ -13,19 +13,19 @@ const useProjectViewModel = (): ProjectViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { authToken } = useUserContext();
+    const { accessToken } = useUserContext();
 
     useEffect(() => {
         const loadProjects = async () => {
-            const all = await ProjectService.getProjectsByUserId(authToken);
+            const all = await ProjectService.getProjectsByUserId(accessToken);
             setProjects(all);
             setLoading(false);
             setSuccess(true);
         };
-        if (authToken) {
+        if (accessToken) {
             loadProjects();
         }
-    }, [authToken]);
+    }, [accessToken]);
 
     useEffect(() => {
         if (currentProject !== "") return;
@@ -52,7 +52,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            await ProjectService.addProject(project, authToken);
+            await ProjectService.addProject(project, accessToken);
             setProjects((prev) => [...prev, project]);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,7 +71,7 @@ const useProjectViewModel = (): ProjectViewModel => {
             const project = projects.find((p) => p.id === id);
             if (project) {
                 const updated = { ...project, name };
-                await ProjectService.updateProject(updated, authToken);
+                await ProjectService.updateProject(updated, accessToken);
             }
             setProjects((prev) =>
                 prev.map((project) =>
@@ -92,7 +92,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            await ProjectService.removeProject(id, authToken);
+            await ProjectService.removeProject(id, accessToken);
             setProjects((prev) => prev.filter((project) => project.id !== id));
             if (currentProject === id) {
                 setCurrentProject("");
@@ -121,10 +121,10 @@ const useProjectViewModel = (): ProjectViewModel => {
                     prev.map((p) => (p.id === currentProject ? updated : p))
                 );
                 setCurrentRoot(id);
-                ProjectService.updateProject(updated, authToken);
+                ProjectService.updateProject(updated, accessToken);
             }
         },
-        [currentProject, projects, authToken]
+        [currentProject, projects, accessToken]
     );
 
     return {

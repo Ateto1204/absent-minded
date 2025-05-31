@@ -36,7 +36,7 @@ class ProjectService {
     static async getProjectsByUserId(accessToken: string): Promise<Project[]> {
         try {
             return await this.request<Project[]>(
-                "http://localhost:8080/projects",
+                "http://localhost:8080/api/projects",
                 {
                     method: "GET",
                     accessToken,
@@ -56,7 +56,7 @@ class ProjectService {
         accessToken: string
     ): Promise<void> {
         try {
-            await this.request<Project>("http://localhost:8080/projects", {
+            await this.request<Project>("http://localhost:8080/api/projects", {
                 method: "POST",
                 body: JSON.stringify(project),
                 accessToken,
@@ -75,7 +75,7 @@ class ProjectService {
     ): Promise<void> {
         try {
             await this.request<Project>(
-                `http://localhost:8080/projects/${updated.id}`,
+                `http://localhost:8080/api/projects/${updated.id}`,
                 {
                     method: "PUT",
                     body: JSON.stringify(updated),
@@ -96,10 +96,13 @@ class ProjectService {
 
     static async removeProject(id: string, accessToken: string): Promise<void> {
         try {
-            await this.request<void>(`http://localhost:8080/projects/${id}`, {
-                method: "DELETE",
-                accessToken,
-            });
+            await this.request<void>(
+                `http://localhost:8080/api/projects/${id}`,
+                {
+                    method: "DELETE",
+                    accessToken,
+                }
+            );
         } catch (err) {
             console.error(
                 "Failed to delete project on API, removing local copy:",
