@@ -3,53 +3,112 @@ import Task from "@/models/interfaces/task/Task";
 class TaskService {
     private static STORAGE_KEY = "tasks";
 
-    private static delay<T>(result: T, ms = 1000): Promise<T> {
-        return new Promise((resolve) => setTimeout(() => resolve(result), ms));
-    }
-
-    static getAllTasks(): Task[] {
+    private static getLocal(): Task[] {
         const raw = localStorage.getItem(this.STORAGE_KEY);
-        const allTasks = raw ? (JSON.parse(raw) as Task[]) : [];
-        return allTasks;
+        return raw ? (JSON.parse(raw) as Task[]) : [];
     }
-
-    static async getTasksByUser(user: string): Promise<Task[]> {
-        const allTasks = TaskService.getAllTasks();
-        const tasks = allTasks.filter((task) => task.user === user);
-        return this.delay(tasks);
-    }
-
-    static async getTasksByProject(projectId: string): Promise<Task[]> {
-        const allTasks = TaskService.getAllTasks();
-        const tasks = allTasks.filter((task) => task.project === projectId);
-        return this.delay(tasks);
-    }
-
-    static async addTasks(newTasks: Task[]): Promise<void> {
-        const tasks = TaskService.getAllTasks();
-        tasks.push(...newTasks);
+    private static setLocal(tasks: Task[]): void {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
-        return this.delay(undefined);
     }
 
-    static async removeTasks(ids: string[]): Promise<void> {
-        let tasks = TaskService.getAllTasks();
-        tasks = tasks.filter((task) => !ids.includes(task.id));
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
-        return this.delay(undefined);
-    }
-
-    static async updateTasks(updatedTasks: Task[]): Promise<void> {
-        let tasks = TaskService.getAllTasks();
-        tasks = tasks.map((task) => {
-            const updatedTask = updatedTasks.find(
-                (updated) => updated.id === task.id
-            );
-            if (updatedTask) return updatedTask;
-            return task;
+    private static async request<T>(
+        url: string,
+        options: RequestInit & { accessToken: string }
+    ): Promise<T> {
+        const { accessToken, ...init } = options;
+        const res = await fetch(url, {
+            ...init,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+                ...init.headers,
+            },
         });
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
-        return this.delay(undefined);
+        if (!res.ok)
+            throw new Error(`Request failed with status ${res.status}`);
+        return res.status === 204
+            ? (undefined as T)
+            : ((await res.json()) as T);
+    }
+
+    static async getTasksByUser(accessToken: string): Promise<Task[]> {
+        try {
+            return await this.request<Task[]>("http://localhost:8080/tasks", {
+                method: "GET",
+                accessToken,
+            });
+        } catch (err) {
+            console.error("GET /tasks 失敗，使用 local:", err);
+            return this.getLocal();
+        }
+    }
+
+    static async getTasksByProject(
+        projectId: string,
+        accessToken: string
+    ): Promise<Task[]> {
+        try {
+            return await this.request<Task[]>(
+                `http://localhost:8080/tasks/project/${projectId}`,
+                { method: "GET", accessToken }
+            );
+        } catch (err) {
+            console.error("GET /tasks/project 失敗，使用 local:", err);
+            return this.getLocal().filter((t) => t.project === projectId);
+        }
+    }
+
+    static async addTasks(tasks: Task[], accessToken: string): Promise<void> {
+        try {
+            await this.request<void>("http://localhost:8080/tasks", {
+                method: "POST",
+                body: JSON.stringify(tasks),
+                accessToken,
+            });
+        } catch (err) {
+            console.error("POST /tasks 失敗，寫入 local:", err);
+            const all = this.getLocal();
+            this.setLocal([...all, ...tasks]);
+        }
+    }
+
+    static async updateTasks(
+        tasks: Task[],
+        accessToken: string
+    ): Promise<void> {
+        try {
+            await this.request<void>("http://localhost:8080/tasks", {
+                method: "PUT",
+                body: JSON.stringify(tasks),
+                accessToken,
+            });
+        } catch (err) {
+            console.error("PUT /tasks 失敗，更新 local:", err);
+            const merged = this.getLocal().map((t) => {
+                const u = tasks.find((x) => x.id === t.id);
+                return u ?? t;
+            });
+            this.setLocal(merged);
+        }
+    }
+
+    static async removeTasks(
+        ids: string[],
+        accessToken: string
+    ): Promise<void> {
+        try {
+            await this.request<void>("http://localhost:8080/tasks", {
+                method: "DELETE",
+                body: JSON.stringify(ids),
+                accessToken,
+            });
+        } catch (err) {
+            console.error("DELETE /tasks 失敗，更新 local:", err);
+            const remaining = this.getLocal().filter(
+                (t) => !ids.includes(t.id)
+            );
+            this.setLocal(remaining);
+        }
     }
 }
 

@@ -22,7 +22,9 @@ const useProjectViewModel = (): ProjectViewModel => {
             setLoading(false);
             setSuccess(true);
         };
-        loadProjects();
+        if (authToken) {
+            loadProjects();
+        }
     }, [authToken]);
 
     useEffect(() => {
@@ -39,6 +41,11 @@ const useProjectViewModel = (): ProjectViewModel => {
             setCurrentRoot(projects[0].rootTask);
         }
     }, [projects, currentProject]);
+
+    useEffect(() => {
+        console.log("current project:", currentProject);
+        console.log("root task:", currentRoot);
+    }, [currentProject, currentRoot]);
 
     const addProject = async (project: Project) => {
         setLoading(true);
