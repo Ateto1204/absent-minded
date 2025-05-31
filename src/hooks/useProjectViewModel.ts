@@ -13,11 +13,14 @@ const useProjectViewModel = (): ProjectViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { accessToken } = useUserContext();
+    const { accessToken, serverUri } = useUserContext();
 
     useEffect(() => {
         const loadProjects = async () => {
-            const all = await ProjectService.getProjectsByUserId(accessToken);
+            const all = await ProjectService.getProjectsByUserId(
+                accessToken,
+                serverUri
+            );
             setProjects(all);
             setLoading(false);
             setSuccess(true);
@@ -25,7 +28,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         if (accessToken) {
             loadProjects();
         }
-    }, [accessToken]);
+    }, [accessToken, serverUri]);
 
     useEffect(() => {
         if (currentProject !== "") return;
@@ -52,7 +55,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            await ProjectService.addProject(project, accessToken);
+            await ProjectService.addProject(project, accessToken, serverUri);
             setProjects((prev) => [...prev, project]);
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,7 +74,11 @@ const useProjectViewModel = (): ProjectViewModel => {
             const project = projects.find((p) => p.id === id);
             if (project) {
                 const updated = { ...project, name };
-                await ProjectService.updateProject(updated, accessToken);
+                await ProjectService.updateProject(
+                    updated,
+                    accessToken,
+                    serverUri
+                );
             }
             setProjects((prev) =>
                 prev.map((project) =>
@@ -92,7 +99,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         setSuccess(false);
         setError(null);
         try {
-            await ProjectService.removeProject(id, accessToken);
+            await ProjectService.removeProject(id, accessToken, serverUri);
             setProjects((prev) => prev.filter((project) => project.id !== id));
             if (currentProject === id) {
                 setCurrentProject("");
@@ -121,10 +128,10 @@ const useProjectViewModel = (): ProjectViewModel => {
                     prev.map((p) => (p.id === currentProject ? updated : p))
                 );
                 setCurrentRoot(id);
-                ProjectService.updateProject(updated, accessToken);
+                ProjectService.updateProject(updated, accessToken, serverUri);
             }
         },
-        [currentProject, projects, accessToken]
+        [currentProject, projects, accessToken, serverUri]
     );
 
     return {

@@ -31,15 +31,15 @@ class TaskService {
             : ((await res.json()) as T);
     }
 
-    static async getTasksByUser(accessToken: string): Promise<Task[]> {
+    static async getTasksByUser(
+        accessToken: string,
+        uri: string
+    ): Promise<Task[]> {
         try {
-            return await this.request<Task[]>(
-                "http://localhost:8080/api/tasks",
-                {
-                    method: "GET",
-                    accessToken,
-                }
-            );
+            return await this.request<Task[]>(`${uri}/api/tasks`, {
+                method: "GET",
+                accessToken,
+            });
         } catch (err) {
             console.error("GET /tasks 失敗，使用 local:", err);
             return this.getLocal();
@@ -48,11 +48,12 @@ class TaskService {
 
     static async getTasksByProject(
         projectId: string,
-        accessToken: string
+        accessToken: string,
+        uri: string
     ): Promise<Task[]> {
         try {
             return await this.request<Task[]>(
-                `http://localhost:8080/api/tasks/project/${projectId}`,
+                `${uri}/api/tasks/project/${projectId}`,
                 { method: "GET", accessToken }
             );
         } catch (err) {
@@ -61,9 +62,13 @@ class TaskService {
         }
     }
 
-    static async addTasks(tasks: Task[], accessToken: string): Promise<void> {
+    static async addTasks(
+        tasks: Task[],
+        accessToken: string,
+        uri: string
+    ): Promise<void> {
         try {
-            await this.request<void>("http://localhost:8080/api/tasks", {
+            await this.request<void>(`${uri}/api/tasks`, {
                 method: "POST",
                 body: JSON.stringify(tasks),
                 accessToken,
@@ -77,10 +82,11 @@ class TaskService {
 
     static async updateTasks(
         tasks: Task[],
-        accessToken: string
+        accessToken: string,
+        uri: string
     ): Promise<void> {
         try {
-            await this.request<void>("http://localhost:8080/api/tasks", {
+            await this.request<void>(`${uri}/api/tasks`, {
                 method: "PUT",
                 body: JSON.stringify(tasks),
                 accessToken,
@@ -97,10 +103,11 @@ class TaskService {
 
     static async removeTasks(
         ids: string[],
-        accessToken: string
+        accessToken: string,
+        uri: string
     ): Promise<void> {
         try {
-            await this.request<void>("http://localhost:8080/api/tasks", {
+            await this.request<void>(`${uri}/api/tasks`, {
                 method: "DELETE",
                 body: JSON.stringify(ids),
                 accessToken,

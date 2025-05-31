@@ -33,15 +33,15 @@ class ProjectService {
             : ((await response.json()) as T);
     }
 
-    static async getProjectsByUserId(accessToken: string): Promise<Project[]> {
+    static async getProjectsByUserId(
+        accessToken: string,
+        uri: string
+    ): Promise<Project[]> {
         try {
-            return await this.request<Project[]>(
-                "http://localhost:8080/api/projects",
-                {
-                    method: "GET",
-                    accessToken,
-                }
-            );
+            return await this.request<Project[]>(`${uri}/api/projects`, {
+                method: "GET",
+                accessToken,
+            });
         } catch (err) {
             console.error(
                 "Failed to fetch projects from API, fallback to local data:",
@@ -53,10 +53,11 @@ class ProjectService {
 
     static async addProject(
         project: Project,
-        accessToken: string
+        accessToken: string,
+        uri: string
     ): Promise<void> {
         try {
-            await this.request<Project>("http://localhost:8080/api/projects", {
+            await this.request<Project>(`${uri}/api/projects`, {
                 method: "POST",
                 body: JSON.stringify(project),
                 accessToken,
@@ -71,17 +72,15 @@ class ProjectService {
 
     static async updateProject(
         updated: Project,
-        accessToken: string
+        accessToken: string,
+        uri: string
     ): Promise<void> {
         try {
-            await this.request<Project>(
-                `http://localhost:8080/api/projects/${updated.id}`,
-                {
-                    method: "PUT",
-                    body: JSON.stringify(updated),
-                    accessToken,
-                }
-            );
+            await this.request<Project>(`${uri}/api/projects/${updated.id}`, {
+                method: "PUT",
+                body: JSON.stringify(updated),
+                accessToken,
+            });
         } catch (err) {
             console.error(
                 "Failed to update project on API, updating local copy:",
@@ -94,15 +93,16 @@ class ProjectService {
         }
     }
 
-    static async removeProject(id: string, accessToken: string): Promise<void> {
+    static async removeProject(
+        id: string,
+        accessToken: string,
+        uri: string
+    ): Promise<void> {
         try {
-            await this.request<void>(
-                `http://localhost:8080/api/projects/${id}`,
-                {
-                    method: "DELETE",
-                    accessToken,
-                }
-            );
+            await this.request<void>(`${uri}/api/projects/${id}`, {
+                method: "DELETE",
+                accessToken,
+            });
         } catch (err) {
             console.error(
                 "Failed to delete project on API, removing local copy:",
