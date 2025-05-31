@@ -10,7 +10,7 @@ interface UserViewModel {
     unsubscribeUserPlan: () => void;
     serverUri: string;
     setServerUri: (uri: string) => void;
-    authToken: string;
+    accessToken: string;
 }
 
 export default UserViewModel;

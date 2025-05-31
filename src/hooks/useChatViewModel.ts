@@ -2,6 +2,7 @@ import { useUserContext } from "@/context/UserContext";
 import MsgSender from "@/models/enums/MsgSender";
 import Message from "@/models/interfaces/message/Message";
 import ChatViewModel from "@/models/interfaces/viewModel/ChatViewModel";
+import ChatService from "@/models/services/ChatService";
 import { useState } from "react";
 
 const useChatViewModel = (): ChatViewModel => {
@@ -14,11 +15,13 @@ const useChatViewModel = (): ChatViewModel => {
     const [messages, setMessages] = useState<Message[]>(defaultMsg);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const { serverUri } = useUserContext();
+    const [error, setError] = useState<string | null>(null);
+    const { serverUri, accessToken } = useUserContext();
 
     const sendMessage = async (prompt: string) => {
         setLoading(true);
         setSuccess(false);
+        setError(null);
         const userMessage: Message = {
             text: prompt,
             sender: MsgSender.User,
@@ -29,22 +32,11 @@ const useChatViewModel = (): ChatViewModel => {
         };
         setMessages((prev) => [...prev, userMessage, awaitMessage]);
         try {
-            const response = await fetch(`${serverUri}/gpt`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({ message: prompt }),
-            });
-            let botText = "";
-            const contentType = response.headers.get("content-type") || "";
-            if (contentType.includes("application/json")) {
-                const data = await response.json();
-                botText = data.text || JSON.stringify(data);
-            } else {
-                botText = await response.text();
-            }
+            const botText = await ChatService.sendMessage(
+                prompt,
+                serverUri,
+                accessToken
+            );
             setSuccess(true);
             setMessages((prev) => {
                 const index = [...prev]
@@ -63,7 +55,14 @@ const useChatViewModel = (): ChatViewModel => {
                 };
                 return newMessages;
             });
-        } catch (e) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e: any) {
+            const errMsg = `[${e}]
+                            Oops! Something went wrong, please check with the steps: \n
+                            1. Open the user console
+                            2. Check the server URI is correct
+                            3. Check your server is accessible
+                            `;
             setMessages((prev) => {
                 const index = [...prev]
                     .reverse()
@@ -76,34 +75,25 @@ const useChatViewModel = (): ChatViewModel => {
                     return [
                         ...prev,
                         {
-                            text: `[${e}]
-                            Oops! Something went wrong, please check with the steps: \n
-                            1. Open the user console
-                            2. Check the server URI is correct
-                            3. Check your server is accessible
-                            `,
+                            text: errMsg,
                             sender: MsgSender.Gpt,
                         },
                     ];
                 const realIndex = prev.length - 1 - index;
                 const newMessages = [...prev];
                 newMessages[realIndex] = {
-                    text: `[${e}]
-                            Oops! Something went wrong, please check with the steps: \n
-                            1. Open the user console
-                            2. Check the server URI is correct
-                            3. Check your server is accessible
-                            `,
+                    text: errMsg,
                     sender: MsgSender.Gpt,
                 };
                 return newMessages;
             });
+            setError(e.message);
         } finally {
             setLoading(false);
         }
     };
 
-    return { messages, loading, success, sendMessage };
+    return { messages, loading, success, error, sendMessage };
 };
 
 export default useChatViewModel;

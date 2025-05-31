@@ -38,7 +38,7 @@ export function tasksToEdges(tasks: NodeTask[], root: string): Edge[] {
 export function tasksToNodeTasks(
     tasks: Task[],
     project: string,
-    user: string
+    userId: string
 ): NodeTask[] {
     const avtiveTasks = tasks.filter((t) => t.status === TaskStatus.Active);
     if (avtiveTasks.length === 0) {
@@ -55,7 +55,7 @@ export function tasksToNodeTasks(
                 project,
                 status: TaskStatus.Active,
                 type: "placeholder",
-                user,
+                userId,
             },
         ];
     }
@@ -79,7 +79,7 @@ export function tasksToNodeTasks(
             project,
             status: TaskStatus.Active,
             type: "placeholder",
-            user,
+            userId,
         });
     }
     return nodeTasks;

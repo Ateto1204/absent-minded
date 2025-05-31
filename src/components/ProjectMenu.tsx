@@ -10,7 +10,7 @@ import UserConsole from "@/components/user/UserConsole";
 import { useUserContext } from "@/context/UserContext";
 
 function ProjectMenu() {
-    const { projects, addProject, toggleProject, currentProject } =
+    const { projects, addProject, toggleProject, currentProject, loading } =
         useProjectContext();
     const { userEmail } = useUserContext();
 
@@ -21,7 +21,7 @@ function ProjectMenu() {
         addProject({
             id,
             name: "new project",
-            user: userEmail,
+            userId: userEmail,
             rootTask: "",
         });
     };
@@ -40,6 +40,7 @@ function ProjectMenu() {
                 <h2 className="text-lg font-semibold text-white">Projects</h2>
                 <Tooltip content="Add project">
                     <Button
+                        disabled={loading}
                         size="1"
                         onClick={handleAddProject}
                         color="gray"

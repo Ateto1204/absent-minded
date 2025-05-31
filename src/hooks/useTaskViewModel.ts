@@ -14,25 +14,28 @@ const useTaskViewModel = (): TaskViewModel => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { currentProject, currentRoot, setupRootTask } = useProjectContext();
-    const { userEmail } = useUserContext();
+    const { accessToken } = useUserContext();
 
     const fetchTasksByUser = useCallback(async () => {
+        if (!accessToken) return;
         try {
-            const fetchedTasks = await TaskService.getTasksByUser(userEmail);
+            const fetchedTasks = await TaskService.getTasksByUser(accessToken);
             setAllTasks(fetchedTasks);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message || "Failed to fetch tasks");
         }
-    }, [userEmail]);
+    }, [accessToken]);
 
     const fetchTasksByProject = useCallback(async () => {
         setLoading(true);
         setSuccess(false);
         setError(null);
         try {
+            if (!accessToken || !currentProject) return;
             const fetchedTasks = await TaskService.getTasksByProject(
-                currentProject
+                currentProject,
+                accessToken
             );
             setTasks(fetchedTasks);
             setSuccess(true);
@@ -42,23 +45,26 @@ const useTaskViewModel = (): TaskViewModel => {
         } finally {
             setLoading(false);
         }
-    }, [currentProject]);
+    }, [currentProject, accessToken]);
 
-    const addTask = useCallback(async (task: Task) => {
-        setLoading(true);
-        setSuccess(false);
-        setError(null);
-        try {
-            setTasks((prev) => [...prev, task]);
-            await TaskService.addTasks([task]);
-            setSuccess(true);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            setError(err.message || "Failed to add task");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    const addTask = useCallback(
+        async (task: Task) => {
+            setLoading(true);
+            setSuccess(false);
+            setError(null);
+            try {
+                setTasks((prev) => [...prev, task]);
+                await TaskService.addTasks([task], accessToken);
+                setSuccess(true);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (err: any) {
+                setError(err.message || "Failed to add task");
+            } finally {
+                setLoading(false);
+            }
+        },
+        [accessToken]
+    );
 
     const findAllDescendants = useCallback(
         (id: string, descendants: string[]): string[] => {
@@ -84,7 +90,7 @@ const useTaskViewModel = (): TaskViewModel => {
             setError(null);
             try {
                 const descendantIds = findAllDescendants(taskId, []);
-                await TaskService.removeTasks(descendantIds);
+                await TaskService.removeTasks(descendantIds, accessToken);
                 setTasks((prevTasks) =>
                     taskId === currentRoot
                         ? []
@@ -101,7 +107,7 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         },
-        [currentRoot, findAllDescendants, setupRootTask]
+        [currentRoot, accessToken, findAllDescendants, setupRootTask]
     );
 
     const getTaskById = (id: string): Task | undefined => {
@@ -122,7 +128,7 @@ const useTaskViewModel = (): TaskViewModel => {
             setTasks(updated);
             const taskToUpdate = updated.find((t) => t.id === taskId);
             if (taskToUpdate) {
-                await TaskService.updateTasks([taskToUpdate]);
+                await TaskService.updateTasks([taskToUpdate], accessToken);
             }
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,7 +152,7 @@ const useTaskViewModel = (): TaskViewModel => {
                         ? { ...task, status }
                         : task;
                 });
-                await TaskService.updateTasks(updatedTasks);
+                await TaskService.updateTasks(updatedTasks, accessToken);
                 setTasks(updatedTasks);
                 setSuccess(true);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -156,7 +162,7 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         },
-        [findAllDescendants, tasks]
+        [findAllDescendants, tasks, accessToken]
     );
 
     const resaveTask = useCallback(
@@ -177,7 +183,7 @@ const useTaskViewModel = (): TaskViewModel => {
                         ? { ...task, status: TaskStatus.Active }
                         : task
                 );
-                await TaskService.updateTasks(updatedTasks);
+                await TaskService.updateTasks(updatedTasks, accessToken);
                 setTasks(updatedTasks);
                 setSuccess(true);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -187,7 +193,7 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         },
-        [tasks]
+        [tasks, accessToken]
     );
 
     useEffect(() => {

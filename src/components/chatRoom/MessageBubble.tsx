@@ -27,13 +27,16 @@ const MessageBubble = ({ text, sender }: Message) => {
         text.trim().endsWith("}")
     ) {
         try {
-            jsonObj = JSON.parse(text);
-            const today = new Date().toISOString().split("T")[0];
-            jsonObj = {
-                ...jsonObj,
-                start: today,
-                deadline: today,
-            };
+            const parsed = JSON.parse(text);
+
+            if (!Object.prototype.hasOwnProperty.call(parsed, "error")) {
+                const today = new Date();
+                jsonObj = {
+                    ...parsed,
+                    start: today,
+                    deadline: today,
+                };
+            }
         } catch {}
     }
 
@@ -47,7 +50,7 @@ const MessageBubble = ({ text, sender }: Message) => {
             data: jsonObj,
             parent: currentRoot,
             project: currentProject,
-            user: userEmail,
+            userId: userEmail,
             status: TaskStatus.Active,
         };
         setAppliedStatus(GptAppliedStatus.Loading);
@@ -83,23 +86,33 @@ const MessageBubble = ({ text, sender }: Message) => {
                     </Flex>
                     <Separator orientation="horizontal" size="4" />
                     <DataList.Root>
-                        {Object.entries(jsonObj).map(([k, v]) => (
-                            <DataList.Item key={k} className="py-1">
-                                <DataList.Label className="text-zinc-400">
-                                    {k}
-                                </DataList.Label>
-                                <DataList.Value className="text-zinc-100">
-                                    {String(v)}
-                                </DataList.Value>
-                            </DataList.Item>
-                        ))}
+                        {Object.entries(jsonObj).map(([k, v]) => {
+                            const display =
+                                v instanceof Date
+                                    ? v.toLocaleDateString("en-US", {
+                                          year: "numeric",
+                                          month: "2-digit",
+                                          day: "2-digit",
+                                      })
+                                    : String(v);
+                            return (
+                                <DataList.Item key={k} className="py-1">
+                                    <DataList.Label className="text-zinc-400">
+                                        {k}
+                                    </DataList.Label>
+                                    <DataList.Value className="text-zinc-100">
+                                        {display}
+                                    </DataList.Value>
+                                </DataList.Item>
+                            );
+                        })}
                     </DataList.Root>
                 </Flex>
             ) : (
                 <Flex
                     align="center"
                     gap="2"
-                    className={`px-3 py-2 rounded-2xl shadow max-w-[70%] text-sm leading-snug whitespace-pre-line ${
+                    className={`px-3 py-2 rounded-2xl shadow max-w-fit text-sm leading-snug whitespace-pre-line ${
                         sender === "user"
                             ? "bg-blue-500 text-white rounded-br-none"
                             : "bg-gray-200 text-gray-900 rounded-bl-none"
