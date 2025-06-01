@@ -12,6 +12,7 @@ interface ProjectViewModel {
     updateProjectName: (id: string, name: string) => void;
     deleteProject: (id: string) => void;
     setupRootTask: (id: string) => void;
+    inviteParticipant: (projectId: string, email: string) => void;
 }
 
 export default ProjectViewModel;

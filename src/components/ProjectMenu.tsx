@@ -21,8 +21,9 @@ function ProjectMenu() {
         addProject({
             id,
             name: "new project",
-            userId: userEmail,
+            ownerId: userEmail,
             rootTask: "",
+            participants: [],
         });
     };
 

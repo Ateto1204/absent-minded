@@ -1,7 +1,8 @@
 interface Project {
     id: string;
     name: string;
-    userId: string;
+    ownerId: string;
+    participants: string[];
     rootTask: string;
 }
 

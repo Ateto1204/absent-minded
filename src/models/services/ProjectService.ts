@@ -112,6 +112,22 @@ class ProjectService {
             this.setLocal(projects);
         }
     }
+
+    static async inviteParticipant(
+        projectId: string,
+        email: string,
+        accessToken: string,
+        uri: string
+    ): Promise<void> {
+        await this.request<void>(
+            `${uri}/api/projects/${projectId}/participants`,
+            {
+                method: "POST",
+                body: JSON.stringify({ email }),
+                accessToken,
+            }
+        );
+    }
 }
 
 export default ProjectService;

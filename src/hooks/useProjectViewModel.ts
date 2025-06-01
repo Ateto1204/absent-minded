@@ -114,6 +114,38 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
+    const inviteParticipant = async (projectId: string, email: string) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            await ProjectService.inviteParticipant(
+                projectId,
+                email,
+                accessToken,
+                serverUri
+            );
+            setProjects((prev) =>
+                prev.map((p) =>
+                    p.id === projectId
+                        ? {
+                              ...p,
+                              participants: p.participants
+                                  ? [...p.participants, email]
+                                  : [email],
+                          }
+                        : p
+                )
+            );
+            setSuccess(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to invite participant");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const toggleProject = (id: string) => {
         setCurrentProject(id);
         localStorage.setItem(STORAGE_KEY, id);
@@ -142,6 +174,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         addProject,
         updateProjectName,
         deleteProject,
+        inviteParticipant,
         setupRootTask,
         loading,
         success,
