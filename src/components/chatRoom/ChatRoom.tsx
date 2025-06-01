@@ -1,7 +1,7 @@
 import { Flex } from "@radix-ui/themes";
-import ChatHeader from "./ChatHeader";
-import MessagesList from "./MessagesList";
-import ChatInput from "./ChatInput";
+import ChatHeader from "@/components/chatRoom/ChatHeader";
+import MessagesList from "@/components/chatRoom/MessagesList";
+import ChatInput from "@/components/chatRoom/ChatInput";
 
 const ChatRoom = ({ onClose }: { onClose: () => void }) => (
     <Flex

@@ -1,6 +1,6 @@
 import TaskStatus from "@/models/enums/TaskStatus";
 import { Flex } from "@radix-ui/themes";
-import ArchivedTasksView from "./ArchivedTasksView";
+import ArchivedTasksView from "@/components/archived/ArchivedTasksView";
 
 const ArchivedTasksList = () => {
     return (

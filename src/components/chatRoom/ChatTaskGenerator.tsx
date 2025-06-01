@@ -1,7 +1,7 @@
 import { Button, Dialog } from "@radix-ui/themes";
 import { useState } from "react";
 import ChatRoom from "@/components/chatRoom/ChatRoom";
-import UpgradeDialogContent from "../user/UpgradeDialogContent";
+import UpgradeDialogContent from "@/components/user/UpgradeDialogContent";
 import { useUserContext } from "@/context/UserContext";
 import UserPlanEnum from "@/models/enums/UserPlanEnum";
 
