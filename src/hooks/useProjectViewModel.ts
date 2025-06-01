@@ -31,7 +31,7 @@ const useProjectViewModel = (): ProjectViewModel => {
     }, [accessToken, serverUri]);
 
     useEffect(() => {
-        if (currentProject !== "") return;
+        if (currentProject !== "" || projects.length === 0) return;
         const storedProjectId = localStorage.getItem(STORAGE_KEY) as string;
         const initProject = projects.find((p) => p.id === storedProjectId);
         if (initProject) {

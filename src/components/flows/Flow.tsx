@@ -16,7 +16,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import TaskNode from "../nodes/TaskNode";
+import TaskNode from "@/components/nodes/TaskNode";
 import PlaceholderNodeDemo from "../nodes/PlaceholderNodeDemo";
 import getLayoutedElements from "@/utils/getLayoutedElements";
 import { useTaskContext } from "@/context/TaskContext";
@@ -27,7 +27,7 @@ import {
 } from "@/utils/taskParser";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Flex } from "@radix-ui/themes";
-import StateBar from "./StateBar";
+import StateBar from "@/components/flows/StateBar";
 import { useUserContext } from "@/context/UserContext";
 
 const nodeTypes = { task: TaskNode, placeholder: PlaceholderNodeDemo };

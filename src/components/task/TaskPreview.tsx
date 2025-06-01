@@ -1,7 +1,7 @@
 import TaskData from "@/models/interfaces/task/TaskData";
 import { HoverCard } from "@radix-ui/themes";
-import TaskPreviewContent from "./TaskPreviewContent";
-import TaskNodeView from "./TaskNodeView";
+import TaskPreviewContent from "@/components/task/TaskPreviewContent";
+import TaskNodeView from "@/components/task/TaskNodeView";
 
 const TaskPreview = ({ id, data }: { id: string; data: TaskData }) => {
     return (

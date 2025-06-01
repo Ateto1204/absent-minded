@@ -4,7 +4,7 @@ class ChatService {
         serverUri: string,
         accessToken: string
     ): Promise<string> {
-        const response = await fetch(`${serverUri}/gpt`, {
+        const response = await fetch(`${serverUri}/api/gpt`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

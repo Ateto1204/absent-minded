@@ -1,4 +1,4 @@
-import TaskData from "./TaskData";
+import TaskData from "@/models/interfaces/task/TaskData";
 import TaskStatus from "@/models/enums/TaskStatus";
 
 interface Task {
