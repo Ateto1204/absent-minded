@@ -17,13 +17,14 @@ function ProjectMenu() {
     const router = useRouter();
 
     const handleAddProject = () => {
+        if (!currentProject) return;
         const id = uuidv4();
         addProject({
             id,
             name: "new project",
             ownerId: userEmail,
             rootTask: "",
-            participants: [],
+            participants: currentProject.participants,
         });
     };
 
@@ -57,7 +58,7 @@ function ProjectMenu() {
                         <ProjectDialog
                             key={project.id}
                             project={project}
-                            isActive={project.id === currentProject}
+                            isActive={project.id === currentProject?.id}
                             toggleProject={() => toggleProject(project.id)}
                         />
                     ))}

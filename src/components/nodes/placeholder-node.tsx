@@ -26,7 +26,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const id = useNodeId();
         const { setNodes, setEdges } = useReactFlow();
         const { addTask, loading } = useTaskContext();
-        const { setupRootTask, currentProject } = useProjectContext();
+        const { currentProject } = useProjectContext();
         const { userEmail } = useUserContext();
 
         const createNode = (id: string, x: number, y: number) => {
@@ -62,7 +62,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const updatedNodes = nodes.map((node) => {
                     if (node.id === id) {
                         if (id === "root") {
-                            setupRootTask(rootId);
+                            // setupRootTask(rootId);
                             return { ...node, id: rootId, type: "task" };
                         }
                         return {
@@ -89,6 +89,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     }
                     return edge;
                 });
+                if (!currentProject) return updatedEdges;
                 const task: Task = {
                     id: id === "root" ? rootId : id,
                     data: {
@@ -99,9 +100,9 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     },
                     parent: source,
                     status: TaskStatus.Active,
-                    project: currentProject,
+                    project: currentProject.id,
                     ownerId: userEmail,
-                    participants: [],
+                    participants: currentProject.participants,
                 };
                 addTask(task);
                 const newEdge1: Edge = createEdge(source, newId1);
@@ -116,7 +117,6 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
             addTask,
             loading,
             currentProject,
-            setupRootTask,
             userEmail,
         ]);
 

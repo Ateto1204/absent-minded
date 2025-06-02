@@ -8,8 +8,7 @@ const STORAGE_KEY = "current-project-id";
 
 const useProjectViewModel = (): ProjectViewModel => {
     const [projects, setProjects] = useState<Project[]>([]);
-    const [currentProject, setCurrentProject] = useState("");
-    const [currentRoot, setCurrentRoot] = useState("");
+    const [currentProject, setCurrentProject] = useState<Project | null>(null);
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -31,24 +30,22 @@ const useProjectViewModel = (): ProjectViewModel => {
     }, [accessToken, serverUri]);
 
     useEffect(() => {
-        if (currentProject !== "" || projects.length === 0) return;
+        if (
+            !currentProject ||
+            currentProject.id !== "" ||
+            projects.length === 0
+        )
+            return;
         const storedProjectId = localStorage.getItem(STORAGE_KEY) as string;
         const initProject = projects.find((p) => p.id === storedProjectId);
         if (initProject) {
-            setCurrentProject(initProject.id);
-            setCurrentRoot(initProject.rootTask);
+            setCurrentProject(initProject);
             return;
         }
         if (projects[0]) {
-            setCurrentProject(projects[0].id);
-            setCurrentRoot(projects[0].rootTask);
+            setCurrentProject(projects[0]);
         }
     }, [projects, currentProject]);
-
-    useEffect(() => {
-        console.log("current project:", currentProject);
-        console.log("root task:", currentRoot);
-    }, [currentProject, currentRoot]);
 
     const addProject = async (project: Project) => {
         setLoading(true);
@@ -101,8 +98,8 @@ const useProjectViewModel = (): ProjectViewModel => {
         try {
             await ProjectService.removeProject(id, accessToken, serverUri);
             setProjects((prev) => prev.filter((project) => project.id !== id));
-            if (currentProject === id) {
-                setCurrentProject("");
+            if (currentProject && currentProject.id === id) {
+                setCurrentProject(null);
                 localStorage.removeItem(STORAGE_KEY);
             }
             setSuccess(true);
@@ -147,19 +144,22 @@ const useProjectViewModel = (): ProjectViewModel => {
     };
 
     const toggleProject = (id: string) => {
-        setCurrentProject(id);
+        const project = projects.find((p) => p.id === id);
+        if (!project) return;
+        setCurrentProject(project);
         localStorage.setItem(STORAGE_KEY, id);
     };
 
     const setupRootTask = useCallback(
         (id: string) => {
-            const project = projects.find((p) => p.id === currentProject);
+            if (!currentProject) return;
+            const project = projects.find((p) => p.id === currentProject.id);
             if (project) {
                 const updated: Project = { ...project, rootTask: id };
                 setProjects((prev) =>
-                    prev.map((p) => (p.id === currentProject ? updated : p))
+                    prev.map((p) => (p.id === currentProject.id ? updated : p))
                 );
-                setCurrentRoot(id);
+                // setCurrentRoot(id);
                 ProjectService.updateProject(updated, accessToken, serverUri);
             }
         },
@@ -169,7 +169,6 @@ const useProjectViewModel = (): ProjectViewModel => {
     return {
         projects,
         currentProject,
-        currentRoot,
         toggleProject,
         addProject,
         updateProjectName,

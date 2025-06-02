@@ -15,7 +15,7 @@ const ModeSelector = ({
     return (
         <div className="px-6 py-4 border-b border-zinc-800 text-sm font-semibold bg-zinc-900">
             <Flex justify="between">
-                <Text>{currentProject}</Text>
+                <Text>{currentProject?.id}</Text>
                 <Flex gapX="4">
                     <ChatTaskGenerator />
                     <Select.Root

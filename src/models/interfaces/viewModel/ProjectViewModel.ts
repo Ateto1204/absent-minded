@@ -2,8 +2,8 @@ import Project from "@/models/interfaces/project/Project";
 
 interface ProjectViewModel {
     projects: Project[];
-    currentProject: string;
-    currentRoot: string;
+    currentProject: Project | null;
+    // currentRoot: string;
     loading: boolean;
     success: boolean;
     error: string | null;
