@@ -17,7 +17,6 @@ function ProjectMenu() {
     const router = useRouter();
 
     const handleAddProject = () => {
-        if (!currentProject) return;
         const id = uuidv4();
         addProject({
             id,
