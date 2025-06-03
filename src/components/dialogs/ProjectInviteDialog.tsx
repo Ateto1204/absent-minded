@@ -1,25 +1,30 @@
 import { useProjectContext } from "@/context/ProjectContext";
+import { useUserContext } from "@/context/UserContext";
+import Project from "@/models/interfaces/project/Project";
 import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
 
 interface ProjectInviteDialogProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    projectId: string;
-    participants: string[];
+    project: Project;
 }
 
 function ProjectInviteDialog({
     open,
     setOpen,
-    projectId,
-    participants,
+    project,
 }: ProjectInviteDialogProps) {
-    const { inviteParticipant } = useProjectContext();
+    const { inviteParticipant, removeParticipant } = useProjectContext();
+    const { userEmail } = useUserContext();
     const [inviteEmail, setInviteEmail] = useState("");
 
     const handleInvite = () => {
-        inviteParticipant(projectId, inviteEmail);
+        inviteParticipant(project.id, inviteEmail);
+    };
+
+    const handleRemove = (email: string) => {
+        removeParticipant(project.id, email);
     };
 
     return (
@@ -37,15 +42,26 @@ function ProjectInviteDialog({
                 </Dialog.Title>
                 <Flex direction="column" gap="2">
                     <Text weight="bold">Current Members</Text>
-                    {participants.length === 0 ? (
+                    {project.participants.length === 0 ? (
                         <Text size="2" color="gray">
                             No members yet
                         </Text>
                     ) : (
-                        participants.map((p) => (
-                            <Text key={p} size="2">
-                                {p}
-                            </Text>
+                        project.participants.map((p, i) => (
+                            <Flex key={p} align="center" gap="3">
+                                <Text size="2">
+                                    {i + 1}. {p}
+                                </Text>
+                                {project.ownerId === userEmail && (
+                                    <Button
+                                        size="2"
+                                        variant="ghost"
+                                        onClick={() => handleRemove(p)}
+                                    >
+                                        x
+                                    </Button>
+                                )}
+                            </Flex>
                         ))
                     )}
                 </Flex>

@@ -128,6 +128,22 @@ class ProjectService {
             }
         );
     }
+
+    static async removeParticipant(
+        projectId: string,
+        email: string,
+        accessToken: string,
+        uri: string
+    ): Promise<void> {
+        await this.request<void>(
+            `${uri}/api/projects/${projectId}/participants`,
+            {
+                method: "DELETE",
+                body: JSON.stringify({ email }),
+                accessToken,
+            }
+        );
+    }
 }
 
 export default ProjectService;

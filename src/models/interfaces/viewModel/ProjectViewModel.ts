@@ -3,7 +3,6 @@ import Project from "@/models/interfaces/project/Project";
 interface ProjectViewModel {
     projects: Project[];
     currentProject: Project | null;
-    // currentRoot: string;
     loading: boolean;
     success: boolean;
     error: string | null;
@@ -13,6 +12,7 @@ interface ProjectViewModel {
     deleteProject: (id: string) => void;
     setupRootTask: (id: string) => void;
     inviteParticipant: (projectId: string, email: string) => void;
+    removeParticipant: (projectId: string, email: string) => void;
 }
 
 export default ProjectViewModel;

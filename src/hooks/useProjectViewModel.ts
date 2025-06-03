@@ -138,6 +138,34 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
+    const removeParticipant = async (projectId: string, email: string) => {
+        setLoading(true);
+        setSuccess(false);
+        setError(null);
+        try {
+            await ProjectService.removeParticipant(
+                projectId,
+                email,
+                accessToken,
+                serverUri
+            );
+            setProjects((prev) =>
+                prev.map((p) => {
+                    if (p.id !== projectId) return p;
+                    const participants = p.participants.filter(
+                        (pa) => pa !== email
+                    );
+                    return { ...p, participants };
+                })
+            );
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message || "Failed to remove participant");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const toggleProject = (id: string) => {
         const project = projects.find((p) => p.id === id);
         if (!project) return;
@@ -169,6 +197,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         deleteProject,
         inviteParticipant,
         setupRootTask,
+        removeParticipant,
         loading,
         success,
         error,

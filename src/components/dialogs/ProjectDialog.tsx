@@ -3,15 +3,15 @@ import { useProjectContext } from "@/context/ProjectContext";
 import { Button, Tooltip, DropdownMenu, Flex } from "@radix-ui/themes";
 import ProjectEditDialog from "@/components/dialogs/ProjectEditDialog";
 import ProjectInviteDialog from "@/components/dialogs/ProjectInviteDialog";
-import ProjectType from "@/models/type/ProjectType";
 import { MdPeople } from "react-icons/md";
+import Project from "@/models/interfaces/project/Project";
 
 function ProjectDialog({
     project,
     isActive,
     toggleProject,
 }: {
-    project: ProjectType;
+    project: Project;
     isActive: boolean;
     toggleProject: () => void;
 }) {
@@ -87,8 +87,7 @@ function ProjectDialog({
             <ProjectInviteDialog
                 open={inviteOpen}
                 setOpen={setInviteOpen}
-                projectId={project.id}
-                participants={project.participants ?? []}
+                project={project}
             />
         </DropdownMenu.Root>
     );
