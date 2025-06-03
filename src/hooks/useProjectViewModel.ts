@@ -30,12 +30,7 @@ const useProjectViewModel = (): ProjectViewModel => {
     }, [accessToken, serverUri]);
 
     useEffect(() => {
-        if (
-            !currentProject ||
-            currentProject.id !== "" ||
-            projects.length === 0
-        )
-            return;
+        if (projects.length === 0) return;
         const storedProjectId = localStorage.getItem(STORAGE_KEY) as string;
         const initProject = projects.find((p) => p.id === storedProjectId);
         if (initProject) {
@@ -159,7 +154,6 @@ const useProjectViewModel = (): ProjectViewModel => {
                 setProjects((prev) =>
                     prev.map((p) => (p.id === currentProject.id ? updated : p))
                 );
-                // setCurrentRoot(id);
                 ProjectService.updateProject(updated, accessToken, serverUri);
             }
         },

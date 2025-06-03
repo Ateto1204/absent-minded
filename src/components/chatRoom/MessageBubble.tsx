@@ -5,7 +5,6 @@ import TaskStatus from "@/models/enums/TaskStatus";
 import { Button, DataList, Flex, Separator, Spinner } from "@radix-ui/themes";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useUserContext } from "@/context/UserContext";
 import Message from "@/models/interfaces/message/Message";
 import MsgSender from "@/models/enums/MsgSender";
 import GptAppliedStatus from "@/models/enums/GptAppliedStatus";
@@ -16,8 +15,6 @@ const MessageBubble = ({ text, sender }: Message) => {
     const [appliedStatus, setAppliedStatus] = useState<GptAppliedStatus>(
         GptAppliedStatus.Apply
     );
-    const { userEmail } = useUserContext();
-
     let jsonObj = null;
 
     if (
@@ -54,7 +51,7 @@ const MessageBubble = ({ text, sender }: Message) => {
             data: jsonObj,
             parent: tasks.length === 0 ? "root" : currentProject.rootTask,
             project: currentProject.id,
-            ownerId: userEmail,
+            ownerId: currentProject.ownerId,
             status: TaskStatus.Active,
             participants: currentProject.participants,
         };

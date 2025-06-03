@@ -15,7 +15,6 @@ import Task from "@/models/interfaces/task/Task";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Tooltip } from "@radix-ui/themes";
 import TaskStatus from "@/models/enums/TaskStatus";
-import { useUserContext } from "@/context/UserContext";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;
@@ -27,7 +26,6 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const { setNodes, setEdges } = useReactFlow();
         const { addTask, loading } = useTaskContext();
         const { currentProject } = useProjectContext();
-        const { userEmail } = useUserContext();
 
         const createNode = (id: string, x: number, y: number) => {
             const newNode: Node = {
@@ -101,7 +99,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     parent: source,
                     status: TaskStatus.Active,
                     project: currentProject.id,
-                    ownerId: userEmail,
+                    ownerId: currentProject.ownerId,
                     participants: currentProject.participants,
                 };
                 addTask(task);
@@ -110,15 +108,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [
-            id,
-            setEdges,
-            setNodes,
-            addTask,
-            loading,
-            currentProject,
-            userEmail,
-        ]);
+        }, [id, setEdges, setNodes, addTask, loading, currentProject]);
 
         return (
             <Tooltip content="Add new task">
