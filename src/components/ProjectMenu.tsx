@@ -24,7 +24,7 @@ function ProjectMenu() {
             name: "new project",
             ownerId: userEmail,
             rootTask: "",
-            participants: currentProject.participants,
+            participants: [],
         });
     };
 
