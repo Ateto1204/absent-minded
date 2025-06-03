@@ -13,7 +13,7 @@ const useTaskViewModel = (): TaskViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { currentProject } = useProjectContext();
+    const { currentProject, setupRootTask } = useProjectContext();
     const { accessToken, serverUri } = useUserContext();
 
     const fetchTasksByUser = useCallback(async () => {
@@ -106,7 +106,7 @@ const useTaskViewModel = (): TaskViewModel => {
                               (task) => !descendantIds.includes(task.id)
                           )
                 );
-                // setupRootTask("");
+                setupRootTask("");
                 setSuccess(true);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
@@ -115,7 +115,13 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         },
-        [currentProject, accessToken, serverUri, findAllDescendants]
+        [
+            currentProject,
+            accessToken,
+            serverUri,
+            findAllDescendants,
+            setupRootTask,
+        ]
     );
 
     const getTaskById = (id: string): Task | undefined => {

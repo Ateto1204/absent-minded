@@ -11,7 +11,7 @@ import GptAppliedStatus from "@/models/enums/GptAppliedStatus";
 
 const MessageBubble = ({ text, sender }: Message) => {
     const { addTask, success, error, tasks } = useTaskContext();
-    const { currentProject } = useProjectContext();
+    const { currentProject, setupRootTask } = useProjectContext();
     const [appliedStatus, setAppliedStatus] = useState<GptAppliedStatus>(
         GptAppliedStatus.Apply
     );
@@ -38,13 +38,7 @@ const MessageBubble = ({ text, sender }: Message) => {
     }
 
     const handleApply = async () => {
-        if (
-            !currentProject ||
-            (currentProject.rootTask.trim() === "" && tasks.length !== 0)
-        ) {
-            console.log("current root was null:", tasks);
-            return;
-        }
+        if (!currentProject) return;
         const newTaskId = uuidv4();
         const task: Task = {
             id: newTaskId,
@@ -55,7 +49,7 @@ const MessageBubble = ({ text, sender }: Message) => {
             status: TaskStatus.Active,
             participants: currentProject.participants,
         };
-        // if (tasks.length === 0) setupRootTask(newTaskId);
+        if (tasks.length === 0) setupRootTask(newTaskId);
         setAppliedStatus(GptAppliedStatus.Loading);
         addTask(task);
         if (success) {

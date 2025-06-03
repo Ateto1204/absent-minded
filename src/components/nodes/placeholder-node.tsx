@@ -25,7 +25,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const id = useNodeId();
         const { setNodes, setEdges } = useReactFlow();
         const { addTask, loading } = useTaskContext();
-        const { currentProject } = useProjectContext();
+        const { currentProject, setupRootTask } = useProjectContext();
 
         const createNode = (id: string, x: number, y: number) => {
             const newNode: Node = {
@@ -60,7 +60,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const updatedNodes = nodes.map((node) => {
                     if (node.id === id) {
                         if (id === "root") {
-                            // setupRootTask(rootId);
+                            setupRootTask(rootId);
                             return { ...node, id: rootId, type: "task" };
                         }
                         return {
@@ -108,7 +108,15 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [id, setEdges, setNodes, addTask, loading, currentProject]);
+        }, [
+            id,
+            setEdges,
+            setNodes,
+            addTask,
+            loading,
+            currentProject,
+            setupRootTask,
+        ]);
 
         return (
             <Tooltip content="Add new task">
