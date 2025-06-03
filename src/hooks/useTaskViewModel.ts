@@ -13,7 +13,7 @@ const useTaskViewModel = (): TaskViewModel => {
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { currentProject, currentRoot, setupRootTask } = useProjectContext();
+    const { currentProject } = useProjectContext();
     const { accessToken, serverUri } = useUserContext();
 
     const fetchTasksByUser = useCallback(async () => {
@@ -37,7 +37,7 @@ const useTaskViewModel = (): TaskViewModel => {
         try {
             if (!accessToken || !currentProject) return;
             const fetchedTasks = await TaskService.getTasksByProject(
-                currentProject,
+                currentProject.id,
                 accessToken,
                 serverUri
             );
@@ -72,7 +72,7 @@ const useTaskViewModel = (): TaskViewModel => {
 
     const findAllDescendants = useCallback(
         (id: string, descendants: string[]): string[] => {
-            if (id === currentRoot) {
+            if (id === currentProject?.rootTask) {
                 const ids = tasks.map((t) => t.id);
                 return ids;
             }
@@ -84,7 +84,7 @@ const useTaskViewModel = (): TaskViewModel => {
             });
             return descendants;
         },
-        [currentRoot, tasks]
+        [currentProject, tasks]
     );
 
     const deleteTask = useCallback(
@@ -100,13 +100,13 @@ const useTaskViewModel = (): TaskViewModel => {
                     serverUri
                 );
                 setTasks((prevTasks) =>
-                    taskId === currentRoot
+                    taskId === currentProject?.rootTask
                         ? []
                         : prevTasks.filter(
                               (task) => !descendantIds.includes(task.id)
                           )
                 );
-                setupRootTask("");
+                // setupRootTask("");
                 setSuccess(true);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
@@ -115,7 +115,7 @@ const useTaskViewModel = (): TaskViewModel => {
                 setLoading(false);
             }
         },
-        [currentRoot, accessToken, serverUri, findAllDescendants, setupRootTask]
+        [currentProject, accessToken, serverUri, findAllDescendants]
     );
 
     const getTaskById = (id: string): Task | undefined => {

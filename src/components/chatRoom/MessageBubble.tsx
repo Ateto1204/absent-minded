@@ -5,19 +5,16 @@ import TaskStatus from "@/models/enums/TaskStatus";
 import { Button, DataList, Flex, Separator, Spinner } from "@radix-ui/themes";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useUserContext } from "@/context/UserContext";
 import Message from "@/models/interfaces/message/Message";
 import MsgSender from "@/models/enums/MsgSender";
 import GptAppliedStatus from "@/models/enums/GptAppliedStatus";
 
 const MessageBubble = ({ text, sender }: Message) => {
     const { addTask, success, error, tasks } = useTaskContext();
-    const { currentProject, currentRoot, setupRootTask } = useProjectContext();
+    const { currentProject } = useProjectContext();
     const [appliedStatus, setAppliedStatus] = useState<GptAppliedStatus>(
         GptAppliedStatus.Apply
     );
-    const { userEmail } = useUserContext();
-
     let jsonObj = null;
 
     if (
@@ -41,7 +38,10 @@ const MessageBubble = ({ text, sender }: Message) => {
     }
 
     const handleApply = async () => {
-        if (currentRoot.trim() === "" && tasks.length !== 0) {
+        if (
+            !currentProject ||
+            (currentProject.rootTask.trim() === "" && tasks.length !== 0)
+        ) {
             console.log("current root was null:", tasks);
             return;
         }
@@ -49,12 +49,13 @@ const MessageBubble = ({ text, sender }: Message) => {
         const task: Task = {
             id: newTaskId,
             data: jsonObj,
-            parent: tasks.length === 0 ? "root" : currentRoot,
-            project: currentProject,
-            userId: userEmail,
+            parent: tasks.length === 0 ? "root" : currentProject.rootTask,
+            project: currentProject.id,
+            ownerId: currentProject.ownerId,
             status: TaskStatus.Active,
+            participants: currentProject.participants,
         };
-        if (tasks.length === 0) setupRootTask(newTaskId);
+        // if (tasks.length === 0) setupRootTask(newTaskId);
         setAppliedStatus(GptAppliedStatus.Loading);
         addTask(task);
         if (success) {

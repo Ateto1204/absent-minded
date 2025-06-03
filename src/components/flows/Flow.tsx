@@ -38,7 +38,7 @@ export default function Flow() {
     const { fitView } = useReactFlow();
     const { tasks, loading, deleteTask } = useTaskContext();
     const [mounted, setMounted] = useState(false);
-    const { currentProject, currentRoot } = useProjectContext();
+    const { currentProject } = useProjectContext();
     const { userEmail } = useUserContext();
 
     useEffect(() => {
@@ -99,9 +99,14 @@ export default function Flow() {
 
     useEffect(() => {
         if ((!mounted && loading) || !currentProject) return;
-        const nodeTasks = tasksToNodeTasks(tasks, currentProject, userEmail);
+        const nodeTasks = tasksToNodeTasks(
+            tasks,
+            currentProject.id,
+            userEmail,
+            currentProject.participants
+        );
         const initNodes = tasksToNodes(nodeTasks);
-        const initEdges = tasksToEdges(nodeTasks, currentRoot);
+        const initEdges = tasksToEdges(nodeTasks, currentProject.rootTask);
         const { layoutedNodes, layoutedEdges } = getLayoutedElements(
             initNodes,
             initEdges
@@ -117,7 +122,6 @@ export default function Flow() {
         tasks,
         mounted,
         currentProject,
-        currentRoot,
         userEmail,
     ]);
 

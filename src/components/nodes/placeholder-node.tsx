@@ -15,7 +15,6 @@ import Task from "@/models/interfaces/task/Task";
 import { useProjectContext } from "@/context/ProjectContext";
 import { Tooltip } from "@radix-ui/themes";
 import TaskStatus from "@/models/enums/TaskStatus";
-import { useUserContext } from "@/context/UserContext";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
     children?: ReactNode;
@@ -26,8 +25,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
         const id = useNodeId();
         const { setNodes, setEdges } = useReactFlow();
         const { addTask, loading } = useTaskContext();
-        const { setupRootTask, currentProject } = useProjectContext();
-        const { userEmail } = useUserContext();
+        const { currentProject } = useProjectContext();
 
         const createNode = (id: string, x: number, y: number) => {
             const newNode: Node = {
@@ -62,7 +60,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const updatedNodes = nodes.map((node) => {
                     if (node.id === id) {
                         if (id === "root") {
-                            setupRootTask(rootId);
+                            // setupRootTask(rootId);
                             return { ...node, id: rootId, type: "task" };
                         }
                         return {
@@ -89,6 +87,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     }
                     return edge;
                 });
+                if (!currentProject) return updatedEdges;
                 const task: Task = {
                     id: id === "root" ? rootId : id,
                     data: {
@@ -99,8 +98,9 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                     },
                     parent: source,
                     status: TaskStatus.Active,
-                    project: currentProject,
-                    userId: userEmail,
+                    project: currentProject.id,
+                    ownerId: currentProject.ownerId,
+                    participants: currentProject.participants,
                 };
                 addTask(task);
                 const newEdge1: Edge = createEdge(source, newId1);
@@ -108,16 +108,7 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                 const newEdge2: Edge = createEdge(id, newId2);
                 return [...updatedEdges, newEdge1, newEdge2];
             });
-        }, [
-            id,
-            setEdges,
-            setNodes,
-            addTask,
-            loading,
-            currentProject,
-            setupRootTask,
-            userEmail,
-        ]);
+        }, [id, setEdges, setNodes, addTask, loading, currentProject]);
 
         return (
             <Tooltip content="Add new task">
