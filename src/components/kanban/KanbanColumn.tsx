@@ -47,7 +47,7 @@ const KanbanColumn = ({ column, tasks, onOpenDialog }: KanbanColumnProps) => {
                     {...provided.droppableProps}
                     className="rounded-lg p-3 w-80 bg-neutral-900"
                 >
-                    <Flex direction="column" gap="3">
+                    <Flex direction="column" gap="4">
                         <Text size="3" weight="bold">
                             {column.title}: {tasks.length}
                         </Text>
