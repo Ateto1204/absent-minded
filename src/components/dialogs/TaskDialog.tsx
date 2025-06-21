@@ -32,6 +32,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
             alert("The start time cannot be later than the end time");
             return;
         }
+        handleClose();
         const taskData = {
             label,
             description,
@@ -39,6 +40,19 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
             deadline: deadline ? new Date(deadline) : null,
         };
         updateTaskData(id, taskData);
+    };
+
+    const handleClose = () => {
+        setLabel(data.label || "");
+        setDescription(data.description || "");
+        setDeadline(
+            data.deadline
+                ? new Date(data.deadline).toISOString().slice(0, 10)
+                : ""
+        );
+        setStart(
+            data.start ? new Date(data.start).toISOString().slice(0, 10) : ""
+        );
     };
     const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -60,7 +74,10 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         Edit Task
                     </Dialog.Title>
                     <Dialog.Close>
-                        <Text className="relative bottom-3 cursor-pointer">
+                        <Text
+                            className="relative bottom-3 cursor-pointer"
+                            onClick={handleClose}
+                        >
                             x
                         </Text>
                     </Dialog.Close>
