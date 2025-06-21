@@ -24,6 +24,11 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     );
 
     const handleSave = () => {
+        if (deadline && new Date(start) > new Date(deadline)) {
+            alert("The start time cannot be later than the end time");
+            return;
+        }
+        handleClose();
         const taskData = {
             label,
             description,
@@ -31,6 +36,19 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
             deadline: deadline ? new Date(deadline) : null,
         };
         updateTaskData(id, taskData);
+    };
+
+    const handleClose = () => {
+        setLabel(data.label || "");
+        setDescription(data.description || "");
+        setDeadline(
+            data.deadline
+                ? new Date(data.deadline).toISOString().slice(0, 10)
+                : ""
+        );
+        setStart(
+            data.start ? new Date(data.start).toISOString().slice(0, 10) : ""
+        );
     };
 
     return (
@@ -41,7 +59,10 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         Edit Task
                     </Dialog.Title>
                     <Dialog.Close>
-                        <Text className="relative bottom-3 cursor-pointer">
+                        <Text
+                            className="relative bottom-3 cursor-pointer"
+                            onClick={handleClose}
+                        >
                             x
                         </Text>
                     </Dialog.Close>
@@ -71,15 +92,6 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                 value={start}
                                 onChange={(e) => {
                                     const newStart = e.target.value;
-                                    if (
-                                        deadline &&
-                                        new Date(newStart) > new Date(deadline)
-                                    ) {
-                                        alert(
-                                            "The start time cannot be later than the end time"
-                                        );
-                                        return;
-                                    }
                                     setStart(newStart);
                                 }}
                                 className="border px-2 py-1 rounded border-gray-600"
