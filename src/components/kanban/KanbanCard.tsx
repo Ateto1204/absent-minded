@@ -1,18 +1,9 @@
 import TaskStatus from "@/models/enums/TaskStatus";
 import { Draggable } from "@hello-pangea/dnd";
-import {
-    AlertDialog,
-    Card,
-    Flex,
-    HoverCard,
-    Text,
-    Tooltip,
-} from "@radix-ui/themes";
+import { Card, Flex, HoverCard, Text } from "@radix-ui/themes";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 import Task from "@/models/interfaces/task/Task";
-import { TiDelete } from "react-icons/ti";
-import DeleteDialog from "@/components/dialogs/DeleteDialog";
-import { useTaskContext } from "@/context/TaskContext";
+import TaskDeleteDialog from "@/components/buttons/TaskDeleteDialog";
 
 type KanbanCardProps = {
     task: Task;
@@ -21,8 +12,6 @@ type KanbanCardProps = {
 };
 
 const KanbanCard = ({ task, index, onOpenDialog }: KanbanCardProps) => {
-    const { loading } = useTaskContext();
-
     return (
         <div className="relative">
             <Draggable draggableId={task.id} index={index}>
@@ -44,10 +33,24 @@ const KanbanCard = ({ task, index, onOpenDialog }: KanbanCardProps) => {
                                         : "bg-neutral-800"
                                 }`}
                             >
-                                <Flex direction="column" gap="2">
-                                    <Text className="font-medium">
-                                        {task.data.label}
-                                    </Text>
+                                <Flex direction="column" gap="3">
+                                    <Flex gap="2" align="end">
+                                        <Text className="font-medium">
+                                            {task.data.label}
+                                        </Text>
+                                        {task.data.deadline && (
+                                            <Text size="1" color="gray">
+                                                end at:{" "}
+                                                {new Date(
+                                                    task.data.deadline
+                                                ).toLocaleDateString("en-US", {
+                                                    year: "numeric",
+                                                    month: "long",
+                                                    day: "numeric",
+                                                })}
+                                            </Text>
+                                        )}
+                                    </Flex>
                                     {task.data.description && (
                                         <Text size="1" color="gray">
                                             {task.data.description}
@@ -60,20 +63,7 @@ const KanbanCard = ({ task, index, onOpenDialog }: KanbanCardProps) => {
                     </HoverCard.Root>
                 )}
             </Draggable>
-            <AlertDialog.Root>
-                <AlertDialog.Trigger>
-                    <button
-                        onClick={(e) => e.stopPropagation()}
-                        className="absolute -top-1.5 -right-1.5 cursor-pointer rounded-full hover:opacity-70 p-0"
-                        disabled={loading}
-                    >
-                        <Tooltip content="Remove task">
-                            <TiDelete color="gray" />
-                        </Tooltip>
-                    </button>
-                </AlertDialog.Trigger>
-                <DeleteDialog id={task.id} type="task" />
-            </AlertDialog.Root>
+            <TaskDeleteDialog taskId={task.id} />
         </div>
     );
 };
