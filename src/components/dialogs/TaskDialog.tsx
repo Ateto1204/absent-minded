@@ -24,6 +24,10 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     );
 
     const handleSave = () => {
+        if (deadline && new Date(start) > new Date(deadline)) {
+            alert("The start time cannot be later than the end time");
+            return;
+        }
         const taskData = {
             label,
             description,
@@ -71,15 +75,6 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                 value={start}
                                 onChange={(e) => {
                                     const newStart = e.target.value;
-                                    if (
-                                        deadline &&
-                                        new Date(newStart) > new Date(deadline)
-                                    ) {
-                                        alert(
-                                            "The start time cannot be later than the end time"
-                                        );
-                                        return;
-                                    }
                                     setStart(newStart);
                                 }}
                                 className="border px-2 py-1 rounded border-gray-600"
