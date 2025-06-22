@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button, Flex } from "@radix-ui/themes";
 import { useState } from "react";
+import {GithubIcon} from "lucide-react";
 
 export default function HomePage() {
     const router = useRouter();
@@ -13,13 +14,22 @@ export default function HomePage() {
     return (
         <main className="relative flex flex-col items-center justify-center min-h-screen bg-zinc-950 text-white px-4">
             <div className="absolute top-4 right-4">
-                <Button
-                    onClick={toggleLanguage}
-                    className="text-white bg-gray-700 hover:bg-gray-600"
-                    size="1"
-                >
-                    {language === "en" ? "中文" : "Eng"}
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        size="1"
+                        variant="ghost"
+                        onClick={() => window.open("https://github.com/Ateto1204/absent-minded.git", "_blank")}
+                    >
+                        <GithubIcon />
+                    </Button>
+                    <Button
+                        onClick={toggleLanguage}
+                        className="text-white bg-gray-700 hover:bg-gray-600"
+                        size="1"
+                    >
+                        {language === "en" ? "中文" : "Eng"}
+                    </Button>
+                </div>
             </div>
             <h1 className="text-5xl font-bold mb-4">
                 {language === "en" ? "Absent Minded" : "Absent Minded"}
