@@ -23,6 +23,8 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
         data.start ? new Date(data.start).toISOString().slice(0, 10) : ""
     );
 
+    const isMac = typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
+    const shortcutLabel = isMac ? "⌘↵" : "Ctrl+↵";
     const handleSave = () => {
         if (deadline && new Date(start) > new Date(deadline)) {
             alert("The start time cannot be later than the end time");
@@ -40,7 +42,8 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
 
     const closeRef = useRef<HTMLButtonElement>(null);
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === "Enter" && !(e.target instanceof HTMLTextAreaElement)) {
+        const mod = isMac ? e.metaKey : e.ctrlKey;
+        if (e.key === "Enter" && mod) {
             e.preventDefault();
             handleSave();
             closeRef.current?.click();
