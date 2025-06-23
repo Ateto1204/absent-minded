@@ -34,7 +34,7 @@ function ProjectDialog({
             >
                 <Flex justify="between" align="center">
                     <Flex gap="2">
-                        {project.participants!.length > 0 && (
+                        {project.participants?.length > 0 && (
                             <MdPeople className="relative top-1 opacity-70" />
                         )}
                         <span>{project.name}</span>

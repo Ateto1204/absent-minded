@@ -7,7 +7,7 @@ import {
     TextField,
     DataList,
 } from "@radix-ui/themes";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/interfaces/task/TaskData";
 import TaskStatusUpdateButton from "@/components/buttons/TaskStatusUpdateButton";
@@ -38,6 +38,15 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
         updateTaskData(id, taskData);
     };
 
+    const closeRef = useRef<HTMLButtonElement>(null);
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Enter" && !(e.target instanceof HTMLTextAreaElement)) {
+            e.preventDefault();
+            handleSave();
+            closeRef.current?.click();
+        }
+    };
+
     const handleClose = () => {
         setLabel(data.label || "");
         setDescription(data.description || "");
@@ -53,7 +62,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
 
     return (
         <Flex>
-            <Dialog.Content>
+            <Dialog.Content onKeyDown={handleKeyDown}>
                 <Flex justify="between" align="center">
                     <Dialog.Title className="text-lg font-semibold">
                         Edit Task

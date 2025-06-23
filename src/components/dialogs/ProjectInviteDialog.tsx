@@ -42,12 +42,12 @@ function ProjectInviteDialog({
                 </Dialog.Title>
                 <Flex direction="column" gap="2">
                     <Text weight="bold">Current Members</Text>
-                    {project.participants.length === 0 ? (
+                    {project.participants?.length === 0 ? (
                         <Text size="2" color="gray">
                             No members yet
                         </Text>
                     ) : (
-                        project.participants.map((p, i) => (
+                        project.participants?.map((p, i) => (
                             <Flex key={p} align="center" gap="3">
                                 <Text size="2">
                                     {i + 1}. {p}
