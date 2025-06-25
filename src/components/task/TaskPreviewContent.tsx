@@ -8,7 +8,10 @@ const TaskPreviewContent = ({ id, data }: { id: string; data: TaskData }) => {
                 <DataList.Item>
                     <DataList.Label>Task</DataList.Label>
                     <DataList.Value>
-                        <Text title={data.label} className="whitespace-pre-wrap break-words">
+                        <Text
+                            title={data.label}
+                            className="whitespace-pre-wrap break-words"
+                        >
                             {data.label}
                         </Text>
                     </DataList.Value>
