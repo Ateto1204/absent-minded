@@ -69,7 +69,7 @@ export default function LoginPage() {
                <FcGoogle className="w-5 h-5 mr-2" />
                <span className="flex-1">使用 Google 登入</span>
              </Button>
-             <hr className="w-full border border-gray-200" />
+             <hr className="w-full border border-gray" />
              <label className="text-xs text-gray-500">電子郵件</label>
              <input
                type="email"

@@ -15,7 +15,7 @@ export default function HomePage() {
     return (
         <div>
             <div className="relative z-10">
-                <main className="relative flex flex-col items-center justify-center min-h-[85vh] pt-8 bg-zinc-950 text-white px-4 pb-4">
+                <main className="relative flex flex-col items-center justify-center min-h-screen bg-zinc-950 text-white px-4 pt-20 pb-20">
                     <div className="absolute top-4 right-4">
                         <div className="flex gap-2">
                             <Button
