@@ -19,26 +19,20 @@ export default function Home() {
     const router = useRouter();
 useEffect(() => {
     const getToken = async () => {
-        let timeoutId: NodeJS.Timeout;
+        const startTime = performance.now();
+        const { data } = await supabase.auth.getSession();
+        const endTime = performance.now();
+        const duration = endTime - startTime;
 
-        timeoutId = setTimeout(() => {
+        if (duration > 10000) {
             setShowTimeoutMessage(true);
             setVisible(true);
-
-            setTimeout(() => {
-                setVisible(false);
-                setTimeout(() => {
-                    setShowTimeoutMessage(false);
-                }, 500);
-            }, 10000);
-        }, 10000);
-
-        const { data } = await supabase.auth.getSession();
-        clearTimeout(timeoutId); 
+        }
 
         const hash = window.location.hash;
         const match = hash.match(/access_token=([^&]*)/);
-        if (!data.session && !match) router.push("/login");
+
+        if (!data?.session && !match) router.push("/login");
     };
 
     getToken();
