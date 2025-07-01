@@ -17,10 +17,6 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
         typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
     const shortcutLabel = isMac ? "⌘↵" : "Ctrl+↵";
 
-    const isMac =
-        typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
-    const shortcutLabel = isMac ? "⌘↵" : "Ctrl+↵";
-
     const { updateTaskData, loading } = useTaskContext();
     const [label, setLabel] = useState(data.label || "");
     const [description, setDescription] = useState(data.description || "");
@@ -64,21 +60,10 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
             data.start ? new Date(data.start).toISOString().slice(0, 10) : ""
         );
     };
-    const closeRef = useRef<HTMLButtonElement>(null);
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        const enterWithMod =
-            (isMac && e.metaKey) || (!isMac && e.ctrlKey);
-        if (e.key === "Enter" && enterWithMod) {
-            e.preventDefault();
-            handleSave();
-            closeRef.current?.click();
-        }
-    };
 
     return (
         <Flex>
-            <Dialog.Content>
+            <Dialog.Content onKeyDown={handleKeyDown}>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -89,7 +74,7 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                         <Dialog.Title className="text-lg font-semibold">
                             Edit Task
                         </Dialog.Title>
-                        <Dialog.Close>
+                        <Dialog.Close onClick={handleClose}>
                             <Text className="relative bottom-3 cursor-pointer">
                                 x
                             </Text>
