@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button, Flex } from "@radix-ui/themes";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function HomePage() {
     const router = useRouter();
@@ -12,6 +13,14 @@ export default function HomePage() {
 
     return (
         <main className="relative flex flex-col items-center justify-center min-h-screen bg-zinc-950 text-white px-4">
+            <Image
+                src="/absent-minded/logo.svg"
+                alt="Logo"
+                width={256}
+                height={256}
+                unoptimized
+                className="mb-8"
+            />
             <div className="absolute top-4 right-4">
                 <Button
                     onClick={toggleLanguage}
