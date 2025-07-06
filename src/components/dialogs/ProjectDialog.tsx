@@ -37,7 +37,14 @@ function ProjectDialog({
                         {project.participants!.length > 0 && (
                             <MdPeople className="relative top-1 opacity-70" />
                         )}
-                        <span>{project.name}</span>
+                        <span 
+                            onDoubleClick={(e) => {
+                                e.stopPropagation();
+                                setEditOpen(true);
+                            }}
+                        >
+                            {project.name}
+                        </span>
                     </Flex>
                     <Tooltip content="Project actions">
                         <DropdownMenu.Trigger>
