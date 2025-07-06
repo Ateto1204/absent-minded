@@ -1,4 +1,15 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Absent Minded
+
+A mind-mapping powered to-do list application built with Next.js. Break down your tasks into manageable pieces using structured, visual thinking.
+
+## Features
+
+- **Mind-mapping visualization** - Visual task breakdown using React Flow
+- **Multi-view support** - Switch between Flow, Kanban, Gantt, and Pie chart views
+- **Bilingual support** - English and Chinese language support
+- **Task management** - Create, edit, and organize tasks
+- **Authentication** - Secure login with Supabase
+- **Responsive design** - Works on desktop and mobile devices
 
 ## Getting Started
 
@@ -19,6 +30,68 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Testing
+
+This project includes comprehensive E2E testing with Playwright.
+
+### Quick Start
+```bash
+# Install dependencies
+npm install
+
+# Install Playwright browsers
+npm run test:setup
+
+# Run all tests
+npm run test
+```
+
+### Test Commands
+```bash
+npm run test           # Run all tests
+npm run test:headed    # Run tests with browser UI
+npm run test:ui        # Run tests in interactive mode
+npm run test:debug     # Run tests in debug mode
+npm run test:report    # View test report
+npm run test:verify    # Verify test setup
+```
+
+### Test Coverage
+- Landing page functionality
+- Login and authentication
+- Task management features
+- Kanban board operations
+- Navigation and routing
+- Responsive design
+- Accessibility compliance
+
+For detailed testing documentation, see [TESTING.md](TESTING.md) or [tests/README.md](tests/README.md).
+
+## Project Structure
+
+```
+src/
+├── app/              # Next.js app router
+├── components/       # React components
+├── context/         # React context providers
+├── hooks/           # Custom React hooks
+├── lib/             # Utility libraries
+├── models/          # Data models and services
+└── utils/           # Utility functions
+
+tests/               # E2E tests with Playwright
+```
+
+## Technologies Used
+
+- **Next.js 15** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Radix UI** - Component library
+- **React Flow** - Flow diagram visualization
+- **Supabase** - Backend and authentication
+- **Playwright** - E2E testing
 
 ## Learn More
 
