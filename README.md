@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Absent-Minded
 
-## Getting Started
+一款輕量、直觀的 Next.js 筆記協作應用，結合多元登入方式與視覺化圖形流程。
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 產品功能與特色
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Email Magic Link**：無密碼電子郵件登入  
+- **OAuth 登入**：支援 Google、Apple、Microsoft  
+- **Passkey (WebAuthn)**：一鍵無密碼登入體驗  
+- **企業 SSO**：單一登入 (SSO) 流程整合  
+- **MVVM 架構**：Model-View-ViewModel 分離，提升維護與測試效率  
+- **流程圖編輯**：  
+  - **React Flow**：互動式流程圖元件庫  
+  - **Dagre 演算法**：自動佈局節點，使圖形自動排列  
+  - 支援節點拖放、連線與動態更新  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 系統技術與架構
 
-## Learn More
+- **前端**  
+  - Next.js 15 (App Router) + React + TypeScript  
+  - **MVVM 模式**：使用 ViewModel 層管理 UI 狀態與邏輯  
+  - **React Flow**：流程圖互動元件  
+  - **Dagre Algorithm**：有向圖自動佈局演算法  
+  - Tailwind CSS  
 
-To learn more about Next.js, take a look at the following resources:
+- **後端 / BaaS**  
+  - Supabase Authentication (Magic Link, OAuth, WebAuthn/Passkey)  
+  - Supabase Database (PostgreSQL)  
+  - Supabase Storage  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **整合與部署**  
+  - 環境變數管理：`.env.local`（NEXT_PUBLIC\_… 前綴）  
+  - 部署平台：Vercel / Netlify（或任何支援 Next.js 的平台）  
