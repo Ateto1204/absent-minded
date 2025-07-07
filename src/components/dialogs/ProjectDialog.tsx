@@ -19,9 +19,13 @@ function ProjectDialog({
     const [name, setName] = useState(project.name);
     const [editOpen, setEditOpen] = useState(false);
     const [inviteOpen, setInviteOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleSave = () => {
-        updateProjectName(project.id, name);
+        const trimmedName = name.trim() || "Project name";
+        updateProjectName(project.id, trimmedName);
+        setName(trimmedName);
+        setIsEditing(false);
     };
 
     return (
@@ -37,7 +41,43 @@ function ProjectDialog({
                         {project.participants!.length > 0 && (
                             <MdPeople className="relative top-1 opacity-70" />
                         )}
-                        <span>{project.name}</span>
+                        {isActive ? (
+                            isEditing ? (
+                                <>
+                                    <input
+                                        className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-blue-500"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        onBlur={handleSave}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                handleSave();
+                                                e.currentTarget.blur();
+                                            }
+                                        }}
+                                        autoFocus
+                                    />
+                                </>
+                            ) : (
+                                <span
+                                    onDoubleClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsEditing(true);
+                                    }}
+                                >
+                                    {project.name || "Project name"}
+                                </span>
+                            )
+                        ) : (
+                            <span
+                                onDoubleClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleProject();
+                                }}
+                            >
+                                {project.name || "Project name"}
+                            </span>
+                        )}
                     </Flex>
                     <Tooltip content="Project actions">
                         <DropdownMenu.Trigger>
