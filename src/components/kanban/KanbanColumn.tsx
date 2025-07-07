@@ -28,13 +28,14 @@ const KanbanColumn = ({ column, tasks, onOpenDialog }: KanbanColumnProps) => {
                 description: "",
                 start: null,
                 deadline: null,
+                url: "",
+                assignees: [],
             },
             parent:
                 projectTasks.length === 0 ? "root" : currentProject.rootTask,
             project: currentProject.id,
             ownerId: currentProject.ownerId,
             status: TaskStatus.Active,
-            participants: currentProject.participants,
         };
         addTask(task);
     };

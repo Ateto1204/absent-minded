@@ -99,12 +99,7 @@ export default function Flow() {
 
     useEffect(() => {
         if ((!mounted && loading) || !currentProject) return;
-        const nodeTasks = tasksToNodeTasks(
-            tasks,
-            currentProject.id,
-            userEmail,
-            currentProject.participants
-        );
+        const nodeTasks = tasksToNodeTasks(tasks, currentProject.id, userEmail);
         const initNodes = tasksToNodes(nodeTasks);
         const initEdges = tasksToEdges(nodeTasks, currentProject.rootTask);
         const { layoutedNodes, layoutedEdges } = getLayoutedElements(

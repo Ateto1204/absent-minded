@@ -95,12 +95,13 @@ export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(
                         description: "",
                         start: null,
                         deadline: null,
+                        url: "",
+                        assignees: [],
                     },
                     parent: source,
                     status: TaskStatus.Active,
                     project: currentProject.id,
                     ownerId: currentProject.ownerId,
-                    participants: currentProject.participants,
                 };
                 addTask(task);
                 const newEdge1: Edge = createEdge(source, newId1);
