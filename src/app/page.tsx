@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button, Flex, Box } from "@radix-ui/themes";
 import { useState } from "react";
+import Image from "next/image";
 import { GithubIcon } from "lucide-react";
 
 export default function HomePage() {
