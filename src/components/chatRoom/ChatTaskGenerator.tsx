@@ -5,7 +5,11 @@ import UpgradeDialogContent from "@/components/user/UpgradeDialogContent";
 import { useUserContext } from "@/context/UserContext";
 import UserPlanEnum from "@/models/enums/UserPlanEnum";
 
-const ChatTaskGenerator = () => {
+interface ChatTaskGeneratorProps {
+    disabled?: boolean;
+}
+
+const ChatTaskGenerator = ({ disabled = false }: ChatTaskGeneratorProps) => {
     const [open, setOpen] = useState(false);
     const { userPlan } = useUserContext();
 
@@ -15,6 +19,7 @@ const ChatTaskGenerator = () => {
                 <Button
                     onClick={() => setOpen(true)}
                     color={userPlan === UserPlanEnum.Free ? "gray" : "blue"}
+                    disabled={disabled}
                 >
                     gpt +
                 </Button>
