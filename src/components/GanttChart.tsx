@@ -4,22 +4,63 @@ import { useTaskContext } from "@/context/TaskContext";
 import { useMemo, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 import "@fullcalendar/common/main.css";
-import { Dialog, HoverCard } from "@radix-ui/themes";
+import { Dialog, HoverCard, Button, Flex, Text } from "@radix-ui/themes";
 import TaskDialog from "@/components/dialogs/TaskDialog";
 import TaskStatus from "@/models/enums/TaskStatus";
 import TaskPreviewContent from "@/components/task/TaskPreviewContent";
 import StateBar from "@/components/flows/StateBar";
+import { useProjectContext } from "@/context/ProjectContext";
+import Task from "@/models/interfaces/task/Task";
+import { v4 as uuidv4 } from "uuid";
 
 const GanttChart = () => {
-    const { tasks } = useTaskContext();
+    const { tasks, addTask } = useTaskContext();
+    const { currentProject, setupRootTask } = useProjectContext();
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+    const [newTaskDialogOpen, setNewTaskDialogOpen] = useState(false);
+    const [newTaskDate, setNewTaskDate] = useState<Date | null>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEventClick = (info: any) => {
         setSelectedTaskId(info.event.id);
+        setDialogOpen(true);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleDateClick = (info: any) => {
+        if (info.jsEvent.detail === 2) {
+            setNewTaskDate(new Date(info.dateStr));
+            setNewTaskDialogOpen(true);
+        }
+    };
+    const handleCreateNewTask = async () => {
+        if (!currentProject || !newTaskDate) return;
+        
+        const newTaskId = uuidv4();
+        const task: Task = {
+            id: newTaskId,
+            data: {
+                label: "new task",
+                description: "",
+                start: newTaskDate,
+                deadline: newTaskDate,
+            },
+            parent: tasks.length === 0 ? "root" : currentProject.rootTask,
+            project: currentProject.id,
+            ownerId: currentProject.ownerId,
+            status: TaskStatus.Active,
+            participants: currentProject.participants,
+        };
+        
+        if (tasks.length === 0) setupRootTask(newTaskId);
+        await addTask(task);
+        
+        setNewTaskDialogOpen(false);
+        setSelectedTaskId(newTaskId);
         setDialogOpen(true);
     };
 
@@ -90,23 +131,54 @@ const GanttChart = () => {
     return (
         <div className="h-[700px]">
             <FullCalendar
-                plugins={[dayGridPlugin]}
+                plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
                 height="100%"
                 events={events}
                 eventClick={handleEventClick}
                 eventContent={renderEventContent}
+                dateClick={handleDateClick}
                 viewClassNames={"rounded-lg overflow-hidden"}
             />
             {selectedTaskId && (
                 <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
                     <TaskDialog
-                        key={selectedTaskId}
                         id={selectedTaskId!}
                         data={tasks.find((t) => t.id === selectedTaskId)!.data}
                     />
                 </Dialog.Root>
             )}
+            
+            <Dialog.Root open={newTaskDialogOpen} onOpenChange={setNewTaskDialogOpen}>
+                <Dialog.Content>
+                    <Dialog.Title>
+                        <Text size="4" weight="bold">Add New Task</Text>
+                    </Dialog.Title>
+                    <Dialog.Description>
+                        <Text size="2">
+                            Would you like to add a new task on {newTaskDate?.toLocaleDateString()}?
+                        </Text>
+                    </Dialog.Description>
+                    <Flex gap="2" justify="end" mt="4">
+                        <Dialog.Close>
+                            <Button
+                                variant="outline"
+                                size="2"
+                                onClick={() => setNewTaskDialogOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                        </Dialog.Close>
+                        <Button
+                            variant="solid"
+                            size="2"
+                            onClick={handleCreateNewTask}
+                        >
+                            Add Task
+                        </Button>
+                    </Flex>
+                </Dialog.Content>
+            </Dialog.Root>
             <StateBar />
         </div>
     );
