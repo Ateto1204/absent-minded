@@ -6,17 +6,20 @@ import {
     TextArea,
     TextField,
     DataList,
+    DropdownMenu,
 } from "@radix-ui/themes";
 import React, { useState, useRef } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/interfaces/task/TaskData";
 import TaskStatusUpdateButton from "@/components/buttons/TaskStatusUpdateButton";
+import { useProjectContext } from "@/context/ProjectContext";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const isMac =
         typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
     const shortcutLabel = isMac ? "⌘↵" : "Ctrl+↵";
 
+    const { currentProject } = useProjectContext();
     const { updateTaskData, loading } = useTaskContext();
     const [label, setLabel] = useState(data.label || "");
     const [description, setDescription] = useState(data.description || "");
@@ -123,6 +126,60 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                     }}
                                     className="border px-2 py-1 rounded border-gray-600"
                                 />
+                            </DataList.Value>
+                        </DataList.Item>
+                        <DataList.Item>
+                            <DataList.Label>Assignees</DataList.Label>
+                            <DataList.Value>
+                                <DropdownMenu.Root>
+                                    <DropdownMenu.Trigger>
+                                        <button
+                                            type="button"
+                                            className="w-full border px-2 py-1 rounded text-left"
+                                        >
+                                            {assignees.length > 0
+                                                ? assignees.join(", ")
+                                                : "Select assignees"}
+                                        </button>
+                                    </DropdownMenu.Trigger>
+                                    <DropdownMenu.Content>
+                                        {currentProject?.participants?.map(
+                                            (participant: string) => {
+                                                const label = participant;
+                                                const value = participant;
+                                                const isChecked =
+                                                    assignees.includes(value);
+
+                                                return (
+                                                    <DropdownMenu.CheckboxItem
+                                                        key={value}
+                                                        checked={isChecked}
+                                                        onCheckedChange={(
+                                                            checked
+                                                        ) => {
+                                                            if (checked) {
+                                                                setAssignees([
+                                                                    ...assignees,
+                                                                    value,
+                                                                ]);
+                                                            } else {
+                                                                setAssignees(
+                                                                    assignees.filter(
+                                                                        (a) =>
+                                                                            a !==
+                                                                            value
+                                                                    )
+                                                                );
+                                                            }
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </DropdownMenu.CheckboxItem>
+                                                );
+                                            }
+                                        )}
+                                    </DropdownMenu.Content>
+                                </DropdownMenu.Root>
                             </DataList.Value>
                         </DataList.Item>
                         <DataList.Item>
