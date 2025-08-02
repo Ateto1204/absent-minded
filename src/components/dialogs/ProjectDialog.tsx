@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useProjectContext } from "@/context/ProjectContext";
-import { Button, Tooltip, DropdownMenu, Flex, AlertDialog } from "@radix-ui/themes";
+import {
+    Button,
+    Tooltip,
+    DropdownMenu,
+    Flex,
+    AlertDialog,
+} from "@radix-ui/themes";
 import ProjectEditDialog from "@/components/dialogs/ProjectEditDialog";
 import DeleteDialog from "@/components/dialogs/DeleteDialog";
 import { MdPeople } from "react-icons/md";
@@ -85,6 +91,7 @@ function ProjectDialog({
                 onSave={handleSave}
             />
             <AlertDialog.Root open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <AlertDialog.Title />
                 <AlertDialog.Content>
                     <DeleteDialog id={project.id} type="project" />
                 </AlertDialog.Content>
