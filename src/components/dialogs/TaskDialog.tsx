@@ -6,17 +6,20 @@ import {
     TextArea,
     TextField,
     DataList,
+    DropdownMenu,
 } from "@radix-ui/themes";
 import React, { useState, useRef } from "react";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskData from "@/models/interfaces/task/TaskData";
 import TaskStatusUpdateButton from "@/components/buttons/TaskStatusUpdateButton";
+import { useProjectContext } from "@/context/ProjectContext";
 
 const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const isMac =
         typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
     const shortcutLabel = isMac ? "⌘↵" : "Ctrl+↵";
 
+    const { currentProject } = useProjectContext();
     const { updateTaskData, loading } = useTaskContext();
     const [label, setLabel] = useState(data.label || "");
     const [description, setDescription] = useState(data.description || "");
@@ -26,6 +29,8 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
     const [start, setStart] = useState(
         data.start ? new Date(data.start).toISOString().slice(0, 10) : ""
     );
+    const [url, setUrl] = useState(data.url || "");
+    const [assignees, setAssignees] = useState(data.assignees || []);
 
     const handleSave = () => {
         const taskData = {
@@ -33,14 +38,15 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
             description,
             start: start ? new Date(start) : null,
             deadline: deadline ? new Date(deadline) : null,
+            url,
+            assignees,
         };
         updateTaskData(id, taskData);
     };
     const closeRef = useRef<HTMLButtonElement>(null);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        const enterWithMod =
-            (isMac && e.metaKey) || (!isMac && e.ctrlKey);
+        const enterWithMod = (isMac && e.metaKey) || (!isMac && e.ctrlKey);
         if (e.key === "Enter" && enterWithMod) {
             e.preventDefault();
             handleSave();
@@ -98,6 +104,17 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                             </DataList.Value>
                         </DataList.Item>
                         <DataList.Item>
+                            <DataList.Label>URL</DataList.Label>
+                            <DataList.Value>
+                                <TextField.Root
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    placeholder="task url"
+                                    className="w-full"
+                                />
+                            </DataList.Value>
+                        </DataList.Item>
+                        <DataList.Item>
                             <DataList.Label>Start</DataList.Label>
                             <DataList.Value>
                                 <input
@@ -112,6 +129,60 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                             </DataList.Value>
                         </DataList.Item>
                         <DataList.Item>
+                            <DataList.Label>Assignees</DataList.Label>
+                            <DataList.Value>
+                                <DropdownMenu.Root>
+                                    <DropdownMenu.Trigger>
+                                        <button
+                                            type="button"
+                                            className="w-full border px-2 py-1 rounded text-left"
+                                        >
+                                            {assignees.length > 0
+                                                ? assignees.join(", ")
+                                                : "Select assignees"}
+                                        </button>
+                                    </DropdownMenu.Trigger>
+                                    <DropdownMenu.Content>
+                                        {currentProject?.participants?.map(
+                                            (participant: string) => {
+                                                const label = participant;
+                                                const value = participant;
+                                                const isChecked =
+                                                    assignees.includes(value);
+
+                                                return (
+                                                    <DropdownMenu.CheckboxItem
+                                                        key={value}
+                                                        checked={isChecked}
+                                                        onCheckedChange={(
+                                                            checked
+                                                        ) => {
+                                                            if (checked) {
+                                                                setAssignees([
+                                                                    ...assignees,
+                                                                    value,
+                                                                ]);
+                                                            } else {
+                                                                setAssignees(
+                                                                    assignees.filter(
+                                                                        (a) =>
+                                                                            a !==
+                                                                            value
+                                                                    )
+                                                                );
+                                                            }
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </DropdownMenu.CheckboxItem>
+                                                );
+                                            }
+                                        )}
+                                    </DropdownMenu.Content>
+                                </DropdownMenu.Root>
+                            </DataList.Value>
+                        </DataList.Item>
+                        <DataList.Item>
                             <DataList.Label>Deadline</DataList.Label>
                             <DataList.Value>
                                 <input
@@ -121,7 +192,8 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                         const newDeadline = e.target.value;
                                         if (
                                             start &&
-                                            new Date(start) > new Date(newDeadline)
+                                            new Date(start) >
+                                                new Date(newDeadline)
                                         ) {
                                             alert(
                                                 "The start time cannot be later than the end time"
@@ -139,7 +211,9 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                             <DataList.Value>
                                 <TextArea
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
                                     placeholder={"write description here..."}
                                     className="w-full"
                                 />
@@ -158,7 +232,10 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
                                 className="rounded-full px-4 py-2 flex items-center"
                             >
                                 <Text size="1">Save</Text>
-                                <Text size="1" className="ml-2 bg-blue-500 px-2 py-0.5 rounded text-white">
+                                <Text
+                                    size="1"
+                                    className="ml-2 bg-blue-500 px-2 py-0.5 rounded text-white"
+                                >
                                     {shortcutLabel}
                                 </Text>
                             </Button>
