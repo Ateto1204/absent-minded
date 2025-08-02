@@ -13,7 +13,7 @@ const ModeSelector = ({
 }) => {
     const { currentProject, loading: projectLoading } = useProjectContext();
     const { loading: taskLoading } = useTaskContext();
-    
+
     const isLoading = projectLoading || taskLoading;
 
     return (
@@ -21,7 +21,7 @@ const ModeSelector = ({
             <Flex justify="between">
                 <Text>{currentProject?.id}</Text>
                 <Flex gapX="4">
-                    <ChatTaskGenerator disabled={isLoading} />
+                    <ChatTaskGenerator loading={isLoading} />
                     <Select.Root
                         value={mode}
                         onValueChange={(m) => setMode(m as ListMode)}
