@@ -1,5 +1,6 @@
 import ChatTaskGenerator from "@/components/chatRoom/ChatTaskGenerator";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useTaskContext } from "@/context/TaskContext";
 import ListMode from "@/models/enums/ListMode";
 import { Flex, Select, Text } from "@radix-ui/themes";
 
@@ -10,14 +11,17 @@ const ModeSelector = ({
     mode: ListMode;
     setMode: (mode: ListMode) => void;
 }) => {
-    const { currentProject } = useProjectContext();
+    const { currentProject, loading: projectLoading } = useProjectContext();
+    const { loading: taskLoading } = useTaskContext();
+
+    const isLoading = projectLoading || taskLoading;
 
     return (
         <div className="px-6 py-4 border-b border-zinc-800 text-sm font-semibold bg-zinc-900">
             <Flex justify="between">
                 <Text>{currentProject?.id}</Text>
                 <Flex gapX="4">
-                    <ChatTaskGenerator />
+                    <ChatTaskGenerator loading={isLoading} />
                     <Select.Root
                         value={mode}
                         onValueChange={(m) => setMode(m as ListMode)}
