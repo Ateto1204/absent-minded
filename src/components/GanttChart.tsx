@@ -135,14 +135,18 @@ const GanttChart = () => {
                 dateClick={handleDateClick}
                 viewClassNames={"rounded-lg overflow-hidden"}
             />
-            {selectedTaskId && (
-                <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <TaskDialog
-                        id={selectedTaskId!}
-                        data={tasks.find((t) => t.id === selectedTaskId)!.data}
-                    />
-                </Dialog.Root>
-            )}
+            {selectedTaskId && (() => {
+                const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+                return selectedTask ? (
+                    <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <TaskDialog
+                            key={selectedTaskId}
+                            id={selectedTaskId}
+                            data={selectedTask.data}
+                        />
+                    </Dialog.Root>
+                ) : null;
+            })()}
             <StateBar />
         </div>
     );

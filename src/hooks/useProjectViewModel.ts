@@ -111,12 +111,28 @@ const useProjectViewModel = (): ProjectViewModel => {
         setSuccess(false);
         setError(null);
         try {
+            // 先將邀請的 email 加入 pending 列表
+            setProjects((prev) =>
+                prev.map((p) =>
+                    p.id === projectId
+                        ? {
+                              ...p,
+                              pendingParticipants: p.pendingParticipants
+                                  ? [...p.pendingParticipants, email]
+                                  : [email],
+                          }
+                        : p
+                )
+            );
+
             await ProjectService.inviteParticipant(
                 projectId,
                 email,
                 accessToken,
                 serverUri
             );
+
+            // 邀請成功後，從 pending 移除並加入正式 participants
             setProjects((prev) =>
                 prev.map((p) =>
                     p.id === projectId
@@ -125,6 +141,9 @@ const useProjectViewModel = (): ProjectViewModel => {
                               participants: p.participants
                                   ? [...p.participants, email]
                                   : [email],
+                              pendingParticipants: p.pendingParticipants?.filter(
+                                  (pe) => pe !== email
+                              ) || [],
                           }
                         : p
                 )
@@ -132,6 +151,19 @@ const useProjectViewModel = (): ProjectViewModel => {
             setSuccess(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
+            // 如果邀請失敗，從 pending 中移除
+            setProjects((prev) =>
+                prev.map((p) =>
+                    p.id === projectId
+                        ? {
+                              ...p,
+                              pendingParticipants: p.pendingParticipants?.filter(
+                                  (pe) => pe !== email
+                              ) || [],
+                          }
+                        : p
+                )
+            );
             setError(err.message || "Failed to invite participant");
         } finally {
             setLoading(false);
@@ -166,6 +198,18 @@ const useProjectViewModel = (): ProjectViewModel => {
         }
     };
 
+    const removePendingParticipant = (projectId: string, email: string) => {
+        setProjects((prev) =>
+            prev.map((p) => {
+                if (p.id !== projectId) return p;
+                const pendingParticipants = p.pendingParticipants?.filter(
+                    (pe) => pe !== email
+                ) || [];
+                return { ...p, pendingParticipants };
+            })
+        );
+    };
+
     const toggleProject = (id: string) => {
         const project = projects.find((p) => p.id === id);
         if (!project) return;
@@ -198,6 +242,7 @@ const useProjectViewModel = (): ProjectViewModel => {
         inviteParticipant,
         setupRootTask,
         removeParticipant,
+        removePendingParticipant,
         loading,
         success,
         error,
