@@ -6,6 +6,17 @@ const TaskPreviewContent = ({ id, data }: { id: string; data: TaskData }) => {
         <HoverCard.Content>
             <DataList.Root>
                 <DataList.Item>
+                    <DataList.Label>Task</DataList.Label>
+                    <DataList.Value>
+                        <Text
+                            title={data.label}
+                            className="whitespace-pre-wrap break-words"
+                        >
+                            {data.label}
+                        </Text>
+                    </DataList.Value>
+                </DataList.Item>
+                <DataList.Item>
                     <DataList.Label>ID</DataList.Label>
                     <DataList.Value>{id}</DataList.Value>
                 </DataList.Item>

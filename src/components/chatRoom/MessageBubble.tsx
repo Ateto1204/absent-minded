@@ -47,7 +47,6 @@ const MessageBubble = ({ text, sender }: Message) => {
             project: currentProject.id,
             ownerId: currentProject.ownerId,
             status: TaskStatus.Active,
-            participants: currentProject.participants,
         };
         if (tasks.length === 0) setupRootTask(newTaskId);
         setAppliedStatus(GptAppliedStatus.Loading);

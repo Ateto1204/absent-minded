@@ -7,7 +7,6 @@ interface Task {
     parent: string;
     project: string;
     ownerId: string;
-    participants: string[];
     status: TaskStatus;
 }
 
