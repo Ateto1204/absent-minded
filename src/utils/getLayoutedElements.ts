@@ -6,13 +6,21 @@ const nodeHeight = 36;
 
 export default function getLayoutedElements(nodes: Node[], edges: Edge[]) {
     const graph = new dagre.graphlib.Graph();
-    graph.setDefaultEdgeLabel(() => ({}));
+    graph.setDefaultEdgeLabel(() => ({ weight: 1 }));
     graph.setGraph({ rankdir: "LR" });
+    const nodeIds = new Set(nodes.map((node) => node.id));
     nodes.forEach((node) => {
         graph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
     });
-    edges.forEach((edge) => {
-        graph.setEdge(edge.source, edge.target);
+    const safeEdges = edges.filter(
+        (edge) =>
+            edge.source &&
+            edge.target &&
+            nodeIds.has(edge.source) &&
+            nodeIds.has(edge.target)
+    );
+    safeEdges.forEach((edge) => {
+        graph.setEdge(edge.source, edge.target, { weight: 1 });
     });
     dagre.layout(graph);
     const layoutedNodes = nodes.map((node) => {
@@ -25,7 +33,7 @@ export default function getLayoutedElements(nodes: Node[], edges: Edge[]) {
             },
         };
     });
-    const layoutedEdges = edges.map((edge) => ({
+    const layoutedEdges = safeEdges.map((edge) => ({
         ...edge,
         type: "default",
     }));
