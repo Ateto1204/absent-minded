@@ -33,6 +33,8 @@ const TaskDialog = ({ id, data }: { id: string; data: TaskData }) => {
             description,
             start: start ? new Date(start) : null,
             deadline: deadline ? new Date(deadline) : null,
+            url: data.url,
+            assignees: data.assignees,
         };
         updateTaskData(id, taskData);
     };
