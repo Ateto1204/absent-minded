@@ -9,7 +9,7 @@ import Message from "@/models/interfaces/message/Message";
 import MsgSender from "@/models/enums/MsgSender";
 import GptAppliedStatus from "@/models/enums/GptAppliedStatus";
 
-const MessageBubble = ({ text, sender }: Message) => {
+const MessageBubble = ({ text, sender, suggestedParentId }: Message) => {
     const { addTask, success, error, tasks } = useTaskContext();
     const { currentProject, setupRootTask } = useProjectContext();
     const [appliedStatus, setAppliedStatus] = useState<GptAppliedStatus>(
@@ -40,10 +40,16 @@ const MessageBubble = ({ text, sender }: Message) => {
     const handleApply = async () => {
         if (!currentProject) return;
         const newTaskId = uuidv4();
+        const hasSuggestedParent =
+            typeof suggestedParentId === "string" &&
+            (tasks.some((t) => t.id === suggestedParentId) ||
+                (suggestedParentId === "root" && tasks.length === 0));
+        const fallbackParent =
+            tasks.length === 0 ? "root" : currentProject.rootTask;
         const task: Task = {
             id: newTaskId,
             data: jsonObj,
-            parent: tasks.length === 0 ? "root" : currentProject.rootTask,
+            parent: hasSuggestedParent ? suggestedParentId : fallbackParent,
             project: currentProject.id,
             ownerId: currentProject.ownerId,
             status: TaskStatus.Active,
