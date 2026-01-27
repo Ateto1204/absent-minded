@@ -3,8 +3,11 @@
 import { useRouter } from "next/navigation";
 import { Button, Flex, Box } from "@radix-ui/themes";
 import { useState } from "react";
-import Image from "next/image";
 import { GithubIcon } from "lucide-react";
+import Image from "next/image";
+
+const mockImageSrc =
+    "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22960%22%20height%3D%22384%22%20viewBox%3D%220%200%20960%20384%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%20y1%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%232563eb%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22960%22%20height%3D%22384%22%20fill%3D%22url(%23g)%22%2F%3E%3Crect%20x%3D%2248%22%20y%3D%2248%22%20width%3D%22864%22%20height%3D%22288%22%20rx%3D%2224%22%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.08%22%2F%3E%3C%2Fsvg%3E";
 
 export default function HomePage() {
     const router = useRouter();
@@ -92,8 +95,17 @@ export default function HomePage() {
                         ))}
                     </Flex>
 
-                    <Box className="w-full max-w-6xl h-96 bg-zinc-800 rounded-lg flex items-center justify-center text-white text-xl">
-                        {mode.charAt(0).toUpperCase() + mode.slice(1)} Mock Image
+                    <Box className="relative w-full max-w-6xl h-96 bg-zinc-800 rounded-lg overflow-hidden">
+                        <Image
+                            src={mockImageSrc}
+                            alt={`${mode} preview`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 960px"
+                            className="object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center text-white text-xl bg-black/20">
+                            {mode.charAt(0).toUpperCase() + mode.slice(1)} Mock Image
+                        </div>
                     </Box>
                 </Box>
 
@@ -125,8 +137,17 @@ export default function HomePage() {
                         ))}
                     </Flex>
 
-                    <Box className="w-full max-w-6xl h-96 bg-zinc-800 rounded-lg flex items-center justify-center text-white text-xl">
-                        {mode.charAt(0).toUpperCase() + mode.slice(1)} Mock Image
+                    <Box className="relative w-full max-w-6xl h-96 bg-zinc-800 rounded-lg overflow-hidden">
+                        <Image
+                            src={mockImageSrc}
+                            alt={`${mode} preview`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 960px"
+                            className="object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center text-white text-xl bg-black/20">
+                            {mode.charAt(0).toUpperCase() + mode.slice(1)} Mock Image
+                        </div>
                     </Box>
                 </Box>
             </Box>
