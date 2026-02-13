@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { useProjectContext } from "@/context/ProjectContext";
-import { Button, Tooltip, DropdownMenu, Flex } from "@radix-ui/themes";
+import {
+    Button,
+    Tooltip,
+    DropdownMenu,
+    Flex,
+    AlertDialog,
+} from "@radix-ui/themes";
 import ProjectEditDialog from "@/components/dialogs/ProjectEditDialog";
-import ProjectInviteDialog from "@/components/dialogs/ProjectInviteDialog";
+import DeleteDialog from "@/components/dialogs/DeleteDialog";
 import { MdPeople } from "react-icons/md";
 import Project from "@/models/interfaces/project/Project";
 
@@ -18,7 +24,7 @@ function ProjectDialog({
     const { updateProjectName, loading } = useProjectContext();
     const [name, setName] = useState(project.name);
     const [editOpen, setEditOpen] = useState(false);
-    const [inviteOpen, setInviteOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     const handleSave = () => {
         updateProjectName(project.id, name);
@@ -69,10 +75,10 @@ function ProjectDialog({
                 <DropdownMenu.Item
                     onSelect={(e) => {
                         e.stopPropagation();
-                        setInviteOpen(true);
+                        setDeleteOpen(true);
                     }}
                 >
-                    Invite
+                    Delete
                 </DropdownMenu.Item>
             </DropdownMenu.Content>
             <ProjectEditDialog
@@ -84,11 +90,12 @@ function ProjectDialog({
                 loading={loading}
                 onSave={handleSave}
             />
-            <ProjectInviteDialog
-                open={inviteOpen}
-                setOpen={setInviteOpen}
-                project={project}
-            />
+            <AlertDialog.Root open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <AlertDialog.Title />
+                <AlertDialog.Content>
+                    <DeleteDialog id={project.id} type="project" />
+                </AlertDialog.Content>
+            </AlertDialog.Root>
         </DropdownMenu.Root>
     );
 }

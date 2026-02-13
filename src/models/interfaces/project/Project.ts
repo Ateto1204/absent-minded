@@ -3,6 +3,7 @@ interface Project {
     name: string;
     ownerId: string;
     participants: string[];
+    pendingParticipants?: string[];
     rootTask: string;
 }
 
