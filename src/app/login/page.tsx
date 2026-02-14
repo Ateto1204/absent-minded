@@ -56,33 +56,31 @@ export default function LoginPage() {
     return (
       <Theme>
         <Flex direction="column" align="center" justify="center" className="h-screen p-4 text-gray-800">
-           <h1 className="text-xl font-bold w-full max-w-sm text-gray-600">登入你的 Absent Minded 帳號</h1>
+           <h1 className="text-2xl font-bold w-full max-w-xs text-center text-gray-600 mb-6 whitespace-nowrap">登入你的 Absent Minded 帳號</h1>
 
-           <Flex direction="column" gap="3" className="w-full max-w-sm">
-             <Button  size="4"
+           <Flex direction="column" gap="3" className="w-full max-w-xs">
+             <Button size="3"
                onClick={handleGoogleLogin}
                variant="outline"
-               className="relative px-4 py-2 w-full flex justify-center items-center"
                highContrast
                radius="small"
              >
                <FcGoogle className="w-5 h-5 mr-2" />
                <span className="flex-1">使用 Google 登入</span>
              </Button>
-             <hr className="w-full border border-gray-200" />
-             <label className="text-xs text-gray-500">電子郵件</label>
+             <hr className="w-full border border-gray mt-2" />
+             <label className="text-xs text-gray-500 mt-4">電子郵件</label>
              <input
                type="email"
                placeholder="請輸入 Email"
                value={email}
                onChange={(e) => setEmail(e.target.value)}
-               className="border border-gray-300 bg-transparent px-4 py-2 rounded w-full text-white"
+               className="border border-gray-300 px-3 py-2 w-full max-w-xs text-sm text-gray-800 rounded text-white"
              />
              <Button
-                size="4"
+                size="3"
                 onClick={handleEmailLogin}
                 loading={loading}
-                className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full"
                 radius="small"
                 >
                 寄送登入信
