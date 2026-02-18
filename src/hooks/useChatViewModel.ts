@@ -72,7 +72,7 @@ const useChatViewModel = (projectId?: string): ChatViewModel => {
                     task: { label: task.label, description: task.description },
                 });
 
-                const sug = await TaskSuggestService.suggestTaskLocation(
+                const dualSug = await TaskSuggestService.suggestTaskLocationBoth(
                     serverUri,
                     accessToken,
                     {
@@ -90,17 +90,24 @@ const useChatViewModel = (projectId?: string): ChatViewModel => {
                     const newMessages = [...prev];
                     newMessages[realIndex] = {
                         ...newMessages[realIndex],
-                        suggestedParentId: sug.parentId,
+                        suggestHybrid: dualSug.hybrid,    // 混合版
+                        suggestAiOnly: dualSug.aiOnly,    // AI版
+                        suggestedParentId: dualSug.hybrid.parentId  // 預設用 hybrid
                     };
                     return newMessages;
                 });
 
                 const sugText =
-                    `📌 建議放置位置\n` +
-                    `- parentId: ${sug.parentId ?? "(root)"}\n` +
-                    `- depth: ${sug.depth}\n` +
-                    `- confidence: ${sug.confidence.toFixed(2)}\n\n` +
-                    `${sug.explanation}`;
+                    `📌 hybrid建議放置位置\n` +
+                    `- parentId: ${dualSug.hybrid.parentId ?? "(root)"}\n` +
+                    `- depth: ${dualSug.hybrid.depth}\n` +
+                    `- confidence: ${dualSug.hybrid.confidence.toFixed(2)}\n\n` +
+                    `${dualSug.hybrid.explanation}`;
+                    `📌 AI建議放置位置\n` +
+                    `- parentId: ${dualSug.aiOnly.parentId ?? "(root)"}\n` +
+                    `- depth: ${dualSug.aiOnly.depth}\n` +
+                    `- confidence: ${dualSug.aiOnly.confidence.toFixed(2)}\n\n` +
+                    `${dualSug.aiOnly.explanation}`;
 
                 setMessages((prev) => [...prev, { text: sugText, sender: MsgSender.Gpt }]);
             } else {
