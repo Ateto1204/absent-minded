@@ -2,7 +2,8 @@ class ChatService {
     static async sendMessage(
         prompt: string,
         serverUri: string,
-        accessToken: string
+        accessToken: string,
+        projectId?: string
     ): Promise<string> {
         const response = await fetch(`${serverUri}/api/gpt`, {
             method: "POST",
@@ -11,7 +12,7 @@ class ChatService {
                 Authorization: `Bearer ${accessToken}`,
             },
             credentials: "include",
-            body: JSON.stringify({ message: prompt }),
+            body: JSON.stringify({ message: prompt, projectId }),
         });
 
         const contentType = response.headers.get("content-type") || "";

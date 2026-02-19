@@ -115,7 +115,8 @@ const useChatViewModel = (projectId?: string): ChatViewModel => {
             const botText = await ChatService.sendMessage(
                 prompt,
                 serverUri,
-                accessToken
+                accessToken,
+                projectId
             );
 
             setMessages((prev) =>
