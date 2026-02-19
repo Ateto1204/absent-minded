@@ -13,13 +13,18 @@ export interface SuggestTaskResponse {
     explanation: string;
 }
 
+export interface DualSuggestResponse {
+    aiOnly: SuggestTaskResponse;
+    hybrid: SuggestTaskResponse;
+}
+
 class TaskSuggestService {
     static async suggestTaskLocation(
         serverUri: string,
         accessToken: string,
         req: SuggestTaskRequest
-    ): Promise<SuggestTaskResponse> {
-        const response = await fetch(`${serverUri}/api/suggest`, {
+    ): Promise<DualSuggestResponse> {
+        const response = await fetch(`${serverUri}/api/suggestest`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

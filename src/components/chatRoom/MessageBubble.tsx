@@ -1,3 +1,4 @@
+import { useChatContext } from "@/context/ChatContext";
 import { useProjectContext } from "@/context/ProjectContext";
 import { useTaskContext } from "@/context/TaskContext";
 import Task from "@/models/interfaces/task/Task";
@@ -9,7 +10,15 @@ import Message from "@/models/interfaces/message/Message";
 import MsgSender from "@/models/enums/MsgSender";
 import GptAppliedStatus from "@/models/enums/GptAppliedStatus";
 
-const MessageBubble = ({ text, sender, suggestedParentId }: Message) => {
+const MessageBubble = ({
+    text,
+    sender,
+    suggestedParentId,
+    comparisonId,
+    suggestionOptions,
+    selectedOptionId,
+}: Message) => {
+    const { chooseSuggestion } = useChatContext();
     const { addTask, success, error, tasks } = useTaskContext();
     const { currentProject, setupRootTask } = useProjectContext();
     const [appliedStatus, setAppliedStatus] = useState<GptAppliedStatus>(
@@ -112,9 +121,10 @@ const MessageBubble = ({ text, sender, suggestedParentId }: Message) => {
                 </Flex>
             ) : (
                 <Flex
-                    align="center"
+                    direction="column"
+                    align="start"
                     gap="2"
-                    className={`px-3 py-2 rounded-2xl shadow max-w-fit text-sm leading-snug whitespace-pre-line ${
+                    className={`px-3 py-2 rounded-2xl shadow max-w-[90%] text-sm leading-snug whitespace-pre-line ${
                         sender === "user"
                             ? "bg-blue-500 text-white rounded-br-none"
                             : "bg-gray-200 text-gray-900 rounded-bl-none"
@@ -123,6 +133,51 @@ const MessageBubble = ({ text, sender, suggestedParentId }: Message) => {
                     {sender === MsgSender.Gpt &&
                         text.toLowerCase().startsWith("think") && <Spinner />}
                     {text}
+                    {sender === MsgSender.Gpt &&
+                        comparisonId &&
+                        suggestionOptions &&
+                        suggestionOptions.length === 2 && (
+                            <Flex direction="column" gap="2" className="w-full">
+                                {suggestionOptions.map((option) => (
+                                    <Flex
+                                        key={option.id}
+                                        direction="column"
+                                        gap="1"
+                                        className="rounded border border-gray-400 bg-white px-2 py-2 text-gray-900"
+                                    >
+                                        <div className="font-medium">
+                                            Option {option.id}
+                                        </div>
+                                        <div>
+                                            parentId:{" "}
+                                            {option.parentId ?? "(root)"}
+                                        </div>
+                                        <div>depth: {option.depth}</div>
+                                        <div>
+                                            confidence:{" "}
+                                            {option.confidence.toFixed(2)}
+                                        </div>
+                                        <div>{option.explanation}</div>
+                                        <Button
+                                            size="1"
+                                            onClick={() =>
+                                                chooseSuggestion(
+                                                    comparisonId,
+                                                    option.id
+                                                )
+                                            }
+                                            disabled={
+                                                selectedOptionId !== undefined
+                                            }
+                                        >
+                                            {selectedOptionId === option.id
+                                                ? "Selected"
+                                                : "Choose"}
+                                        </Button>
+                                    </Flex>
+                                ))}
+                            </Flex>
+                        )}
                 </Flex>
             )}
         </div>

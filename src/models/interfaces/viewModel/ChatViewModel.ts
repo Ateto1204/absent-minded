@@ -5,7 +5,11 @@ interface ChatViewModel {
     loading: boolean;
     success: boolean;
     error: string | null;
-    sendMessage: (msg: string) => void;
+    sendMessage: (msg: string) => Promise<void>;
+    chooseSuggestion: (
+        comparisonId: string,
+        optionId: "A" | "B"
+    ) => void;
 }
 
 export default ChatViewModel;
